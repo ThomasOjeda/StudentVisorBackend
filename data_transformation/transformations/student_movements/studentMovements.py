@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-
+import sys
 
 def studentMovements(year1Filename, year2Filename):
 
@@ -34,6 +34,8 @@ def studentMovements(year1Filename, year2Filename):
             year1Enrolled.size - activeOnSameOffer.size - movements.size,
         )
     )
+    sys.stdout.flush()
+
 
 
 studentMovements("data_transformation/data/2015_students.pickle", "data_transformation/data/2016_students.pickle")

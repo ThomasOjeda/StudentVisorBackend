@@ -17,7 +17,7 @@ const testpython = (req, res) => {
 
   var dataToSend;
   // spawn new child process to call the python script
-  const python = spawn("python", [path.resolve(__dirname+'/testfile.py')]);
+  const python = spawn("python", ['C:/Users/Fanat/Escritorio/StudentVisorBackend/data_transformation/transformations/student_movements/studentMovements.py']);
   // collect data from script
   python.stdout.on("data", function (data) {
 

@@ -8,4 +8,4 @@ def toPickle(original,destination):
     data.to_pickle(destination)
 
 
-toPickle('./data/2015_students.xlsx','./data/2015_students.pickle')
+toPickle('./data_transformation/data/2016_students.xlsx','./data_transformation/data/2016_students.pickle')

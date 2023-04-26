@@ -1,3 +1,4 @@
+const { MASTER_SECRET } = require("../../config/config");
 const { Unauthorized, BadRequest } = require("../../errors/errors-index");
 const masterAuthentication = async (req, res, next) => {
   if (
@@ -8,7 +9,7 @@ const masterAuthentication = async (req, res, next) => {
 
   const token = req.headers.authorization.split(" ")[1];
 
-  if (process.env.MASTER_SECRET == token) next();
+  if (MASTER_SECRET == token) next();
   else throw new Unauthorized("Unauthorized");
 };
 

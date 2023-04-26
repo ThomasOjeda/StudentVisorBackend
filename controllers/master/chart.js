@@ -6,7 +6,7 @@ const getAllCharts = async (req, res) => {
   resultCharts = await chart.find({});
   res
     .status(StatusCodes.OK)
-    .json({ success: true, result: resultCharts, nHits: resultCharts.length });
+    .json({ success: true, result: resultCharts, nHits: resultCharts.length});
 };
 
 const getChart = async (req, res) => {

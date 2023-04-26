@@ -1,6 +1,6 @@
 const express = require("express");
 const {spawn} = require('child_process');
-const path = require('path')
+
 const {
   getAllCharts,
   getChart,
@@ -17,7 +17,7 @@ const testpython = (req, res) => {
 
   var dataToSend;
   // spawn new child process to call the python script
-  const python = spawn("python", ['./data_transformation/transformations/student_movements/studentMovements.py']);
+  const python = spawn("python3", ['./data_transformation/transformations/student_movements/studentMovements.py']);
   // collect data from script
   python.stdout.on("data", function (data) {
 

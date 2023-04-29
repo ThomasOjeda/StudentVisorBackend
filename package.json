@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "dev": "nodemon --legacy-watch --polling-interval 3000 app.js"
+    "dev": "nodemon --legacy-watch --polling-interval 3000 -e js,json,py app.js"
   },
   "repository": {
     "type": "git",
@@ -28,6 +28,7 @@
     "express-async-errors": "^3.1.1",
     "http-status-codes": "^2.2.0",
     "jsonwebtoken": "^9.0.0",
-    "mongoose": "^7.0.3"
+    "mongoose": "^7.0.3",
+    "python-shell": "^5.0.0"
   }
 }

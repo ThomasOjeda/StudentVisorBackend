@@ -20,8 +20,6 @@ app.use(errorHandler);
 
 const start = async () => {
   try {
-    console.log("THIS IS THE MONGO URI")
-    console.log(MONGO_URI)
     await connectDB(MONGO_URI);
     app.listen(PORT, () => {
       console.log(`server listening on port ${PORT}`);

@@ -26,16 +26,9 @@ def studentMovements(year1Filename, year2Filename):
         "DOCUMENTO"
     ].unique()
 
-    print(
-        "year1Enrolled {}, Same offer {}, Movements {}, No data {}".format(
+    return "year1Enrolled {}, Same offer {}, Movements {}, No data {}".format(
             year1Enrolled.size,
             activeOnSameOffer.size,
             movements.size,
             year1Enrolled.size - activeOnSameOffer.size - movements.size,
         )
-    )
-    sys.stdout.flush()
-
-
-
-studentMovements("data_transformation/data/2015_students.pickle", "data_transformation/data/2016_students.pickle")

@@ -9,11 +9,10 @@ const {
   deleteAllCharts,
   transformData,
 } = require("../../controllers/master/chart");
-const transformationValidation = require("../../middleware/transformation-validation");
 
 const chartsMasterRouter = express.Router();
 
-chartsMasterRouter.post("/transform", transformationValidation, transformData);
+chartsMasterRouter.post("/transform", transformData);
 
 chartsMasterRouter.get("/", getAllCharts);
 chartsMasterRouter.get("/:id", getChart);

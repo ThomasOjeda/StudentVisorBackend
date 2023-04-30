@@ -1,12 +1,12 @@
-const { MONGO_URI, MONGO_PORT, PORT } = require("./config/config");
+const { MONGO_URI, PORT } = require("./config/config");
 const connectDB = require("./db/connect");
 const express = require("express");
 require("dotenv").config();
 require("express-async-errors");
-const apiRouter = require("./routes/api");
-const masterRouter = require("./routes/master/masterRouter")
-const notFound = require("./controllers/not-found");
-const errorHandler = require("./middleware/error-handler");
+const apiRouter = require("./apiv1/routes/api");
+const masterRouter = require("./apimaster/routes/masterRouter")
+const resourceNotFound = require("./resource-not-found");
+const errorHandler = require("./error-handler");
 const app = express();
 
 app.use(express.json());
@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1", apiRouter);
 app.use("/master", masterRouter)
 
-app.use(notFound);
+app.use(resourceNotFound);
 app.use(errorHandler);
 
 const start = async () => {

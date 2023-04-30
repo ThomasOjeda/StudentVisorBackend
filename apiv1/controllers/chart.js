@@ -1,6 +1,6 @@
-const chart = require("../models/chart");
-const user = require("../models/user");
-const { NotFound } = require("../errors/errors-index");
+const chart = require("../../models/chart");
+const user = require("../../models/user");
+const { NotFound } = require("../../errors/errors-index");
 const { StatusCodes } = require("http-status-codes");
 
 const getAllCharts = async (req, res) => {

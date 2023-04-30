@@ -1,7 +1,7 @@
-const user = require("../models/user");
+const user = require("../../models/user");
 const { StatusCodes } = require("http-status-codes");
-const { BadRequest } = require("../errors/errors-index");
-const { Unauthorized } = require("../errors/errors-index");
+const { BadRequest } = require("../../errors/errors-index");
+const { Unauthorized } = require("../../errors/errors-index");
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");

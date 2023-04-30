@@ -1,5 +1,4 @@
 const chart = require("../../models/chart");
-const studentFileMetadata = require("../../models/student-file-metadata")
 const { NotFound, BadRequest } = require("../../errors/errors-index");
 const { StatusCodes } = require("http-status-codes");
 const { PythonShell } = require("python-shell");

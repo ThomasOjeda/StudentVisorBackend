@@ -1,6 +1,6 @@
-const { JWT_SECRET } = require("../config/config");
+const { JWT_SECRET } = require("../../config/config");
 const jwt = require("jsonwebtoken");
-const { Unauthorized, BadRequest } = require("../errors/errors-index");
+const { Unauthorized, BadRequest } = require("../../errors/errors-index");
 const authentication = async (req, res, next) => {
   if (
     !req.headers.authorization ||

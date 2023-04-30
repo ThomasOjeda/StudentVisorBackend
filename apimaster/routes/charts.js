@@ -7,12 +7,13 @@ const {
   createChart,
   deleteChart,
   deleteAllCharts,
-  transformData,
-} = require("../../controllers/master/chart");
+} = require("../controllers/chart");
+
+const transformationHandler = require("../controllers/transformation-main-handler")
 
 const chartsMasterRouter = express.Router();
 
-chartsMasterRouter.post("/transform", transformData);
+chartsMasterRouter.post("/transform", transformationHandler);
 
 chartsMasterRouter.get("/", getAllCharts);
 chartsMasterRouter.get("/:id", getChart);

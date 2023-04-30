@@ -7,7 +7,7 @@ const {
   createStudentFile,
   deleteStudentFile,
   deleteAllStudentFiles
-} = require("../../controllers/master/student-file-metadata.js");
+} = require("../controllers/student-file-metadata.js");
 
 const studentFilesMetadataMasterRouter = express.Router();
 

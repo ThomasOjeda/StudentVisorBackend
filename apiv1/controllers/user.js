@@ -1,6 +1,6 @@
-const user = require("../models/user");
+const user = require("../../models/user");
 const { StatusCodes } = require("http-status-codes");
-const {NotFound} = require('../errors/errors-index')
+const {NotFound} = require('../../errors/errors-index')
 
 const getAllUsers = async (req, res) => {
   const resultUsers = await user.find({});

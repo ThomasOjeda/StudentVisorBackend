@@ -1,11 +1,12 @@
 import sys
 import json
-from transformations.student_movements.studentMovements import studentMovements
+from transformations.student_movements.student_movements import studentMovements
+from transformations.student_enrollments.student_enrollments import studentEnrollments
 
 request = json.loads(sys.argv[1])
 
 if (request['type'] == 'st-mv'):
-    print(studentMovements("data_transformation/data/2015_students.pickle", "data_transformation/data/2016_students.pickle"))
+    print(studentMovements(request['yearAPath'],request['yearBPath']))
 
 if (request['type'] == 'insc'):
-    print(request['type'])
+    print(studentEnrollments(request['yearPath']))

@@ -6,8 +6,9 @@ const nameMaxLength = 30;
 const ChartSchema = new mongoose.Schema(
   {
     name: {
-      required: [true, "must provide a name"],
       type: String,
+      required: [true, "must provide a name"],
+      unique: true,
       trim: true,
       maxlength: [
         nameMaxLength,

@@ -8,17 +8,17 @@ const StudentFileMetadataSchema = new mongoose.Schema(
     year: {
       type: Number,
       required: [true, "must provide a year"],
+      unique: true,
       min: [MIN_YEAR, `must provide a year after ${MIN_YEAR}`],
       max: [MAX_YEAR, `must provide a year before ${MAX_YEAR}`],
-      unique: true,
     },
     filename: {
       type: String,
       required: [true, "must provide a filename"],
     },
-    filepath: {
+    folder: {
       type: String,
-      required: [true, "must provide a filepath"],
+      required: [true, "must provide a folder"],
     },
   },
   { timestamps: true }

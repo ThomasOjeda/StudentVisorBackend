@@ -5,15 +5,23 @@ const handlerDict = {
   "insc": require("./transformation-handlers/student-inscriptions-handler"),
 };
 
-const transformationHandler = (req, res) => {
+
+const transformationHandler = async (req, res) => {
+
+
+  
+
   if (!req.body.transformation)
     throw new BadRequest("Transformation object not found in request");
+
+  if (!req.body.transformation.name)
+    throw new BadRequest("Name not found in transformation");
 
   const handler = handlerDict[req.body.transformation.type];
   if (handler == undefined)
     throw new NotFound("Transformation type is non-existant");
 
-  handler(req,res);
+  await handler(req, res);
 };
 
 module.exports = transformationHandler;

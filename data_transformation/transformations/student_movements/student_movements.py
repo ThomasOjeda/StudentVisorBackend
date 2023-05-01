@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import sys
+import json
 
 def studentMovements(year1Filename, year2Filename):
 
@@ -26,9 +26,12 @@ def studentMovements(year1Filename, year2Filename):
         "DOCUMENTO"
     ].unique()
 
-    return "year1Enrolled {}, Same offer {}, Movements {}, No data {}".format(
-            year1Enrolled.size,
-            activeOnSameOffer.size,
-            movements.size,
-            year1Enrolled.size - activeOnSameOffer.size - movements.size,
-        )
+    returnDict = {
+        "Enrolled" : year1Enrolled.size,
+        "Reenrolled" : activeOnSameOffer.size,
+        "Movements": movements.size,
+        "NoData" : year1Enrolled.size - activeOnSameOffer.size - movements.size
+    }
+
+    return json.dumps(returnDict)
+

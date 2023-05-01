@@ -1,13 +1,12 @@
 const chart = require("../../models/chart");
 const { NotFound, BadRequest } = require("../../errors/errors-index");
 const { StatusCodes } = require("http-status-codes");
-const { PythonShell } = require("python-shell");
 
 const getAllCharts = async (req, res) => {
   resultCharts = await chart.find({});
   res
     .status(StatusCodes.OK)
-    .json({ success: true, result: resultCharts, nHits: resultCharts.length});
+    .json({ success: true, result: resultCharts, nHits: resultCharts.length });
 };
 
 const getChart = async (req, res) => {
@@ -49,25 +48,6 @@ const deleteAllCharts = async (req, res) => {
     .json({ success: true, nHits: result.deletedCount });
 };
 
-const transformData = async (req,res) => {
-
-
-  let pythonCallOptions = {
-    mode: 'text',
-    args: [JSON.stringify(req.body.transformation)]
-  };
-
-  try {
-    result = (await PythonShell.run('data_transformation/data-transformation.py', pythonCallOptions))[0]
-    res.status(StatusCodes.CREATED).json({success: true, message: result})
-
-  } catch (error) {
-    throw new BadRequest(error)
-  }
-
-
-}
-
 module.exports = {
   getAllCharts,
   getChart,
@@ -75,5 +55,4 @@ module.exports = {
   createChart,
   deleteChart,
   deleteAllCharts,
-  transformData
 };

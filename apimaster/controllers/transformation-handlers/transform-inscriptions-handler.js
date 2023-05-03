@@ -4,28 +4,20 @@ const studentFileMetadata = require("../../../models/student-file-metadata");
 const { PythonShell } = require("python-shell");
 const chart = require("../../../models/chart");
 
-const studentMovementsHandler = async (req, res) => {
-  if (!req.body.transformation.yearA || !req.body.transformation.yearB)
+const studentInscriptionsHandler = async (req, res) => {
+  if (!req.body.transformation.year)
     throw new BadRequest("Transformation object is malformed");
 
-  yearAMetadata = await studentFileMetadata.findOne({
-    year: req.body.transformation.yearA,
+  yearMetadata = await studentFileMetadata.findOne({
+    year: req.body.transformation.year,
   });
 
-  yearBMetadata = await studentFileMetadata.findOne({
-    year: req.body.transformation.yearB,
-  });
+  if (!yearMetadata)
+    throw new BadRequest("Requested year is not available");
 
-  if (!yearAMetadata || !yearBMetadata)
-    throw new BadRequest("Requested years are not available");
-
-  req.body.transformation.yearAPath = yearAMetadata.folder.concat(
+  req.body.transformation.yearPath = yearMetadata.folder.concat(
     "/",
-    yearAMetadata.filename
-  );
-  req.body.transformation.yearBPath = yearBMetadata.folder.concat(
-    "/",
-    yearBMetadata.filename
+    yearMetadata.filename
   );
 
   let pythonCallOptions = {
@@ -35,7 +27,7 @@ const studentMovementsHandler = async (req, res) => {
 
   result = (
     await PythonShell.run(
-      "data_transformation/data-transformation.py",
+      "./data_transformation/data-transformation.py",
       pythonCallOptions
     )
   )[0];
@@ -47,4 +39,4 @@ const studentMovementsHandler = async (req, res) => {
   res.status(StatusCodes.CREATED).json({ success: true });
 };
 
-module.exports = studentMovementsHandler;
+module.exports = studentInscriptionsHandler;

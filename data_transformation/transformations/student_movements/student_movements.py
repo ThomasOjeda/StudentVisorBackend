@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import json
-
+import sys 
 def studentMovements(year1Filename, year2Filename):
 
     table1 = pd.read_pickle(year1Filename)
@@ -18,6 +18,10 @@ def studentMovements(year1Filename, year2Filename):
 
     activeOnSameOffer = activeOnSameOffer["DOCUMENTO"].unique()
 
+    #print(activeOnAnyOffer.type)
+
+    #print(activeOnSameOffer.type)
+
     movements = np.setdiff1d(activeOnAnyOffer, activeOnSameOffer)
 
     year1Enrolled = pd.read_pickle(year1Filename)
@@ -33,5 +37,8 @@ def studentMovements(year1Filename, year2Filename):
         "NoData" : year1Enrolled.size - activeOnSameOffer.size - movements.size
     }
 
+    #print(returnDict)
+
     return json.dumps(returnDict)
 
+#studentMovements(sys.argv[1],sys.argv[2])

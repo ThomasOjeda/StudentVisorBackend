@@ -1,11 +1,8 @@
 import pandas as pd
+import sys
 
-def toPickle(original,destination):
-    data = pd.read_excel(original,
-                        usecols=["UNIDAD","CARRERA","DOCUMENTO","TIPO.1"])
-    
-    data.rename(columns={'TIPO.1':'TIPO_DOC'},inplace=True)
-    data.to_pickle(destination)
+data = pd.read_excel(sys.argv[1],
+                     usecols=["UNIDAD", "CARRERA", "DOCUMENTO", "TIPO.1"],dtype={"UNIDAD":str,"CARRERA":str,"DOCUMENTO":str,"TIPO.1":str})
 
-
-toPickle('./data_transformation/data/2016_students.xlsx','./data_transformation/data/2016_students.pickle')
+data.rename(columns={'TIPO.1': 'TIPO_DOC'}, inplace=True)
+data.to_pickle(sys.argv[2])

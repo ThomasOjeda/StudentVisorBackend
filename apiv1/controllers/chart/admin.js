@@ -1,8 +1,3 @@
-const chart = require("../../models/chart");
-const user = require("../../models/user");
-const { NotFound } = require("../../errors/errors-index");
-const { StatusCodes } = require("http-status-codes");
-
 const getAllCharts = async (req, res) => {
   const userData = await user.findOne({ email: req.userData.email });
   if (!userData) throw NotFound("The requested resource was not found");
@@ -11,6 +6,7 @@ const getAllCharts = async (req, res) => {
   let requestedCharts = [];
 
   for (const tag of userTags) {
+    //PODRIA HACERSE DE OTRA MANERA CON UNA FUNCION DE MONGO?
     result = await chart.find({ tags: tag });
 
     for (el of result) {
@@ -47,11 +43,6 @@ const updateChart = async (req, res) => {
   res.status(StatusCodes.OK).json({ success: true, result: resultChart });
 };
 
-const createChart = async (req, res) => {
-  created = await chart.create(req.body);
-  res.status(StatusCodes.CREATED).json({ success: true, result: created });
-};
-
 const deleteChart = async (req, res) => {
   const { id: chartId } = req.params;
   result = await chart.deleteOne({ _id: chartId });
@@ -73,7 +64,6 @@ module.exports = {
   getAllCharts,
   getChart,
   updateChart,
-  createChart,
   deleteChart,
   deleteAllCharts,
 };

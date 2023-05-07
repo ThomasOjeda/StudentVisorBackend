@@ -1,10 +1,10 @@
 const express = require("express");
 
-const { chartsMasterRouter } = require("./chart");
-const { usersMasterRouter } = require("./user");
-const { studentFilesMetadataMasterRouter } = require("./student-file-metadata");
-const { transformationsMasterRouter } = require("./transformation");
-const { uploadsMasterRouter } = require("./upload")
+const chartsMasterRouter = require("./chart");
+const usersMasterRouter = require("./user");
+const studentFilesMetadataMasterRouter = require("./student-file-metadata");
+const transformationsMasterRouter = require("./transformation");
+const uploadsMasterRouter = require("./upload")
 
 const masterAuthentication = require("../middleware/master-authentication");
 

@@ -6,4 +6,4 @@ const transformationsMasterRouter = express.Router();
 
 transformationsMasterRouter.post("/", transformationHandler);
 
-module.exports = { transformationsMasterRouter };
+module.exports = transformationsMasterRouter;

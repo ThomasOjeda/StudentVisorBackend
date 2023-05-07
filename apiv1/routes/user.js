@@ -14,4 +14,4 @@ usersRouter.get("/:id", getUser);
 usersRouter.patch("/:id", updateUser);
 usersRouter.delete("/:id", deleteUser);
 
-module.exports = { usersRouter };
+module.exports = usersRouter;

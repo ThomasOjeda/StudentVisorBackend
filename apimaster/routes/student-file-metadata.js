@@ -18,4 +18,4 @@ studentFilesMetadataMasterRouter.post("/", createStudentFile);
 studentFilesMetadataMasterRouter.delete("/:id", deleteStudentFile);
 studentFilesMetadataMasterRouter.delete("/", deleteAllStudentFiles);
 
-module.exports = { studentFilesMetadataMasterRouter };
+module.exports = studentFilesMetadataMasterRouter;

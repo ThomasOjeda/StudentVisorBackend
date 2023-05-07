@@ -43,4 +43,4 @@ const uploadMainHandler = async (req, res) => {
   await handlers[req.body.fileType](req, res, tempFilename);
 };
 
-module.exports = { uploadMainHandler };
+module.exports = uploadMainHandler;

@@ -18,4 +18,4 @@ chartsMasterRouter.patch("/:id", updateChart);
 chartsMasterRouter.delete("/:id", deleteChart);
 chartsMasterRouter.delete("/", deleteAllCharts);
 
-module.exports = { chartsMasterRouter };
+module.exports = chartsMasterRouter;

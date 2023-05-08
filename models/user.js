@@ -21,6 +21,11 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: [true, "must provide a password"],
     },
+    role: {
+      type: String,
+      required: [true, "must provide a role"],
+      default: ["user"]
+    },
     tags: {
       type: [String],
       required: [true, "must provide a tag"],

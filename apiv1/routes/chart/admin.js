@@ -14,7 +14,8 @@ adminChartRouter.get("/",getAllCharts);
 
 adminChartRouter.get("/:id", getChart);
 
-adminChartRouter.patch("/:id", updateChart);
+adminChartRouter.patch("/:id", updateChart)
+
 adminChartRouter.delete("/:id",deleteChart)
 
 //peligroso que el admin pueda borrar todo

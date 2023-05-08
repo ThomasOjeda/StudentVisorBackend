@@ -1,6 +1,11 @@
+const user = require("../../../models/user")
+const chart = require("../../../models/chart")
+const { StatusCodes } = require("http-status-codes")
+const { NotFound } = require("../../../errors/errors-index")
+
 const getAllCharts = async (req, res) => {
   const userData = await user.findOne({ email: req.userData.email });
-  if (!userData) throw NotFound("The requested resource was not found");
+  if (!userData) throw new NotFound("The requested resource was not found");
 
   const userTags = userData.tags;
   let requestedCharts = [];
@@ -28,8 +33,16 @@ const getAllCharts = async (req, res) => {
 
 const getChart = async (req, res) => {
   const { id: chartId } = req.params;
-  resultChart = await chart.findOne({ _id: chartId });
-  if (!resultChart) throw new NotFound(`No chart with id : ${chartId}`);
+  const resultChart = await chart.findOne({ _id: chartId });
+  if (!resultChart) throw new NotFound("The requested chart was not found");
+  
+  const userData = await user.findOne({ email: req.userData.email });
+  if (!userData) throw new NotFound("The requested chart was not found");
+
+  console.log(userData.tags.filter(value => resultChart.tags.includes(value)))
+  if (userData.tags.filter(value => resultChart.tags.includes(value)).length <= 0)
+    throw new NotFound("The requested chart was not found");
+
   res.status(StatusCodes.OK).json({ success: true, result: resultChart });
 };
 

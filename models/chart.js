@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-const tagMaxLength = 15;
 const nameMaxLength = 30;
 
 const ChartSchema = new mongoose.Schema(
@@ -8,7 +7,6 @@ const ChartSchema = new mongoose.Schema(
     name: {
       type: String,
       required: [true, "must provide a name"],
-      unique: true,
       trim: true,
       maxlength: [
         nameMaxLength,

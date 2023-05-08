@@ -2,6 +2,8 @@ const user = require("../../models/user");
 const { StatusCodes } = require("http-status-codes");
 const {NotFound} = require('../../errors/errors-index')
 
+////AQUI; COMPLETAR API DE USERS PARA LOS ADMINS:
+
 const getAllUsers = async (req, res) => {
   const resultUsers = await user.find({});
   res

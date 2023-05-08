@@ -1,6 +1,8 @@
 const user = require("../../models/user");
 const { StatusCodes } = require("http-status-codes");
-const {NotFound} = require('../../errors/errors-index')
+const {NotFound,BadRequest} = require('../../errors/errors-index')
+const bcrypt = require("bcrypt");
+
 
 const getAllUsers = async (req, res) => {
   const resultUsers = await user.find({});
@@ -17,6 +19,15 @@ const getUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ success: true, result: resultUser });
 };
 
+const createUser = async (req, res) => {
+  try {
+    req.body.password = await bcrypt.hash(req.body.password, 10);
+  } catch (err) {
+    throw new BadRequest("Please provide a password");
+  }
+  created = await user.create(req.body);
+  res.status(StatusCodes.CREATED).json({ success: true, result: created });
+};
 
 const updateUser = async (req, res) => {
   const { id: userId } = req.params;
@@ -39,4 +50,12 @@ const deleteUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ success: true });
 };
 
-module.exports = { getAllUsers , getUser, updateUser, deleteUser};
+
+const deleteAllUsers = async (req, res) => {
+  result = await user.deleteMany({});
+  res
+    .status(StatusCodes.OK)
+    .json({ success: true, nHits: result.deletedCount });
+};
+
+module.exports = { getAllUsers , getUser, createUser, updateUser, deleteUser, deleteAllUsers};

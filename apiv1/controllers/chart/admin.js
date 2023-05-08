@@ -1,29 +1,11 @@
+const chart = require("../../../models/chart");
+const { StatusCodes } = require("http-status-codes");
+
 const getAllCharts = async (req, res) => {
-  const userData = await user.findOne({ email: req.userData.email });
-  if (!userData) throw NotFound("The requested resource was not found");
-
-  const userTags = userData.tags;
-  let requestedCharts = [];
-
-  for (const tag of userTags) {
-    //PODRIA HACERSE DE OTRA MANERA CON UNA FUNCION DE MONGO?
-    result = await chart.find({ tags: tag });
-
-    for (el of result) {
-      if (
-        requestedCharts.findIndex((c) => {
-          return c._id.equals(el._id);
-        }) <= -1
-      )
-        requestedCharts.push(el);
-    }
-  }
-
-  res.status(StatusCodes.OK).json({
-    success: true,
-    result: requestedCharts,
-    nHits: requestedCharts.length,
-  });
+  resultCharts = await chart.find({});
+  res
+    .status(StatusCodes.OK)
+    .json({ success: true, result: resultCharts, nHits: resultCharts.length });
 };
 
 const getChart = async (req, res) => {
@@ -35,7 +17,12 @@ const getChart = async (req, res) => {
 
 const updateChart = async (req, res) => {
   const { id: chartId } = req.params;
-  const resultChart = await chart.findOneAndUpdate({ _id: chartId }, req.body, {
+  const updated = {}
+  if (req.body.name)
+    updated.name = req.body.name
+  if (req.body.tags)
+    updated.tags = req.body.tags
+  const resultChart = await chart.findOneAndUpdate({ _id: chartId }, updated, {
     new: true,
     runValidators: true,
   });

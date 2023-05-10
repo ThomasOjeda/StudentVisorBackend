@@ -1,16 +1,16 @@
-const { BadRequest } = require("../../errors/errors-index");
+const { BadRequest, NotFound } = require("../../errors/errors-index");
 const multer = require("multer");
 const util = require("util");
 const fs = require("fs/promises");
 const { v4: uuidv4 } = require("uuid");
+const studentFileMetadata = require("../../models/student-file-metadata");
+const { StatusCodes } = require("http-status-codes");
 
 const handlers = {
   "student-inscriptions": require("./upload-handlers/upload-inscriptions-handler"),
 };
 
 const uploadMainHandler = async (req, res) => {
-
-
   tempFilename = uuidv4();
 
   const storage = multer.diskStorage({
@@ -25,7 +25,7 @@ const uploadMainHandler = async (req, res) => {
   result = await uploadPromise(req, res);
 
   if (result !== undefined) {
-    throw result
+    throw result;
   }
 
   if (!req.body.fileType) {
@@ -43,4 +43,15 @@ const uploadMainHandler = async (req, res) => {
   await handlers[req.body.fileType](req, res, tempFilename);
 };
 
-module.exports = uploadMainHandler;
+const deleteFile = async (req, res) => {
+  const { id: fileId } = req.params;
+  let result = await studentFileMetadata.findOneAndDelete({ _id: fileId });
+
+  if (!result) throw new NotFound(`No file with id : ${fileId}`);
+
+  await fs.unlink(result.folder + "/" + result.filename);
+
+  res.status(StatusCodes.OK).json({ success: true });
+};
+
+module.exports = { uploadMainHandler, deleteFile };

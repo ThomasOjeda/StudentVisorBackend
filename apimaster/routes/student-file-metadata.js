@@ -1,21 +1,21 @@
 const express = require("express");
 
 const {
-  getAllStudentFiles,
-  getStudentFile,
-  updateStudentFile,
-  createStudentFile,
-  deleteStudentFile,
-  deleteAllStudentFiles
+  getAllStudentFileMetadata,
+  getStudentFileMetadata,
+  updateStudentFileMetadata,
+  createStudentFileMetadata,
+  deleteStudentFileMetadata,
+  deleteAllStudentFilesMetadata
 } = require("../controllers/student-file-metadata.js");
 
 const studentFilesMetadataMasterRouter = express.Router();
 
-studentFilesMetadataMasterRouter.get("/", getAllStudentFiles);
-studentFilesMetadataMasterRouter.get("/:id", getStudentFile);
-studentFilesMetadataMasterRouter.patch("/:id", updateStudentFile);
-studentFilesMetadataMasterRouter.post("/", createStudentFile);
-studentFilesMetadataMasterRouter.delete("/:id", deleteStudentFile);
-studentFilesMetadataMasterRouter.delete("/", deleteAllStudentFiles);
+studentFilesMetadataMasterRouter.get("/", getAllStudentFileMetadata);
+studentFilesMetadataMasterRouter.get("/:id", getStudentFileMetadata);
+studentFilesMetadataMasterRouter.patch("/:id", updateStudentFileMetadata);
+studentFilesMetadataMasterRouter.post("/", createStudentFileMetadata);
+studentFilesMetadataMasterRouter.delete("/:id", deleteStudentFileMetadata);
+studentFilesMetadataMasterRouter.delete("/", deleteAllStudentFilesMetadata);
 
 module.exports = studentFilesMetadataMasterRouter;

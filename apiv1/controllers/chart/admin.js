@@ -1,5 +1,6 @@
 const chart = require("../../../models/chart");
 const { StatusCodes } = require("http-status-codes");
+const { NotFound } = require("../../../errors/errors-index");
 
 const getAllCharts = async (req, res) => {
   resultCharts = await chart.find({});

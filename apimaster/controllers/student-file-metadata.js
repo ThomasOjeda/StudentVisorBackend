@@ -2,21 +2,21 @@ const studentFileMetadata = require("../../models/student-file-metadata");
 const { NotFound } = require("../../errors/errors-index");
 const { StatusCodes } = require("http-status-codes");
 
-const getAllStudentFiles = async (req, res) => {
+const getAllStudentFileMetadata = async (req, res) => {
   resultFiles = await studentFileMetadata.find({});
   res
     .status(StatusCodes.OK)
     .json({ success: true, result: resultFiles, nHits: resultFiles.length });
 };
 
-const getStudentFile = async (req, res) => {
+const getStudentFileMetadata = async (req, res) => {
   const { id: fileId } = req.params;
   resultFile = await studentFileMetadata.findOne({ _id: fileId });
   if (!resultFile) throw new NotFound(`No file with id : ${fileId}`);
   res.status(StatusCodes.OK).json({ success: true, result: resultFile });
 };
 
-const updateStudentFile = async (req, res) => {
+const updateStudentFileMetadata = async (req, res) => {
   const { id: fileId } = req.params;
   const resultFile = await studentFileMetadata.findOneAndUpdate(
     { _id: fileId },
@@ -30,12 +30,12 @@ const updateStudentFile = async (req, res) => {
   res.status(StatusCodes.OK).json({ success: true, result: resultFile });
 };
 
-const createStudentFile = async (req, res) => {
+const createStudentFileMetadata = async (req, res) => {
   created = await studentFileMetadata.create(req.body);
   res.status(StatusCodes.CREATED).json({ success: true, result: created });
 };
 
-const deleteStudentFile = async (req, res) => {
+const deleteStudentFileMetadata = async (req, res) => {
   const { id: fileId } = req.params;
   result = await studentFileMetadata.deleteOne({ _id: fileId });
 
@@ -44,7 +44,7 @@ const deleteStudentFile = async (req, res) => {
   res.status(StatusCodes.OK).json({ success: true });
 };
 
-const deleteAllStudentFiles = async (req, res) => {
+const deleteAllStudentFilesMetadata = async (req, res) => {
   result = await studentFileMetadata.deleteMany({});
   res
     .status(StatusCodes.OK)
@@ -52,10 +52,10 @@ const deleteAllStudentFiles = async (req, res) => {
 };
 
 module.exports = {
-  getAllStudentFiles,
-  getStudentFile,
-  updateStudentFile,
-  createStudentFile,
-  deleteStudentFile,
-  deleteAllStudentFiles,
+  getAllStudentFileMetadata,
+  getStudentFileMetadata,
+  updateStudentFileMetadata,
+  createStudentFileMetadata,
+  deleteStudentFileMetadata,
+  deleteAllStudentFilesMetadata,
 };

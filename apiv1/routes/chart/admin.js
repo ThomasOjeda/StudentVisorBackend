@@ -5,7 +5,8 @@ const {
     getChart,
     updateChart,
     deleteChart,
-    deleteAllCharts
+    deleteAllCharts,
+
 } = require("../../controllers/chart/admin")
 
 const adminChartRouter = express.Router();

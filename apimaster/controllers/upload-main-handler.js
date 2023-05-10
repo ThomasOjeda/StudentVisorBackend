@@ -12,7 +12,6 @@ const handlers = {
 
 const uploadMainHandler = async (req, res) => {
   tempFilename = uuidv4();
-
   const storage = multer.diskStorage({
     destination: "./temp-files",
     filename: function (req, file, cb) {
@@ -27,13 +26,13 @@ const uploadMainHandler = async (req, res) => {
   if (result !== undefined) {
     throw result;
   }
-
+  if (!req.file) {
+    throw new BadRequest("File not found in request");
+  }
   if (!req.body.fileType) {
     await fs.unlink("./temp-files/" + tempFilename);
-
     throw new BadRequest("File type not found in request");
   }
-
   const handler = handlers[req.body.fileType];
   if (handler == undefined) {
     await fs.unlink("./temp-files/" + tempFilename);

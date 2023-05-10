@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.use("/charts", authentication, chartsRouter);
 router.use("/users", authentication, authorization("admin"), usersRouter);
-router.use("/uploads", authentication, authorization("admin"), uploadsRouter); ///TEST THEM FROM HERE
+router.use("/uploads", authentication, authorization("admin"), uploadsRouter);
 router.use(
   "/transformations",
   authentication,

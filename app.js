@@ -1,6 +1,7 @@
 const { MONGO_URI, PORT } = require("./config/config");
 const connectDB = require("./db/connect");
 const express = require("express");
+const cors = require("cors");
 require("dotenv").config();
 require("express-async-errors");
 const apiRouter = require("./apiv1/routes/api");
@@ -9,8 +10,11 @@ const resourceNotFound = require("./resource-not-found");
 const errorHandler = require("./error-handler");
 const app = express();
 
+app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(express.static('dist/student-visor-frontend'));
 
 app.use("/api/v1", apiRouter);
 app.use("/master", masterRouter)

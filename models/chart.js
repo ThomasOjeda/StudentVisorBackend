@@ -15,8 +15,12 @@ const ChartSchema = new mongoose.Schema(
     },
     tags: {
       type: [String],
-      required: [true,"must provide a tag"],
-      default: ['public']
+      required: [true, "must provide a tag"],
+      default: ["public"],
+    },
+    type: {
+      type: String,
+      required: [true, "must provide a type"],
     },
     structure: {
       required: [true, "must provide an structure"],

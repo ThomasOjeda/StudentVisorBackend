@@ -1,8 +1,9 @@
 const { BadRequest, NotFound } = require("../../errors/errors-index");
+const TransformationType = require("../../models/transformation-types")
 
 const handlers = {
-  "st-mv": require("./transformation-handlers/transform-movements-handler"),
-  "insc": require("./transformation-handlers/transform-inscriptions-handler"),
+  [TransformationType.STMV]: require("./transformation-handlers/transform-movements-handler"),
+  [TransformationType.INSC]: require("./transformation-handlers/transform-inscriptions-handler"),
 };
 
 const transformationHandler = async (req, res) => {

@@ -3,6 +3,7 @@ const { BadRequest } = require("../../../errors/errors-index");
 const studentFileMetadata = require("../../../models/student-file-metadata");
 const { PythonShell } = require("python-shell");
 const chart = require("../../../models/chart");
+const TransformationType = require("../../../models/transformation-types");
 
 const studentInscriptionsHandler = async (req, res) => {
   if (!req.body.transformation.year)
@@ -12,8 +13,7 @@ const studentInscriptionsHandler = async (req, res) => {
     year: req.body.transformation.year,
   });
 
-  if (!yearMetadata)
-    throw new BadRequest("Requested year is not available");
+  if (!yearMetadata) throw new BadRequest("Requested year is not available");
 
   req.body.transformation.yearPath = yearMetadata.folder.concat(
     "/",
@@ -34,7 +34,11 @@ const studentInscriptionsHandler = async (req, res) => {
 
   result = JSON.parse(result);
 
-  await chart.create({ name: req.body.transformation.name, structure: result });
+  await chart.create({
+    name: req.body.transformation.name,
+    type: TransformationType.INSC,
+    structure: result,
+  });
 
   res.status(StatusCodes.CREATED).json({ success: true });
 };

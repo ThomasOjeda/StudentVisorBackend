@@ -3,9 +3,9 @@ const { BadRequest } = require("../../../errors/errors-index");
 const studentFileMetadata = require("../../../models/student-file-metadata");
 const { PythonShell } = require("python-shell");
 const chart = require("../../../models/chart");
+const TransformationType = require("../../../models/transformation-types");
 
 const studentMovementsHandler = async (req, res) => {
-
   if (!req.body.transformation.yearA || !req.body.transformation.yearB)
     throw new BadRequest("Transformation object is malformed");
 
@@ -43,7 +43,11 @@ const studentMovementsHandler = async (req, res) => {
 
   result = JSON.parse(result);
 
-  await chart.create({ name: req.body.transformation.name, structure: result });
+  await chart.create({
+    name: req.body.transformation.name,
+    type: TransformationType.STMV,
+    structure: result,
+  });
 
   res.status(StatusCodes.CREATED).json({ success: true });
 };

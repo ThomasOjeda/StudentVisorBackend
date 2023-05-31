@@ -13,10 +13,7 @@ const getOtherUsers = async (req, res) => {
 };
 
 const getAllUsers = async (req, res) => {
-  const resultUsers = await user.find(
-    { email: { $ne: req.userData.email } },
-    "-password -__v"
-  );
+  const resultUsers = await user.find({}, "-password -__v");
   res
     .status(StatusCodes.OK)
     .json({ success: true, result: resultUsers, nHits: resultUsers.length });
@@ -79,7 +76,9 @@ const safeDeleteUser = async (req, res) => {
   });
 
   if (result.deletedCount <= 0)
-    throw new NotFound(`No user with id : ${userId}, or trying to delete your own user`);
+    throw new NotFound(
+      `No user with id : ${userId}, or trying to delete your own user`
+    );
   res.status(StatusCodes.OK).json({ success: true });
 };
 

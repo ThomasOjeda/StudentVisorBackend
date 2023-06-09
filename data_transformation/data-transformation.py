@@ -5,8 +5,8 @@ from transformations.student_enrollments.student_enrollments import studentEnrol
 
 request = json.loads(sys.argv[1])
 
-if (request['type'] == 'st-mv'):
-    print(studentMovements(request['yearAPath'],request['yearBPath']))
+if (request['transformationHeader']['type'] == 'STMV'):
+    print(studentMovements(request['transformationBody']['yearAPath'],request['transformationBody']['yearBPath']))
 
-if (request['type'] == 'insc'):
-    print(studentEnrollments(request['yearPath']))
+if (request['transformationHeader']['type'] == 'INSC'):
+    print(studentEnrollments(request['transformationBody']['yearPath']))

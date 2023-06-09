@@ -6,23 +6,23 @@ const chart = require("../../../models/chart");
 const TransformationType = require("../../../models/transformation-types");
 
 const studentInscriptionsHandler = async (req, res) => {
-  if (!req.body.transformation.year)
-    throw new BadRequest("Transformation object is malformed");
+  if (!req.body.transformationBody.year)
+    throw new BadRequest("Student inscriptions transformations require a year in the transformation body");
 
   yearMetadata = await studentFileMetadata.findOne({
-    year: req.body.transformation.year,
+    year: req.body.transformationBody.year,
   });
 
   if (!yearMetadata) throw new BadRequest("Requested year is not available");
 
-  req.body.transformation.yearPath = yearMetadata.folder.concat(
+  req.body.transformationBody.yearPath = yearMetadata.folder.concat(
     "/",
     yearMetadata.filename
   );
 
   let pythonCallOptions = {
     mode: "text",
-    args: [JSON.stringify(req.body.transformation)],
+    args: [JSON.stringify(req.body)],
   };
 
   result = (
@@ -35,8 +35,9 @@ const studentInscriptionsHandler = async (req, res) => {
   result = JSON.parse(result);
 
   await chart.create({
-    name: req.body.transformation.name,
+    name: req.body.transformationHeader.name,
     type: TransformationType.INSC,
+    tags: req.body.transformationHeader.tags,
     structure: result,
   });
 

@@ -1,23 +1,19 @@
 const express = require("express");
 
+const uploadsMasterRouter = require("./upload");
+const transformationsMasterRouter = require("./transformation");
 const chartsMasterRouter = require("./chart");
 const usersMasterRouter = require("./user");
 const studentFilesMetadataMasterRouter = require("./student-file-metadata");
-const transformationsMasterRouter = require("./transformation");
-const uploadsMasterRouter = require("./upload")
-
-const masterAuthentication = require("../middleware/master-authentication");
+const tagsMasterRouter = require("./tag");
 
 const masterRouter = express.Router();
 
-masterRouter.use("/uploads", uploadsMasterRouter)
+masterRouter.use("/uploads", uploadsMasterRouter);
 masterRouter.use("/transformations", transformationsMasterRouter);
-masterRouter.use("/charts", masterAuthentication, chartsMasterRouter);
-masterRouter.use("/users", masterAuthentication, usersMasterRouter);
-masterRouter.use(
-  "/studentfiles",
-  masterAuthentication,
-  studentFilesMetadataMasterRouter
-);
+masterRouter.use("/charts", chartsMasterRouter);
+masterRouter.use("/users", usersMasterRouter);
+masterRouter.use("/studentfiles", studentFilesMetadataMasterRouter);
+masterRouter.use("/tags", tagsMasterRouter);
 
 module.exports = masterRouter;

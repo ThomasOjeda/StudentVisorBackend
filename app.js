@@ -8,6 +8,7 @@ const apiRouter = require("./apiv1/routes/api");
 const masterRouter = require("./apimaster/routes/masterRouter")
 const resourceNotFound = require("./resource-not-found");
 const errorHandler = require("./error-handler");
+const masterAuthentication = require("./apimaster/middleware/master-authentication");
 const app = express();
 
 app.use(cors())
@@ -17,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('dist/student-visor-frontend'));
 
 app.use("/api/v1", apiRouter);
-app.use("/master", masterRouter)
+app.use("/master", masterAuthentication, masterRouter)
 
 app.use(resourceNotFound);
 app.use(errorHandler);

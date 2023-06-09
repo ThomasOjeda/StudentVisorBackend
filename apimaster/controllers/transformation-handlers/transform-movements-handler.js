@@ -6,32 +6,32 @@ const chart = require("../../../models/chart");
 const TransformationType = require("../../../models/transformation-types");
 
 const studentMovementsHandler = async (req, res) => {
-  if (!req.body.transformation.yearA || !req.body.transformation.yearB)
-    throw new BadRequest("Transformation object is malformed");
+  if (!req.body.transformationBody.yearA || !req.body.transformationBody.yearB)
+    throw new BadRequest("Student movements transformations require a yearA and yearB in the transformation body");
 
   yearAMetadata = await studentFileMetadata.findOne({
-    year: req.body.transformation.yearA,
+    year: req.body.transformationBody.yearA,
   });
 
   yearBMetadata = await studentFileMetadata.findOne({
-    year: req.body.transformation.yearB,
+    year: req.body.transformationBody.yearB,
   });
 
   if (!yearAMetadata || !yearBMetadata)
     throw new BadRequest("Requested years are not available");
 
-  req.body.transformation.yearAPath = yearAMetadata.folder.concat(
+  req.body.transformationBody.yearAPath = yearAMetadata.folder.concat(
     "/",
     yearAMetadata.filename
   );
-  req.body.transformation.yearBPath = yearBMetadata.folder.concat(
+  req.body.transformationBody.yearBPath = yearBMetadata.folder.concat(
     "/",
     yearBMetadata.filename
   );
 
   let pythonCallOptions = {
     mode: "text",
-    args: [JSON.stringify(req.body.transformation)],
+    args: [JSON.stringify(req.body)],
   };
 
   result = (
@@ -44,8 +44,9 @@ const studentMovementsHandler = async (req, res) => {
   result = JSON.parse(result);
 
   await chart.create({
-    name: req.body.transformation.name,
+    name: req.body.transformationHeader.name,
     type: TransformationType.STMV,
+    tags: req.body.transformationHeader.tags,
     structure: result,
   });
 

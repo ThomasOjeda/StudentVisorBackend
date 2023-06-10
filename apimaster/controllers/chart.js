@@ -18,7 +18,12 @@ const getChart = async (req, res) => {
 
 const updateChart = async (req, res) => {
   const { id: chartId } = req.params;
-  const resultChart = await chart.findOneAndUpdate({ _id: chartId }, req.body, {
+  const updated = {}
+  if (req.body.name)
+    updated.name = req.body.name
+  if (req.body.tags)
+    updated.tags = req.body.tags
+  const resultChart = await chart.findOneAndUpdate({ _id: chartId }, updated, {
     new: true,
     runValidators: true,
   });

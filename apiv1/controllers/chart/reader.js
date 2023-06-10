@@ -32,6 +32,7 @@ const getAllCharts = async (req, res) => {
 };
 
 const getChart = async (req, res) => {
+  //This function needs to check whether any tag of the chart is present in the user
   const { id: chartId } = req.params;
   const resultChart = await chart.findOne({ _id: chartId });
   if (!resultChart) throw new NotFound("The requested chart was not found");

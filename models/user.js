@@ -30,7 +30,6 @@ const UserSchema = new mongoose.Schema(
     tags: {
       type: [String],
       required: [true, "must provide a tag"],
-      default: ["public"],
     },
   },
   { timestamps: true }

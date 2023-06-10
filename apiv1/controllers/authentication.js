@@ -1,6 +1,6 @@
 const user = require("../../models/user");
 const { StatusCodes } = require("http-status-codes");
-const { BadRequest ,Unauthorized} = require("../../errors/errors-index");
+const { BadRequest, Unauthorized } = require("../../errors/errors-index");
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -40,9 +40,10 @@ const login = async (req, res) => {
     throw new Unauthorized("Authentication failed");
   }
 
-  res.status(StatusCodes.OK).json({ success: true, token: token });
+  res
+    .status(StatusCodes.OK)
+    .json({ success: true, token: token, role: userInfo.role });
 };
-
 
 const register = async (req, res) => {
   try {

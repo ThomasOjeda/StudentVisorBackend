@@ -6,7 +6,7 @@ const uploadsRouter = require("../../apimaster/routes/upload");
 const transformationsRouter = require("../../apimaster/routes/transformation");
 const studentFilesMetadataRouter = require("./student-file-metadata");
 const authRouter = require("./auth");
-const tagsRouter = require("./tag")
+const tagsRouter = require("./tag");
 const authentication = require("../middleware/authentication");
 const authorization = require("../middleware/authorization");
 
@@ -27,7 +27,7 @@ router.use(
   authorization("admin"),
   studentFilesMetadataRouter
 );
-router.use("/tags",authentication,authorization("admin"),tagsRouter)
+router.use("/tags", authentication, authorization("admin"), tagsRouter);
 router.use("/auth", authRouter);
 
 module.exports = router;

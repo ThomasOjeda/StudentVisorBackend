@@ -14,9 +14,8 @@ const TagsSchema = new mongoose.Schema(
       ],
     },
     description: {
-      type: [String],
+      type: String,
       required: [true, "must provide a description"],
-      default: ["public"],
     },
   },
   { timestamps: true }

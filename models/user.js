@@ -24,12 +24,12 @@ const UserSchema = new mongoose.Schema(
     role: {
       type: String,
       required: [true, "must provide a role"],
-      enum: ["reader","admin"],
-      default: ["reader"]
+      enum: ["reader", "admin"],
+      default: ["reader"],
     },
     tags: {
       type: [String],
-      required: [true, "must provide a tag"],
+      default: undefined,
     },
   },
   { timestamps: true }

@@ -30,7 +30,7 @@ const login = async (req, res) => {
       {
         email: userInfo.email,
         username: userInfo.username,
-        role: userInfo.role
+        role: userInfo.role,
       },
       process.env.JWT_SECRET,
       {
@@ -52,6 +52,18 @@ const register = async (req, res) => {
   } catch (err) {
     throw new BadRequest("Please provide a password");
   }
+  if (req.body.tags) {
+    //Check if tags are valid
+    for (const tag of req.body.tags) {
+      if (!(await tagDB.findOne({ _id: tag })))
+        throw new NotFound(`No tag with value : ${tag}`);
+    }
+    //Filter duplicates
+    req.body.tags = req.body.tags.filter(
+      (tag, index) => req.body.tags.indexOf(tag) === index
+    );
+  }
+
   created = await user.create(req.body);
   res.status(StatusCodes.CREATED).json({ success: true });
 };

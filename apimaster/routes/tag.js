@@ -6,6 +6,7 @@ const {
   createTag,
   updateTag,
   deleteTag,
+  consistentDeleteTag,
   deleteAllTags,
 } = require("../controllers/tag");
 
@@ -15,7 +16,8 @@ tagsMasterRouter.get("/", getAllTags);
 tagsMasterRouter.get("/:id", getTag);
 tagsMasterRouter.post("/", createTag);
 tagsMasterRouter.patch("/:id", updateTag);
-tagsMasterRouter.delete("/:id", deleteTag);
+tagsMasterRouter.delete("/consistent/:id", consistentDeleteTag);
+tagsMasterRouter.delete("/inconsistent/:id", deleteTag);
 tagsMasterRouter.delete("/", deleteAllTags);
 
 module.exports = tagsMasterRouter;

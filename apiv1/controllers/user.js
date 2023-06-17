@@ -68,6 +68,7 @@ const updateMyUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ success: true, result: resultUser });
 };
 
+//This safe deletion checks if the user being deleted is not the requesting user.
 const safeDeleteUser = async (req, res) => {
   const { id: userId } = req.params;
   let result = await user.deleteOne({
@@ -82,6 +83,7 @@ const safeDeleteUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ success: true });
 };
 
+//This deletion can erase the requesting user data.
 const deleteUser = async (req, res) => {
   const { id: userId } = req.params;
   let result = await user.deleteOne({ _id: userId });

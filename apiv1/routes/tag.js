@@ -5,8 +5,7 @@ const {
   getTag,
   createTag,
   updateTag,
-  deleteTag,
-  deleteAllTags,
+  consistentDeleteTag,
 } = require("../../apimaster/controllers/tag");
 
 const tagsRouter = express.Router();
@@ -15,7 +14,6 @@ tagsRouter.get("/", getAllTags);
 tagsRouter.get("/:id", getTag);
 tagsRouter.post("/", createTag);
 tagsRouter.patch("/:id", updateTag);
-tagsRouter.delete("/:id", deleteTag);
-tagsRouter.delete("/", deleteAllTags);
+tagsRouter.delete("/:id", consistentDeleteTag);
 
 module.exports = tagsRouter;

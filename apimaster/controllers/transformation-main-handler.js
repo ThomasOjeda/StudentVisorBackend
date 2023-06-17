@@ -1,6 +1,6 @@
 const { BadRequest, NotFound } = require("../../errors/errors-index");
 const TransformationType = require("../../models/transformation-types");
-const tagDB = require("../../models/tag");
+const checkValidAndDuplicateTags = require("../../utils/check-valid-and-duplicate-tags");
 
 const handlers = {
   [TransformationType.STMV]: require("./transformation-handlers/transform-movements-handler"),
@@ -20,19 +20,13 @@ const transformationHandler = async (req, res) => {
   if (!req.body.transformationHeader.name)
     throw new BadRequest("Name not found in transformation header");
 
-  if (!req.body.transformationHeader.tags || req.body.transformationHeader.tags.length <= 0) {
-    req.body.transformationHeader.tags = ["PUBLIC"];
-  } else {
-    //Check if tags are valid
-    for (const tag of req.body.transformationHeader.tags) {
-      if (!(await tagDB.findOne({ _id: tag })))
-        throw new NotFound(`No tag with value : ${tag}`);
-    }
-    //Filter duplicates
-    req.body.transformationHeader.tags = req.body.transformationHeader.tags.filter(
-      (tag, index) => req.body.transformationHeader.tags.indexOf(tag) === index
-    );
-  }
+  //Check if there is specified tags for this transformation
+  if (req.body.transformationHeader.tags)
+    if (req.body.transformationHeader.tags.length > 0)
+      req.body.transformationHeader.tags = await checkValidAndDuplicateTags(
+        req.body.transformationHeader.tags
+      );
+    else req.body.transformationHeader.tags = [];
 
   const handler = handlers[req.body.transformationHeader.type];
   if (handler == undefined)

@@ -4,6 +4,7 @@ const { BadRequest, Unauthorized } = require("../../errors/errors-index");
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const checkValidAndDuplicateTags = require("../../utils/check-valid-and-duplicate-tags");
 
 const login = async (req, res) => {
   if (!req.body.email || !req.body.password) {
@@ -52,17 +53,10 @@ const register = async (req, res) => {
   } catch (err) {
     throw new BadRequest("Please provide a password");
   }
-  if (req.body.tags) {
-    //Check if tags are valid
-    for (const tag of req.body.tags) {
-      if (!(await tagDB.findOne({ _id: tag })))
-        throw new NotFound(`No tag with value : ${tag}`);
-    }
-    //Filter duplicates
-    req.body.tags = req.body.tags.filter(
-      (tag, index) => req.body.tags.indexOf(tag) === index
-    );
-  }
+  if (req.body.tags)
+    if (req.body.tags.length > 0)
+      req.body.tags = await checkValidAndDuplicateTags(req.body.tags);
+    else req.body.tags = [];
 
   created = await user.create(req.body);
   res.status(StatusCodes.CREATED).json({ success: true });

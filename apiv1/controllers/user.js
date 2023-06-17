@@ -1,6 +1,7 @@
 const user = require("../../models/user");
 const { StatusCodes } = require("http-status-codes");
 const { NotFound, Unauthorized } = require("../../errors/errors-index");
+const checkValidAndDuplicateTags = require("../../utils/check-valid-and-duplicate-tags");
 
 const getOtherUsers = async (req, res) => {
   const resultUsers = await user.find(
@@ -40,7 +41,10 @@ const updateUser = async (req, res) => {
   let updatedUser = {};
   if (req.body.username) updatedUser.username = req.body.username;
   if (req.body.role) updatedUser.role = req.body.role;
-  if (req.body.tags) updatedUser.tags = req.body.tags;
+  if (req.body.tags)
+    if (req.body.tags.length > 0)
+      updatedUser.tags = await checkValidAndDuplicateTags(req.body.tags);
+    else updatedUser.tags = [];
   const resultUser = await user.findOneAndUpdate({ _id: userId }, updatedUser, {
     fields: "-password -__v",
     new: true,
@@ -54,7 +58,10 @@ const updateMyUser = async (req, res) => {
   let updatedUser = {};
   if (req.body.username) updatedUser.username = req.body.username;
   if (req.body.role) updatedUser.role = req.body.role;
-  if (req.body.tags) updatedUser.tags = req.body.tags;
+  if (req.body.tags)
+    if (req.body.tags.length > 0)
+      updatedUser.tags = await checkValidAndDuplicateTags(req.body.tags);
+    else updatedUser.tags = [];
   const resultUser = await user.findOneAndUpdate(
     { email: req.userData.email },
     updatedUser,

@@ -1,6 +1,7 @@
 const chart = require("../../models/chart");
 const { NotFound } = require("../../errors/errors-index");
 const { StatusCodes } = require("http-status-codes");
+const checkValidAndDuplicateTags = require("../../utils/check-valid-and-duplicate-tags");
 
 const getAllCharts = async (req, res) => {
   resultCharts = await chart.find({});
@@ -18,11 +19,27 @@ const getChart = async (req, res) => {
 
 const updateChart = async (req, res) => {
   const { id: chartId } = req.params;
-  const updated = {}
-  if (req.body.name)
-    updated.name = req.body.name
+  const updated = {};
+  if (req.body.name) updated.name = req.body.name;
+  if (req.body.tags) updated.tags = req.body.tags;
+  const resultChart = await chart.findOneAndUpdate({ _id: chartId }, updated, {
+    new: true,
+    runValidators: true,
+  });
+  if (!resultChart) throw new NotFound(`No chart with id : ${chartId}`);
+  res.status(StatusCodes.OK).json({ success: true, result: resultChart });
+};
+
+//This update checks if the provided tags are valid and eliminates duplicates
+const consistentUpdateChart = async (req, res) => {
+  const { id: chartId } = req.params;
+  const updated = {};
+  if (req.body.name) updated.name = req.body.name;
   if (req.body.tags)
-    updated.tags = req.body.tags
+    if (req.body.tags.length > 0)
+      updated.tags = await checkValidAndDuplicateTags(req.body.tags);
+    else updated.tags = [];
+
   const resultChart = await chart.findOneAndUpdate({ _id: chartId }, updated, {
     new: true,
     runValidators: true,
@@ -57,6 +74,7 @@ module.exports = {
   getAllCharts,
   getChart,
   updateChart,
+  consistentUpdateChart,
   createChart,
   deleteChart,
   deleteAllCharts,

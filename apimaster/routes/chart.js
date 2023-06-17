@@ -7,6 +7,7 @@ const {
   createChart,
   deleteChart,
   deleteAllCharts,
+  consistentUpdateChart,
 } = require("../controllers/chart");
 
 const chartsMasterRouter = express.Router();
@@ -14,7 +15,8 @@ const chartsMasterRouter = express.Router();
 chartsMasterRouter.get("/", getAllCharts);
 chartsMasterRouter.get("/:id", getChart);
 chartsMasterRouter.post("/", createChart);
-chartsMasterRouter.patch("/:id", updateChart);
+chartsMasterRouter.patch("/inconsistent/:id", updateChart);
+chartsMasterRouter.patch("/consistent/:id", consistentUpdateChart);
 chartsMasterRouter.delete("/:id", deleteChart);
 chartsMasterRouter.delete("/", deleteAllCharts);
 

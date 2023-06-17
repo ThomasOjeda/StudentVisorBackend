@@ -29,7 +29,8 @@ const UserSchema = new mongoose.Schema(
     },
     tags: {
       type: [String],
-      default: undefined,
+      required: [true, "must provide an array of tags, even if its empty"],
+      default: []
     },
   },
   { timestamps: true }

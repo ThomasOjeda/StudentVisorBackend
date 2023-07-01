@@ -1,19 +1,32 @@
-version: '3'
+version: "3"
 services:
-  node-app:
-    build: .
+  node-service:
+    build:
+      context: ./server_node
     ports:
-      - '5000:5000'
-    depends_on:
-      - mongo
-  
-  mongo:
-    image: mongo
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=dbadmin
-      - MONGO_INITDB_ROOT_PASSWORD=dbadminpassword
+      - "5000:5000"
+    #Mount a volume to allow node and pyflask to share files
     volumes:
-      - mongo-db:/data/db
+      - node-pyflask-shared-volume:/studentsdata
+    depends_on:
+      - mongo-service
+      - pyflask-service
 
+  pyflask-service:
+    #The port must be open only if in development mode, check docker-compose.dev to see config
+    build:
+      context: ./server_pyflask
+    #Mount a volume to allow node and pyflask to share files
+    volumes:
+      - node-pyflask-shared-volume:/studentsdata
+
+  mongo-service:
+    image: mongo
+    volumes:
+      #(must not be deleted)The volume that stores the whole mongo database and persists it across multiple container runs
+      - mongo-db-volume:/data/db
+
+# Named volumes need this line
 volumes:
-  mongo-db:
+  mongo-db-volume:
+  node-pyflask-shared-volume:

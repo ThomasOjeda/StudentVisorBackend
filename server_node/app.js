@@ -9,6 +9,9 @@ const masterRouter = require("./apimaster/routes/masterRouter");
 const resourceNotFound = require("./resource-not-found");
 const errorHandler = require("./error-handler");
 const masterAuthentication = require("./apimaster/middleware/master-authentication");
+const axios = require("axios");
+axios.defaults.baseURL = "http://pyflask-service:5100";
+
 const app = express();
 
 app.use(cors());
@@ -19,6 +22,24 @@ app.use(express.static("dist/student-visor-frontend"));
 
 app.use("/api/v1", apiRouter);
 app.use("/master", masterAuthentication, masterRouter);
+
+app.use("/testpy", (req, res) => {
+  console.log("testing!");
+  axios
+    .get("")
+    .then(function (response) {
+      // handle success
+      console.log(response.data);
+      res.send(response.data);
+    })
+    .catch(function (error) {
+      // handle error
+      res.send(error);
+    })
+    .finally(function () {
+      // always executed
+    });
+});
 
 app.use(resourceNotFound);
 app.use(errorHandler);

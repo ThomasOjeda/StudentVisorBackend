@@ -1,8 +1,7 @@
-version: '3'
+version: "3"
 services:
-  node-app:
+  node-service:
     build:
-      context: .
       args:
         NODE_ENV: production
     environment:
@@ -12,7 +11,17 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - MASTER_SECRET=${MASTER_SECRET}
     command: npm start
-  mongo:
+  pyflask-service:
+    #DEBUG_MODE environment variable is REQUIRED
+    #The server opens up in production mode if the DEBUG_MODE environment variable is set to False
+    environment:
+      - PYFLASK_ENV=production
+      - DEBUG_MODE=False
+    command:
+      waitress-serve --host 0.0.0.0 --port=5100 app:app #Host 0.0.0.0 means that the server can be accessed by anyone, but only if the container opens a port
+      #In this case we dont want this, so we dont open any port
+
+  mongo-service:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}

@@ -1,13 +1,16 @@
 const { StatusCodes } = require("http-status-codes");
 const { BadRequest } = require("../../../errors/errors-index");
 const studentFileMetadata = require("../../../models/student-file-metadata");
-const { PythonShell } = require("python-shell");
 const chart = require("../../../models/chart");
 const TransformationType = require("../../../models/transformation-types");
+const { PYFLASK_URL } = require("../../../config/config");
+const axios = require("axios");
 
 const studentInscriptionsHandler = async (req, res) => {
   if (!req.body.transformationBody.year)
-    throw new BadRequest("Student inscriptions transformations require a year in the transformation body");
+    throw new BadRequest(
+      "Student inscriptions transformations require a year in the transformation body"
+    );
 
   yearMetadata = await studentFileMetadata.findOne({
     year: req.body.transformationBody.year,
@@ -19,26 +22,23 @@ const studentInscriptionsHandler = async (req, res) => {
     "/",
     yearMetadata.filename
   );
-
-  let pythonCallOptions = {
-    mode: "text",
-    args: [JSON.stringify(req.body)],
-  };
-
-  result = (
-    await PythonShell.run(
-      "./data_transformation/data-transformation.py",
-      pythonCallOptions
-    )
-  )[0];
-
-  result = JSON.parse(result);
+  let result = null;
+  try {
+    result = await axios.post(
+      PYFLASK_URL + "/transformations/studentinscriptions",
+      {
+        data: req.body,
+      }
+    );
+  } catch (error) {
+    throw error;
+  }
 
   await chart.create({
     name: req.body.transformationHeader.name,
     type: TransformationType.INSC,
     tags: req.body.transformationHeader.tags,
-    structure: result,
+    structure: result.data,
   });
 
   res.status(StatusCodes.CREATED).json({ success: true });

@@ -1,23 +1,22 @@
 from flask import Blueprint, jsonify, request
 import pandas as pd
-import logging
 
 conversionsBP = Blueprint("conversions", __name__, url_prefix="/")
 
 
 @conversionsBP.route("/studentinscriptions", methods=["POST"])
 def post():
-    def toPickle(original, destination):
-        data = pd.read_excel(
-            original, usecols=["UNIDAD", "CARRERA", "DOCUMENTO", "TIPO.1"]
-        )
-
-        data.rename(columns={"TIPO.1": "TIPO_DOC"}, inplace=True)
-        data.to_pickle(destination)
-
-    toPickle(
+    data = pd.read_excel(
         request.get_json()["data"]["sourceFile"],
-        request.get_json()["data"]["destinationFile"],
+        usecols=["UNIDAD", "CARRERA", "DOCUMENTO", "TIPO.1"],
     )
 
-    return jsonify({"created": True}), 200
+    data.rename(columns={"TIPO.1": "TIPO_DOC"}, inplace=True)
+    data.to_pickle(request.get_json()["data"]["destinationFile"])
+
+    return (
+        jsonify(
+            {"created": True, "filename": request.get_json()["data"]["destinationFile"]}
+        ),
+        200,
+    )

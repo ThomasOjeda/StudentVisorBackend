@@ -1,50 +1,52 @@
 const { StatusCodes } = require("http-status-codes");
-const { PythonShell } = require("python-shell");
 const fs = require("fs/promises");
+const axios = require("axios");
 const studentFileMetadata = require("../../../models/student-file-metadata");
 const { BadRequest } = require("../../../errors/errors-index");
 
 const uploadInscriptionsHandler = async (req, res, tempFilename) => {
   if (!req.body.year) {
-    await fs.unlink("./temp-files/" + tempFilename);
+    await fs.unlink("/studentsdata/temp-files/" + tempFilename);
     throw new BadRequest("An inscription upload requires a year");
   }
 
   await fs.rename(
-    "./temp-files/" + tempFilename,
-    "./data/" + tempFilename //the file probably does not need to have the .xlsx extension
+    "/studentsdata/temp-files/" + tempFilename,
+    "/studentsdata/students_inscriptions/" + tempFilename //the file probably does not need to have the .xlsx extension
   );
 
-  let pythonCallOptions = {
-    mode: "text",
-    args: [
-      "./data/" + tempFilename,
-      "./data/" + req.body.year + "_students.pickle",
-    ],
-  };
-
   try {
-    result = (
-      await PythonShell.run(
-        "./data_transformation/transformations/utils/to-pickle.py",
-        pythonCallOptions
-      )
-    )[0];
+    await axios.post(
+      "http://pyflask-service:5100/conversions/studentinscriptions",
+      {
+        data: {
+          sourceFile: "/studentsdata/students_inscriptions/" + tempFilename,
+          destinationFile:
+            "/studentsdata/students_inscriptions/" +
+            req.body.year +
+            "_students.pickle",
+        },
+      }
+    );
   } catch (error) {
-    await fs.unlink("./data/" + tempFilename);
+    await fs.unlink("/studentsdata/students_inscriptions/" + tempFilename);
     throw error;
   }
-  await fs.unlink("./data/" + tempFilename);
+  await fs.unlink("/studentsdata/students_inscriptions/" + tempFilename);
 
   try {
     await studentFileMetadata.create({
       year: req.body.year,
       filename: req.body.year + "_students.pickle",
-      folder: "./data",
+      folder: "/studentsdata/students_inscriptions",
     });
     res.status(StatusCodes.CREATED).json({ success: true });
   } catch (error) {
-    await fs.unlink("./data/" + req.body.year + "_students.pickle");
+    await fs.unlink(
+      "/studentsdata/students_inscriptions/" +
+        req.body.year +
+        "_students.pickle"
+    );
     throw error;
   }
 };

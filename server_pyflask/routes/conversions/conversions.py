@@ -1,13 +1,12 @@
-from flask import Blueprint
-from .student_inscriptions import StudentInscriptionsRoutes
+from flask import Blueprint, jsonify, request
+import pandas as pd
+import logging
 
 conversionsBP = Blueprint("conversions", __name__, url_prefix="/")
 
 
-@conversionsBP.route("/studentinscriptions", methods=["GET"])
-def mainRoute():
-    import pandas as pd
-
+@conversionsBP.route("/studentinscriptions", methods=["POST"])
+def post():
     def toPickle(original, destination):
         data = pd.read_excel(
             original, usecols=["UNIDAD", "CARRERA", "DOCUMENTO", "TIPO.1"]
@@ -16,6 +15,9 @@ def mainRoute():
         data.rename(columns={"TIPO.1": "TIPO_DOC"}, inplace=True)
         data.to_pickle(destination)
 
-    toPickle("/studentsdata/2015_students.xlsx", "/studentsdata/2015_students.pickle")
+    toPickle(
+        request.get_json()["data"]["sourceFile"],
+        request.get_json()["data"]["destinationFile"],
+    )
 
-    return "responseee"
+    return jsonify({"created": True}), 200

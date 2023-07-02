@@ -11,9 +11,10 @@ const handlers = {
 };
 
 const uploadMainHandler = async (req, res) => {
-  tempFilename = uuidv4();
+  let tempFolder = "/studentsdata/temp_files";
+  let tempFilename = uuidv4();
   const storage = multer.diskStorage({
-    destination: "/studentsdata/temp-files",
+    destination: tempFolder,
     filename: function (req, file, cb) {
       cb(null, tempFilename);
     },
@@ -30,16 +31,16 @@ const uploadMainHandler = async (req, res) => {
     throw new BadRequest("File not found in request");
   }
   if (!req.body.fileType) {
-    await fs.unlink("/studentsdata/temp-files/" + tempFilename);
+    await fs.unlink(tempFolder + "/" + tempFilename);
     throw new BadRequest("File type not found in request");
   }
   const handler = handlers[req.body.fileType];
   if (handler == undefined) {
-    await fs.unlink("/studentsdata/temp-files/" + tempFilename);
+    await fs.unlink(tempFolder + "/" + tempFilename);
     throw new NotFound("File type is not supported");
   }
 
-  await handlers[req.body.fileType](req, res, tempFilename);
+  await handlers[req.body.fileType](req, res, tempFolder, tempFilename);
 };
 
 const deleteFile = async (req, res) => {

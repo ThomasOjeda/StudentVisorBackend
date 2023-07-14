@@ -1,11 +1,15 @@
 from flask import Blueprint, jsonify, request
 import pandas as pd
 import numpy as np
+from ..utils.utils import exception_wrap
+
+from .inscriptions import StudentInscriptions
 
 transformationsBP = Blueprint("transformations", __name__, url_prefix="/")
 
 
-@transformationsBP.route("/studentinscriptions", methods=["POST"])
+""" @transformationsBP.route("/studentinscriptions", methods=["POST"])
+@exception_wrap
 def POSTstudentInscriptions():
     enrollments = pd.read_pickle(
         request.get_json()["data"]["transformationBody"]["yearPath"]
@@ -17,10 +21,19 @@ def POSTstudentInscriptions():
         "Enrolled": enrollments.size,
     }
 
-    return jsonify(returnDict), 200
+    return jsonify(returnDict), 200 """
+
+
+@transformationsBP.route("/studentinscriptions", methods=["POST"])
+@exception_wrap
+def POSTstudentInscriptions():
+    transformer = StudentInscriptions(request.get_json()["data"])
+    result = transformer.transform()
+    return jsonify(result), 200
 
 
 @transformationsBP.route("/studentmovements", methods=["POST"])
+@exception_wrap
 def POSTstudentMovements():
     fileA = request.get_json()["data"]["transformationBody"]["yearAPath"]
 

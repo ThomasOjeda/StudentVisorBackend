@@ -1,5 +1,5 @@
 const { StatusCodes } = require("http-status-codes");
-const { BadRequest } = require("../../../errors/errors-index");
+const { BadRequest, PyflaskError } = require("../../../errors/errors-index");
 const studentFileMetadata = require("../../../models/student-file-metadata");
 const chart = require("../../../models/chart");
 const TransformationType = require("../../../models/transformation-types");
@@ -31,7 +31,7 @@ const studentInscriptionsHandler = async (req, res) => {
       }
     );
   } catch (error) {
-    throw error;
+    throw new PyflaskError(error.response.data);
   }
 
   await chart.create({

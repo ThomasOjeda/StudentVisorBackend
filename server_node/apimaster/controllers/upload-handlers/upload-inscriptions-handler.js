@@ -52,6 +52,7 @@ const uploadInscriptionsHandler = async (
 
   try {
     await studentFileMetadata.create({
+      //I MUST CHECK THIS BEFORE DOING ALL THE FILE MOVEMENTS!!! BUG BUG https://trello.com/c/ULRdVfcB
       year: req.body.year,
       filename: req.body.year + fileSuffix,
       folder: newFolder,

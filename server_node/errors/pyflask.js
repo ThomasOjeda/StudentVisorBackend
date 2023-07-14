@@ -1,9 +1,10 @@
 const CustomAPIError = require("./custom-error");
 const { StatusCodes } = require("http-status-codes");
-class BadRequest extends CustomAPIError {
+
+class PyflaskError extends CustomAPIError {
   constructor(message) {
-    super(message, StatusCodes.BAD_REQUEST);
+    super(message, StatusCodes.INTERNAL_SERVER_ERROR);
   }
 }
 
-module.exports = BadRequest;
+module.exports = PyflaskError;

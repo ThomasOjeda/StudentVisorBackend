@@ -1,17 +1,16 @@
-const {StatusCodes} = require('http-status-codes')
+const { StatusCodes } = require("http-status-codes");
 
 const errorHandler = (err, req, res, next) => {
-  responseError = {
+  /*   console.log(err.response.data);
+   */ responseError = {
     status: err.status || StatusCodes.INTERNAL_SERVER_ERROR,
-    msg: err.message || "Something went wrong"
+    msg: err.message || "Something went wrong",
+  };
+
+  if (err.name && (err.name == "ValidationError" || err.name == "CastError")) {
+    responseError.status = StatusCodes.BAD_REQUEST;
+    responseError.msg = err.message;
   }
-
-  if (err.name && (err.name=="ValidationError" || err.name=="CastError")) {
-    responseError.status = StatusCodes.BAD_REQUEST
-    responseError.msg = err.message
-  }
-
-
 
   return res.status(responseError.status).json(responseError.msg);
 };

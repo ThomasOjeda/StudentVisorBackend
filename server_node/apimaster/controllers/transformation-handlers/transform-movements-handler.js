@@ -1,12 +1,9 @@
-const { StatusCodes } = require("http-status-codes");
 const { BadRequest } = require("../../../errors/errors-index");
 const studentFileMetadata = require("../../../models/student-file-metadata");
-const chart = require("../../../models/chart");
-const TransformationType = require("../../../models/transformation-types");
 const { PYFLASK_URL } = require("../../../config/config");
 const axios = require("axios");
 
-const studentMovementsHandler = async (req, res) => {
+const studentMovementsHandler = async (req, res, next) => {
   if (!req.body.transformationBody.yearA || !req.body.transformationBody.yearB)
     throw new BadRequest(
       "Student movements transformations require a yearA and yearB in the transformation body"
@@ -44,14 +41,9 @@ const studentMovementsHandler = async (req, res) => {
     throw error;
   }
 
-  await chart.create({
-    name: req.body.transformationHeader.name,
-    type: TransformationType.STMV,
-    tags: req.body.transformationHeader.tags,
-    structure: result.data,
-  });
+  req.body.calculatedResult = result.data;
 
-  res.status(StatusCodes.CREATED).json({ success: true });
+  next();
 };
 
 module.exports = studentMovementsHandler;

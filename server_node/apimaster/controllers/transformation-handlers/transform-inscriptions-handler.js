@@ -1,12 +1,9 @@
-const { StatusCodes } = require("http-status-codes");
 const { BadRequest, PyflaskError } = require("../../../errors/errors-index");
 const studentFileMetadata = require("../../../models/student-file-metadata");
-const chart = require("../../../models/chart");
-const TransformationType = require("../../../models/transformation-types");
 const { PYFLASK_URL } = require("../../../config/config");
 const axios = require("axios");
 
-const studentInscriptionsHandler = async (req, res) => {
+const studentInscriptionsHandler = async (req, res, next) => {
   if (!req.body.transformationBody.year)
     throw new BadRequest(
       "Student inscriptions transformations require a year in the transformation body"
@@ -34,14 +31,9 @@ const studentInscriptionsHandler = async (req, res) => {
     throw new PyflaskError(error.response.data);
   }
 
-  await chart.create({
-    name: req.body.transformationHeader.name,
-    type: TransformationType.INSC,
-    tags: req.body.transformationHeader.tags,
-    structure: result.data,
-  });
+  req.body.calculatedResult = result.data;
 
-  res.status(StatusCodes.CREATED).json({ success: true });
+  next();
 };
 
 module.exports = studentInscriptionsHandler;

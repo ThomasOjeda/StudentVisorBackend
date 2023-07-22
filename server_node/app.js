@@ -25,16 +25,31 @@ app.use("/master", masterAuthentication, masterRouter);
 app.use(resourceNotFound);
 app.use(errorHandler);
 
+const mongoRetryConnection = async () => {
+  try {
+    await connectDB(MONGO_URI);
+  } catch (error) {
+    console.log("Mongo connection failed, waiting 10sec before retrying...");
+    await new Promise((resolve) => setTimeout(resolve, 10000));
+    await mongoRetryConnection();
+  }
+};
+
 const start = async () => {
+  console.log("Waiting 0.5sec before starting server...");
+  await new Promise((resolve) => setTimeout(resolve, 500));
   try {
     await createDataFolders();
-    await connectDB(MONGO_URI);
-    app.listen(PORT, () => {
-      console.log(`server listening on port ${PORT}`);
-    });
   } catch (err) {
+    console.log(
+      "Initial folder creation failed, server may not work properly..."
+    );
     console.log(err);
   }
+  await mongoRetryConnection();
+  app.listen(PORT, () => {
+    console.log(`server listening on port ${PORT}`);
+  });
 };
 
 start();

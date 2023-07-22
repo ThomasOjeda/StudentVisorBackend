@@ -1,7 +1,8 @@
-const { MONGO_URI, PORT } = require("./config/config");
+const { MONGO_URI, PORT, PYFLASK_URL } = require("./config/config");
 const connectDB = require("./db/connect");
 const express = require("express");
 const cors = require("cors");
+const axios = require("axios");
 require("dotenv").config();
 require("express-async-errors");
 const apiRouter = require("./apiv1/routes/api");
@@ -35,6 +36,16 @@ const mongoRetryConnection = async () => {
   }
 };
 
+const pyflaskRetryConnection = async () => {
+  try {
+    response = await axios.get(PYFLASK_URL);
+  } catch (error) {
+    console.log("Pyflask connection failed, waiting 10sec before retrying...");
+    await new Promise((resolve) => setTimeout(resolve, 10000));
+    await pyflaskRetryConnection();
+  }
+};
+
 const start = async () => {
   console.log("Waiting 0.5sec before starting server...");
   await new Promise((resolve) => setTimeout(resolve, 500));
@@ -47,6 +58,7 @@ const start = async () => {
     console.log(err);
   }
   await mongoRetryConnection();
+  await pyflaskRetryConnection();
   app.listen(PORT, () => {
     console.log(`server listening on port ${PORT}`);
   });

@@ -9,7 +9,7 @@ routesBP = Blueprint("routes", __name__, url_prefix="/")
 @routesBP.route("/", methods=["GET"])
 @exception_wrap
 def mainRoute():
-    return "Pyflask server is active"
+    return "Pyflask server is active", 200
 
 
 routesBP.register_blueprint(conversionsBP, url_prefix="/conversions")

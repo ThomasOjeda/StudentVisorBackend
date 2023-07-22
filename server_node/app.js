@@ -9,6 +9,7 @@ const masterRouter = require("./apimaster/routes/masterRouter");
 const resourceNotFound = require("./resource-not-found");
 const errorHandler = require("./error-handler");
 const masterAuthentication = require("./apimaster/middleware/master-authentication");
+const createDataFolders = require("./utils/create-data-folders");
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(errorHandler);
 
 const start = async () => {
   try {
+    await createDataFolders();
     await connectDB(MONGO_URI);
     app.listen(PORT, () => {
       console.log(`server listening on port ${PORT}`);

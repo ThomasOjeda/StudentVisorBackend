@@ -295,3 +295,5 @@ cython_debug/
 
 #pythonVirtualEnvironment/
 
+#Mounted students data volume 
+/studentsdata

@@ -13,7 +13,6 @@ def before_request():
 @conversionsBP.route("/studentinscriptions", methods=["POST"])
 @exception_wrap
 def post():
-    raise Exception("No papu cagaste xD")
     data = pd.read_excel(
         request.get_json()["data"]["sourceFile"],
         usecols=["UNIDAD", "CARRERA", "DOCUMENTO", "TIPO.1"],

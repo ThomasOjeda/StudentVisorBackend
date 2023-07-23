@@ -18,8 +18,20 @@ const uploadInscriptionsHandler = async (
     await fs.unlink(tempFolder + "/" + tempFilename);
     throw new BadRequest("An inscription upload requires a year");
   }
-  //WARNING: the folders MUST exist! this rename moves the file but does not create the folder if it does not exist!
 
+  try {
+    let found = await studentFileMetadata.findOne({ year: req.body.year });
+    if (found) {
+      throw new BadRequest(
+        `There is already a file for the year ${req.body.year} in the students inscriptions category.`
+      );
+    }
+  } catch (error) {
+    await fs.unlink(tempFolder + "/" + tempFilename);
+    throw error;
+  }
+
+  //WARNING: the folders MUST exist! this rename moves the file but does not create the folder if it does not exist!
   try {
     //Check if folder exists
     await fs.access(newFolder);
@@ -33,26 +45,22 @@ const uploadInscriptionsHandler = async (
     }
   }
 
-  await fs.rename(
-    tempFolder + "/" + tempFilename,
-    newFolder + "/" + tempFilename //the file probably does not need to have the .xlsx extension
-  );
   try {
     await axios.post(PYFLASK_URL + "/conversions/studentinscriptions", {
       data: {
-        sourceFile: newFolder + "/" + tempFilename,
+        sourceFile: tempFolder + "/" + tempFilename,
         destinationFile: newFolder + "/" + req.body.year + fileSuffix,
       },
     });
   } catch (error) {
-    await fs.unlink(newFolder + "/" + tempFilename);
+    await fs.unlink(tempFolder + "/" + tempFilename);
+
     throw error;
   }
-  await fs.unlink(newFolder + "/" + tempFilename);
+  await fs.unlink(tempFolder + "/" + tempFilename);
 
   try {
     await studentFileMetadata.create({
-      //I MUST CHECK THIS BEFORE DOING ALL THE FILE MOVEMENTS!!! BUG BUG https://trello.com/c/ULRdVfcB
       year: req.body.year,
       filename: req.body.year + fileSuffix,
       folder: newFolder,

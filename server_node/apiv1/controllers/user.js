@@ -6,7 +6,7 @@ const checkValidAndDuplicateTags = require("../../utils/check-valid-and-duplicat
 const getOtherUsers = async (req, res) => {
   const resultUsers = await user.find(
     { email: { $ne: req.userData.email } },
-    "-password -__v"
+    "-password"
   );
   res
     .status(StatusCodes.OK)
@@ -14,7 +14,7 @@ const getOtherUsers = async (req, res) => {
 };
 
 const getAllUsers = async (req, res) => {
-  const resultUsers = await user.find({}, "-password -__v");
+  const resultUsers = await user.find({}, "-password");
   res
     .status(StatusCodes.OK)
     .json({ success: true, result: resultUsers, nHits: resultUsers.length });
@@ -22,7 +22,7 @@ const getAllUsers = async (req, res) => {
 
 const getUser = async (req, res) => {
   const { id: userId } = req.params;
-  let resultUser = await user.findOne({ _id: userId }, "-password -__v");
+  let resultUser = await user.findOne({ _id: userId }, "-password");
   if (!resultUser) throw new NotFound(`No user with id : ${userId}`);
   res.status(StatusCodes.OK).json({ success: true, result: resultUser });
 };
@@ -30,7 +30,7 @@ const getUser = async (req, res) => {
 const getMyUser = async (req, res) => {
   let resultUser = await user.findOne(
     { email: req.userData.email },
-    "-password -__v"
+    "-password"
   );
   if (!resultUser) throw new Unauthorized("Unauthorized");
   res.status(StatusCodes.OK).json({ success: true, result: resultUser });
@@ -46,7 +46,7 @@ const updateUser = async (req, res) => {
       updatedUser.tags = await checkValidAndDuplicateTags(req.body.tags);
     else updatedUser.tags = [];
   const resultUser = await user.findOneAndUpdate({ _id: userId }, updatedUser, {
-    fields: "-password -__v",
+    fields: "-password",
     new: true,
     runValidators: true,
   });
@@ -66,7 +66,7 @@ const updateMyUser = async (req, res) => {
     { email: req.userData.email },
     updatedUser,
     {
-      fields: "-password -__v",
+      fields: "-password",
       new: true,
       runValidators: true,
     }

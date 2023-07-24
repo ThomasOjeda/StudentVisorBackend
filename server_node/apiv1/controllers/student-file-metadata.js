@@ -3,7 +3,7 @@ const { NotFound } = require("../../errors/errors-index");
 const { StatusCodes } = require("http-status-codes");
 
 const getAllStudentFileMetadata = async (req, res) => {
-  const resultFiles = await studentFileMetadata.find({},"-folder -__v");
+  const resultFiles = await studentFileMetadata.find({}, "-folder");
   res
     .status(StatusCodes.OK)
     .json({ success: true, result: resultFiles, nHits: resultFiles.length });
@@ -11,7 +11,10 @@ const getAllStudentFileMetadata = async (req, res) => {
 
 const getStudentFileMetadata = async (req, res) => {
   const { id: fileId } = req.params;
-  const resultFile = await studentFileMetadata.findOne({ _id: fileId },"-folder -__v");
+  const resultFile = await studentFileMetadata.findOne(
+    { _id: fileId },
+    "-folder"
+  );
   if (!resultFile) throw new NotFound(`No file with id : ${fileId}`);
   res.status(StatusCodes.OK).json({ success: true, result: resultFile });
 };

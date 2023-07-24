@@ -13,7 +13,7 @@ const errorHandler = require("./error-handler");
 const masterAuthentication = require("./apimaster/middleware/master-authentication");
 const createDataFolders = require("./utils/create-data-folders");
 const retry = require("./utils/retry-connection");
-
+const startupTag = require("./utils/startup-tags");
 const app = express();
 
 //Security related middleware
@@ -60,6 +60,10 @@ const start = async () => {
     "Pyflask connection failed, waiting 10sec before retrying...",
     10000
   );
+
+  //Check PUBLIC startup tag
+
+  await startupTag();
 
   app.listen(PORT, () => {
     console.log(`server listening on port ${PORT}`);

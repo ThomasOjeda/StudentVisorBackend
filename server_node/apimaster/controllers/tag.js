@@ -19,6 +19,7 @@ const getTag = async (req, res) => {
   res.status(StatusCodes.OK).json({ success: true, result: resultTag });
 };
 
+//Only the description of the tag can be updated (Mongo does not allow modification of document _id)
 const updateTag = async (req, res) => {
   const { id: tagId } = req.params;
   const resultTag = await tag.findOneAndUpdate({ _id: tagId }, req.body, {
@@ -34,14 +35,21 @@ const createTag = async (req, res) => {
   res.status(StatusCodes.CREATED).json({ success: true, result: created });
 };
 
+//This delete also prevents the PUBLIC tag from being deleted
 const deleteTag = async (req, res) => {
   const { id: tagId } = req.params;
-  result = await tag.deleteOne({ _id: tagId });
+  result = await tag.deleteOne({
+    $and: [{ _id: tagId }, { _id: { $ne: "PUBLIC" } }],
+  });
 
-  if (result.deletedCount <= 0) throw new NotFound(`No tag with id : ${tagId}`);
+  if (result.deletedCount <= 0)
+    throw new NotFound(
+      `No tag with id : ${tagId} or trying to delete PUBLIC tag`
+    );
   res.status(StatusCodes.OK).json({ success: true });
 };
 
+//This delete also prevents the PUBLIC tag from being deleted
 //This delete checks if the tag is being used in any chart or user before deleting it
 const consistentDeleteTag = async (req, res) => {
   const { id: tagId } = req.params;
@@ -56,14 +64,20 @@ const consistentDeleteTag = async (req, res) => {
     throw new BadRequest(`The tag is in use by user ${u._id}`);
   }
 
-  result = await tag.deleteOne({ _id: tagId });
+  result = await tag.deleteOne({
+    $and: [{ _id: tagId }, { _id: { $ne: "PUBLIC" } }],
+  });
 
-  if (result.deletedCount <= 0) throw new NotFound(`No tag with id : ${tagId}`);
+  if (result.deletedCount <= 0)
+    throw new NotFound(
+      `No tag with id : ${tagId} or trying to delete PUBLIC tag`
+    );
   res.status(StatusCodes.OK).json({ success: true });
 };
 
+//This delete also prevents the PUBLIC tag from being deleted
 const deleteAllTags = async (req, res) => {
-  result = await tag.deleteMany({});
+  result = await tag.deleteMany({ _id: { $ne: "PUBLIC" } });
 
   res
     .status(StatusCodes.OK)

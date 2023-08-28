@@ -3,6 +3,7 @@ services:
   node-service:
     build:
       context: ./server_node
+    image: thomasojeda/studentvisor-node
     ports:
       - "5000:5000"
     #Mount a volume to allow node and pyflask to share files

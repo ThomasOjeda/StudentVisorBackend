@@ -20,6 +20,10 @@ const StudentFileMetadataSchema = new mongoose.Schema(
       type: String,
       required: [true, "must provide a folder"],
     },
+    type: {
+      type: String,
+      required: [true, "must provide a type"],
+    },
   },
   { timestamps: true }
 );

@@ -30,17 +30,17 @@ const uploadMainHandler = async (req, res) => {
   if (!req.file) {
     throw new BadRequest("File not found in request");
   }
-  if (!req.body.fileType) {
+  if (!req.body.type) {
     await fs.unlink(tempFolder + "/" + tempFilename);
     throw new BadRequest("File type not found in request");
   }
-  const handler = handlers[req.body.fileType];
+  const handler = handlers[req.body.type];
   if (handler == undefined) {
     await fs.unlink(tempFolder + "/" + tempFilename);
     throw new NotFound("File type is not supported");
   }
 
-  await handlers[req.body.fileType](req, res, tempFolder, tempFilename);
+  await handlers[req.body.type](req, res, tempFolder, tempFilename);
 };
 
 const deleteFile = async (req, res) => {

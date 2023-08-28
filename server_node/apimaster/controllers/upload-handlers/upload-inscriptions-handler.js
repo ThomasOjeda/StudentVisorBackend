@@ -64,6 +64,7 @@ const uploadInscriptionsHandler = async (
       year: req.body.year,
       filename: req.body.year + fileSuffix,
       folder: newFolder,
+      type: req.body.type,
     });
     res.status(StatusCodes.CREATED).json({ success: true });
   } catch (error) {

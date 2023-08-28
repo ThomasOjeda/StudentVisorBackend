@@ -28,6 +28,10 @@ app.use(express.static("dist/student-visor-frontend"));
 
 app.use("/api/v1", apiRouter);
 app.use("/master", masterAuthentication, masterRouter);
+app.use("/version", (req, res) => {
+  res.status = 200;
+  res.send("28-8-23");
+});
 
 app.use(resourceNotFound);
 app.use(errorHandler);

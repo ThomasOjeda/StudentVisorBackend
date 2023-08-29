@@ -17,7 +17,7 @@ const startupTag = require("./utils/startup-tags");
 const app = express();
 
 //Security related middleware
-app.use(helmet()); //--------
+app.use(helmet({ contentSecurityPolicy: false })); //--------
 app.use(cors()); //----------
 //-------------------------//
 

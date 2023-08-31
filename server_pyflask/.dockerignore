@@ -1,6 +1,0 @@
-.venv
-Dockerfile
-.dockerignore
-.git
-.gitignore
-docker-compose*

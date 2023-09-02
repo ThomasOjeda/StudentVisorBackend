@@ -5,16 +5,16 @@ const fs = require("fs/promises");
 const { v4: uuidv4 } = require("uuid");
 const studentFileMetadata = require("../../models/student-file-metadata");
 const { StatusCodes } = require("http-status-codes");
+const { STUDENTSDATA_TEMP_FOLDER } = require("../../config/paths");
 
 const handlers = {
   "student-inscriptions": require("./upload-handlers/upload-inscriptions-handler"),
 };
 
 const uploadMainHandler = async (req, res) => {
-  let tempFolder = "/studentsdata/temp_files";
   let tempFilename = uuidv4();
   const storage = multer.diskStorage({
-    destination: tempFolder,
+    destination: STUDENTSDATA_TEMP_FOLDER,
     filename: function (req, file, cb) {
       cb(null, tempFilename);
     },
@@ -31,16 +31,21 @@ const uploadMainHandler = async (req, res) => {
     throw new BadRequest("File not found in request");
   }
   if (!req.body.type) {
-    await fs.unlink(tempFolder + "/" + tempFilename);
+    await fs.unlink(STUDENTSDATA_TEMP_FOLDER + "/" + tempFilename);
     throw new BadRequest("File type not found in request");
   }
   const handler = handlers[req.body.type];
   if (handler == undefined) {
-    await fs.unlink(tempFolder + "/" + tempFilename);
+    await fs.unlink(STUDENTSDATA_TEMP_FOLDER + "/" + tempFilename);
     throw new NotFound("File type is not supported");
   }
 
-  await handlers[req.body.type](req, res, tempFolder, tempFilename);
+  await handlers[req.body.type](
+    req,
+    res,
+    STUDENTSDATA_TEMP_FOLDER,
+    tempFilename
+  );
 };
 
 const deleteFile = async (req, res) => {

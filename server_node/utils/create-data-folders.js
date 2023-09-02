@@ -1,18 +1,18 @@
 const fs = require("fs/promises");
-
+const {
+  STUDENTSDATA_TEMP_FOLDER,
+  STUDENT_INSCRIPTIONS_FOLDER,
+} = require("../config/paths");
 const createDataFolders = async () => {
   //The students data folder doesnt need to be created because is created by the mounted volume
-  let tempFolderPath = "/studentsdata/temp_files";
-
-  let studentsInscriptionsFolderPath = "/studentsdata/students_inscriptions";
 
   try {
     //Check if folder exists
-    await fs.access(tempFolderPath);
+    await fs.access(STUDENTSDATA_TEMP_FOLDER);
   } catch (error) {
     //Folder does not exist, create folder
     try {
-      await fs.mkdir(tempFolderPath);
+      await fs.mkdir(STUDENTSDATA_TEMP_FOLDER);
     } catch (error) {
       throw error;
     }
@@ -20,11 +20,11 @@ const createDataFolders = async () => {
 
   try {
     //Check if folder exists
-    await fs.access(studentsInscriptionsFolderPath);
+    await fs.access(STUDENT_INSCRIPTIONS_FOLDER);
   } catch (error) {
     //Folder does not exist, create folder
     try {
-      await fs.mkdir(studentsInscriptionsFolderPath);
+      await fs.mkdir(STUDENT_INSCRIPTIONS_FOLDER);
     } catch (error) {
       throw error;
     }

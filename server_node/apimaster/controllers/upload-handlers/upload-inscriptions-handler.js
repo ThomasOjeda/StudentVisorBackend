@@ -4,16 +4,16 @@ const axios = require("axios");
 const studentFileMetadata = require("../../../models/student-file-metadata");
 const { BadRequest } = require("../../../errors/errors-index");
 const { PYFLASK_URL } = require("../../../config/config");
-
+const {
+  STUDENT_INSCRIPTIONS_FOLDER,
+  STUDENT_INSCRIPTIONS_SUFFIX,
+} = require("../../../config/paths");
 const uploadInscriptionsHandler = async (
   req,
   res,
   tempFolder,
   tempFilename
 ) => {
-  let newFolder = "/studentsdata/students_inscriptions";
-  let fileSuffix = "_students.pickle";
-
   if (!req.body.year) {
     await fs.unlink(tempFolder + "/" + tempFilename);
     throw new BadRequest("An inscription upload requires a year");
@@ -34,11 +34,11 @@ const uploadInscriptionsHandler = async (
   //WARNING: the folders MUST exist! this rename moves the file but does not create the folder if it does not exist!
   try {
     //Check if folder exists
-    await fs.access(newFolder);
+    await fs.access(STUDENT_INSCRIPTIONS_FOLDER);
   } catch (error) {
     //Folder does not exist, create folder
     try {
-      await fs.mkdir(newFolder);
+      await fs.mkdir(STUDENT_INSCRIPTIONS_FOLDER);
     } catch (error) {
       await fs.unlink(tempFolder + "/" + tempFilename);
       throw error;
@@ -49,7 +49,11 @@ const uploadInscriptionsHandler = async (
     await axios.post(PYFLASK_URL + "/conversions/studentinscriptions", {
       data: {
         sourceFile: tempFolder + "/" + tempFilename,
-        destinationFile: newFolder + "/" + req.body.year + fileSuffix,
+        destinationFile:
+          STUDENT_INSCRIPTIONS_FOLDER +
+          "/" +
+          req.body.year +
+          STUDENT_INSCRIPTIONS_SUFFIX,
       },
     });
   } catch (error) {
@@ -62,13 +66,18 @@ const uploadInscriptionsHandler = async (
   try {
     await studentFileMetadata.create({
       year: req.body.year,
-      filename: req.body.year + fileSuffix,
-      folder: newFolder,
+      filename: req.body.year + STUDENT_INSCRIPTIONS_SUFFIX,
+      folder: STUDENT_INSCRIPTIONS_FOLDER,
       type: req.body.type,
     });
     res.status(StatusCodes.CREATED).json({ success: true });
   } catch (error) {
-    await fs.unlink(newFolder + "/" + req.body.year + fileSuffix);
+    await fs.unlink(
+      STUDENT_INSCRIPTIONS_FOLDER +
+        "/" +
+        req.body.year +
+        STUDENT_INSCRIPTIONS_SUFFIX
+    );
     throw error;
   }
 };

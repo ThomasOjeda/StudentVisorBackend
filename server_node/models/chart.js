@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const nameMaxLength = 30;
+const nameMaxLength = 256;
 
 const ChartSchema = new mongoose.Schema(
   {
@@ -16,7 +16,7 @@ const ChartSchema = new mongoose.Schema(
     tags: {
       type: [String],
       required: [true, "must provide an array of tags, even if its empty"],
-      default: []
+      default: [],
     },
     type: {
       type: String,

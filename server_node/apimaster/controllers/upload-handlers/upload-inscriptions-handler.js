@@ -6,7 +6,7 @@ const { BadRequest } = require("../../../errors/errors-index");
 const { PYFLASK_URL } = require("../../../config/config");
 const {
   STUDENT_INSCRIPTIONS_FOLDER,
-  STUDENT_INSCRIPTIONS_SUFFIX,
+  PICKLE_SUFFIX,
 } = require("../../../config/paths");
 const uploadInscriptionsHandler = async (
   req,
@@ -14,11 +14,6 @@ const uploadInscriptionsHandler = async (
   tempFolder,
   tempFilename
 ) => {
-  if (!req.body.year) {
-    await fs.unlink(tempFolder + "/" + tempFilename);
-    throw new BadRequest("An inscription upload requires a year");
-  }
-
   try {
     let found = await studentFileMetadata.findOne({ year: req.body.year });
     if (found) {
@@ -53,7 +48,11 @@ const uploadInscriptionsHandler = async (
           STUDENT_INSCRIPTIONS_FOLDER +
           "/" +
           req.body.year +
-          STUDENT_INSCRIPTIONS_SUFFIX,
+          "_" +
+          req.body.type +
+          "_" +
+          tempFilename +
+          PICKLE_SUFFIX,
       },
     });
   } catch (error) {
@@ -65,8 +64,16 @@ const uploadInscriptionsHandler = async (
 
   try {
     await studentFileMetadata.create({
+      name: req.body.name,
+      description: req.body.description,
       year: req.body.year,
-      filename: req.body.year + STUDENT_INSCRIPTIONS_SUFFIX,
+      filename:
+        req.body.year +
+        "_" +
+        req.body.type +
+        "_" +
+        tempFilename +
+        PICKLE_SUFFIX,
       folder: STUDENT_INSCRIPTIONS_FOLDER,
       type: req.body.type,
     });
@@ -76,7 +83,11 @@ const uploadInscriptionsHandler = async (
       STUDENT_INSCRIPTIONS_FOLDER +
         "/" +
         req.body.year +
-        STUDENT_INSCRIPTIONS_SUFFIX
+        "_" +
+        req.body.type +
+        "_" +
+        tempFilename +
+        PICKLE_SUFFIX
     );
     throw error;
   }

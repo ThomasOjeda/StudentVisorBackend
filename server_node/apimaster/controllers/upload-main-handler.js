@@ -30,6 +30,14 @@ const uploadMainHandler = async (req, res) => {
   if (!req.file) {
     throw new BadRequest("File not found in request");
   }
+  if (!req.body.name) {
+    await fs.unlink(STUDENTSDATA_TEMP_FOLDER + "/" + tempFilename);
+    throw new BadRequest("File name not found in request");
+  }
+  if (!req.body.year) {
+    await fs.unlink(STUDENTSDATA_TEMP_FOLDER + "/" + tempFilename);
+    throw new BadRequest("File year not found in request");
+  }
   if (!req.body.type) {
     await fs.unlink(STUDENTSDATA_TEMP_FOLDER + "/" + tempFilename);
     throw new BadRequest("File type not found in request");

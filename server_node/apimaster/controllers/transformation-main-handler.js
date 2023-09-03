@@ -1,7 +1,6 @@
 const { BadRequest, NotFound } = require("../../errors/errors-index");
 const TransformationType = require("../../models/transformation-types");
-/* const checkValidAndDuplicateTags = require("../../utils/check-valid-and-duplicate-tags");
- */
+
 const handlers = {
   [TransformationType.STMV]: require("./transformation-handlers/transform-movements-handler"),
   [TransformationType.INSC]: require("./transformation-handlers/transform-inscriptions-handler"),

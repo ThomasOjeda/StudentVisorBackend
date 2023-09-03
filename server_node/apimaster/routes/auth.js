@@ -1,9 +1,6 @@
 const express = require("express");
 
-const {
-  login,
-  register,
-} = require("../../apimaster/controllers/authentication");
+const { login, register } = require("../controllers/authentication");
 
 const authRouter = express.Router();
 

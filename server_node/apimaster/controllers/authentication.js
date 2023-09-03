@@ -1,6 +1,10 @@
 const user = require("../../models/user");
 const { StatusCodes } = require("http-status-codes");
-const { BadRequest, Unauthorized } = require("../../errors/errors-index");
+const {
+  BadRequest,
+  Unauthorized,
+  Conflict,
+} = require("../../errors/errors-index");
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -57,6 +61,11 @@ const register = async (req, res) => {
     if (req.body.tags.length > 0)
       req.body.tags = await checkValidAndDuplicateTags(req.body.tags);
     else req.body.tags = [];
+
+  userWithSameEmail = await user.findOne({ email: req.body.email });
+  if (userWithSameEmail) {
+    throw new Conflict("Email already in use");
+  }
 
   created = await user.create(req.body);
   res.status(StatusCodes.CREATED).json({ success: true });

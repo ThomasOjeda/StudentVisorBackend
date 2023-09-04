@@ -2,7 +2,7 @@ const { StatusCodes } = require("http-status-codes");
 const fs = require("fs/promises");
 const axios = require("axios");
 const studentFileMetadata = require("../../../models/student-file-metadata");
-const { BadRequest } = require("../../../errors/errors-index");
+const { Conflict } = require("../../../errors/errors-index");
 const { PYFLASK_URL } = require("../../../config/config");
 const {
   STUDENT_INSCRIPTIONS_FOLDER,
@@ -17,7 +17,7 @@ const uploadInscriptionsHandler = async (
   try {
     let found = await studentFileMetadata.findOne({ year: req.body.year });
     if (found) {
-      throw new BadRequest(
+      throw new Conflict(
         `There is already a file for the year ${req.body.year} in the students inscriptions category.`
       );
     }

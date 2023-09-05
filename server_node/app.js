@@ -14,6 +14,8 @@ const masterAuthentication = require("./apimaster/middleware/master-authenticati
 const createDataFolders = require("./utils/create-data-folders");
 const retry = require("./utils/retry-connection");
 const startupTag = require("./utils/startup-tags");
+const path = require("path");
+
 const app = express();
 
 //Security related middleware
@@ -27,13 +29,17 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("dist/student-visor-frontend"));
 
 app.use("/api/v1", apiRouter);
-app.use("/master", masterAuthentication, masterRouter);
-app.use("/version", (req, res) => {
+app.use("/api/master", masterAuthentication, masterRouter);
+app.use("/api/version", (req, res) => {
   res.status = 200;
   res.send("28-8-23_v2_v4");
 });
 
-app.use(resourceNotFound);
+app.use("/api", resourceNotFound);
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "/dist/student-visor-frontend/index.html"));
+});
+
 app.use(errorHandler);
 
 const start = async () => {

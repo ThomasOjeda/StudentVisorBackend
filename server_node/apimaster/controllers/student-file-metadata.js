@@ -3,7 +3,7 @@ const { NotFound } = require("../../errors/errors-index");
 const { StatusCodes } = require("http-status-codes");
 
 const getAllStudentFileMetadata = async (req, res) => {
-  resultFiles = await studentFileMetadata.find({});
+  resultFiles = await studentFileMetadata.find(req.query);
   res
     .status(StatusCodes.OK)
     .json({ success: true, result: resultFiles, nHits: resultFiles.length });

@@ -8,22 +8,6 @@ from .inscriptions import StudentInscriptions
 transformationsBP = Blueprint("transformations", __name__, url_prefix="/")
 
 
-""" @transformationsBP.route("/studentinscriptions", methods=["POST"])
-@exception_wrap
-def POSTstudentInscriptions():
-    enrollments = pd.read_pickle(
-        request.get_json()["data"]["transformationBody"]["yearPath"]
-    )
-
-    enrollments = enrollments[enrollments["TIPO_DOC"] == "I"]["DOCUMENTO"].unique()
-
-    returnDict = {
-        "Enrolled": enrollments.size,
-    }
-
-    return jsonify(returnDict), 200 """
-
-
 @transformationsBP.route("/studentinscriptions", methods=["POST"])
 @exception_wrap
 def POSTstudentInscriptions():

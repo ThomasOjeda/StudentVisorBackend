@@ -1,5 +1,4 @@
-from flask import Blueprint, jsonify, request
-import pandas as pd
+from flask import Blueprint, request
 from ..utils.utils import exception_wrap
 
 from ..controllers.conversions import student_inscriptions

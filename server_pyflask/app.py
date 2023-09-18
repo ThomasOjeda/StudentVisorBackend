@@ -1,6 +1,5 @@
 import os
-from flask import Flask, jsonify
-from waitress import serve
+from flask import Flask
 
 import logging
 

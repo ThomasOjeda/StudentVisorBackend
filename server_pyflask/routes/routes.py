@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint
 from .conversions import conversionsBP
 from .transformations import transformationsBP
 from ..utils.utils import exception_wrap

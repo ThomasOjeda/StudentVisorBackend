@@ -8,6 +8,7 @@ const {
   STUDENT_INSCRIPTIONS_FOLDER,
   PICKLE_SUFFIX,
 } = require("../../../config/paths");
+const FileType = require("../../../models/file-types");
 const uploadInscriptionsHandler = async (
   req,
   res,
@@ -15,7 +16,10 @@ const uploadInscriptionsHandler = async (
   tempFilename
 ) => {
   try {
-    let found = await studentFileMetadata.findOne({ year: req.body.year });
+    let found = await studentFileMetadata.findOne({
+      year: req.body.year,
+      type: FileType.STUDENT_INSCRIPTIONS,
+    });
     if (found) {
       throw new Conflict(
         `There is already a file for the year ${req.body.year} in the students inscriptions category.`

@@ -48,12 +48,7 @@ const uploadMainHandler = async (req, res) => {
     throw new NotFound("File type is not supported");
   }
 
-  await handlers[req.body.type](
-    req,
-    res,
-    STUDENTSDATA_TEMP_FOLDER,
-    tempFilename
-  );
+  await handler(req, res, STUDENTSDATA_TEMP_FOLDER, tempFilename);
 };
 
 const deleteFile = async (req, res) => {

@@ -1,7 +1,7 @@
 from flask import Blueprint, request
-from .conversions.conversions import conversionsBP
-from .transformations.transformations import transformationsBP
-from .utils.utils import exception_wrap
+from .conversions import conversionsBP
+from .transformations import transformationsBP
+from ..utils.utils import exception_wrap
 
 routesBP = Blueprint("routes", __name__, url_prefix="/")
 

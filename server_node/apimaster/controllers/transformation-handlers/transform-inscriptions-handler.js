@@ -23,9 +23,7 @@ const studentInscriptionsHandler = async (req, res, next) => {
   try {
     result = await axios.post(
       PYFLASK_URL + "/transformations/studentinscriptions",
-      {
-        data: req.body,
-      }
+      req.body
     );
   } catch (error) {
     throw new PyflaskError(error.response.data);

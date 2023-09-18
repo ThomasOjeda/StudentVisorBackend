@@ -1,27 +1,18 @@
-from flask import Blueprint, jsonify, request
+from flask import jsonify, request
 import pandas as pd
 import numpy as np
-from ..utils.utils import exception_wrap
 
 from .inscriptions import StudentInscriptions
 
-transformationsBP = Blueprint("transformations", __name__, url_prefix="/")
-
-
-@transformationsBP.route("/studentinscriptions", methods=["POST"])
-@exception_wrap
-def POSTstudentInscriptions():
-    transformer = StudentInscriptions(request.get_json()["data"])
+def student_inscriptions(request):
+    transformer = StudentInscriptions(request.get_json())
     result = transformer.transform()
     return jsonify(result), 200
 
+def student_movements(request):
+    fileA = request.get_json()["transformationBody"]["yearAPath"]
 
-@transformationsBP.route("/studentmovements", methods=["POST"])
-@exception_wrap
-def POSTstudentMovements():
-    fileA = request.get_json()["data"]["transformationBody"]["yearAPath"]
-
-    fileB = request.get_json()["data"]["transformationBody"]["yearBPath"]
+    fileB = request.get_json()["transformationBody"]["yearBPath"]
 
     table1 = pd.read_pickle(fileA)
 

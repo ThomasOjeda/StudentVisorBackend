@@ -33,9 +33,7 @@ const studentMovementsHandler = async (req, res, next) => {
   try {
     result = await axios.post(
       PYFLASK_URL + "/transformations/studentmovements",
-      {
-        data: req.body,
-      }
+      req.body
     );
   } catch (error) {
     throw error;

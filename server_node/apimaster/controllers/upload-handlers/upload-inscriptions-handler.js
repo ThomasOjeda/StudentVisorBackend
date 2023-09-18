@@ -42,18 +42,16 @@ const uploadInscriptionsHandler = async (
 
   try {
     await axios.post(PYFLASK_URL + "/conversions/studentinscriptions", {
-      data: {
-        sourceFile: tempFolder + "/" + tempFilename,
-        destinationFile:
-          STUDENT_INSCRIPTIONS_FOLDER +
-          "/" +
-          req.body.year +
-          "_" +
-          req.body.type +
-          "_" +
-          tempFilename +
-          PICKLE_SUFFIX,
-      },
+      sourceFile: tempFolder + "/" + tempFilename,
+      destinationFile:
+        STUDENT_INSCRIPTIONS_FOLDER +
+        "/" +
+        req.body.year +
+        "_" +
+        req.body.type +
+        "_" +
+        tempFilename +
+        PICKLE_SUFFIX,
     });
   } catch (error) {
     await fs.unlink(tempFolder + "/" + tempFilename);

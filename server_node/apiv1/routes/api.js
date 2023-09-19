@@ -9,6 +9,7 @@ const authRouter = require("./auth");
 const tagsRouter = require("./tag");
 const authentication = require("../middleware/authentication");
 const authorization = require("../middleware/authorization");
+const dataCategoriesRouter = require("../../apimaster/routes/data-categories");
 
 const router = express.Router();
 
@@ -29,5 +30,6 @@ router.use(
 );
 router.use("/tags", authentication, authorization("admin"), tagsRouter);
 router.use("/auth", authRouter);
+router.use("/datacat", dataCategoriesRouter);
 
 module.exports = router;

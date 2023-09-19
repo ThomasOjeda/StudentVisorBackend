@@ -6,7 +6,7 @@ class Transformation(ABC):
     def __init__(self, requestData):
         self.requestData = requestData
 
-    def readfile(self, path):
+    def readfile(self, path)->pd.DataFrame:
         return pd.read_pickle(path)
 
     @abstractmethod

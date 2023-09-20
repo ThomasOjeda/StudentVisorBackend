@@ -8,7 +8,8 @@ def student_inscriptions(request):
         converters={'UNIDAD':str,'CARRERA':str,'DOCUMENTO':str,'TIPO.1':str,'SEXO':str} #Convert columns to set types to avoid incorrect type inference
     )
 
-    data.rename(columns={"TIPO.1": "TIPO_DOC"}, inplace=True)
+    data.rename(columns={"TIPO.1": "TIPO_INSC"}, inplace=True)
+
     data.to_pickle(request.get_json()["destinationFile"])
 
     return (

@@ -40,14 +40,12 @@ class StudentMovements(Transformation):
             "DOCUMENTO"
         ].unique()
 
-        returnDict = {
+        return  {
             "Enrolled": year1Enrolled.size,
             "Reenrolled": activeOnSameOffer.size,
             "Movements": movements.size,
             "NoData": year1Enrolled.size - activeOnSameOffer.size - movements.size,
         }
-
-        return returnDict
 
         
 

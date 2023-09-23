@@ -1,6 +1,6 @@
 import pandas as pd
 
-def filterDataFrame(data:pd.DataFrame,filters:dict):
+def filterDataFrame(data:pd.DataFrame,filters:dict={}):
     filteredData = data
 
     for key in filters.keys():
@@ -9,6 +9,6 @@ def filterDataFrame(data:pd.DataFrame,filters:dict):
 
     return filteredData
 
-def columnUniqueValues(data:pd.DataFrame,column:str):
+def columnUniqueValues(data:pd.DataFrame,column:str,filters:dict={}):
 
-    return data[column].unique()
+    return filterDataFrame(data,filters)[column].unique()

@@ -1,12 +1,14 @@
 const express = require("express");
 const {
-  getAllUnits,
+  getUnits,
+  getUnitOffers,
   getAllGenders,
 } = require("../controllers/data-categories");
 
 const dataCategoriesMasterRouter = express.Router();
 
-dataCategoriesMasterRouter.get("/units", getAllUnits);
+dataCategoriesMasterRouter.post("/units", getUnits);
+dataCategoriesMasterRouter.post("/unitoffers", getUnitOffers);
 dataCategoriesMasterRouter.get("/genders", getAllGenders);
 
 module.exports = dataCategoriesMasterRouter;

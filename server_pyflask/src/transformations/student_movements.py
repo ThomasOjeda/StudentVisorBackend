@@ -8,26 +8,30 @@ class StudentMovements(Transformation):
         return True
 
     def transform(self) -> dict:
-        fileA = self.requestData["transformationBody"]["yearAPath"]
+        fileAPath = self.requestData["transformationBody"]["yearAPath"]
+        fileBPath = self.requestData["transformationBody"]["yearBPath"]
 
-        fileB = self.requestData["transformationBody"]["yearBPath"]
+        table1Filters = {}
+        table1Filters['TIPO_INSC']="I"
+        table2Filters = {}
 
-        sex = None
+
+
         if ("sex" in self.requestData["transformationBody"]):
-            sex = self.requestData["transformationBody"]["sex"]
+            table1Filters['SEXO'] = self.requestData["transformationBody"]["sex"]
+            table2Filters['SEXO'] = self.requestData["transformationBody"]["sex"]
         
-        unitA=None
         if ("unitA" in self.requestData["transformationBody"]):
-            unitA = self.requestData["transformationBody"]["unitA"]
+            table1Filters['UNIDAD'] = self.requestData["transformationBody"]["unitA"]
 
-        unitB=None
         if ("unitB" in self.requestData["transformationBody"]):
-            unitB = self.requestData["transformationBody"]["unitB"]
+            table2Filters['UNIDAD'] = self.requestData["transformationBody"]["unitB"]
 
-        table1 = self.readfile(fileA)
-        table2 = self.readfile(fileB)
-        table1 = filterDataFrame(table1,insc_type='I',sex=sex,unit=unitA)
-        table2 = filterDataFrame(table2,sex=sex,unit=unitB)
+
+        table1 = self.readfile(fileAPath)
+        table2 = self.readfile(fileBPath)
+        table1 = filterDataFrame(table1,table1Filters)
+        table2 = filterDataFrame(table2,table2Filters)
 
         activeOnAnyOffer = table1.merge(table2, on="DOCUMENTO", how="inner")
         activeOnSameOffer = table1.merge(table2, on=["DOCUMENTO", "CARRERA"], how="inner")

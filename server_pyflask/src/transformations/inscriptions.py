@@ -10,15 +10,16 @@ class StudentInscriptions(Transformation):
 
         enrollments = self.readfile(self.requestData["transformationBody"]["yearPath"])
 
-        sex = None
-        if ("sex" in self.requestData["transformationBody"]):
-            sex = self.requestData["transformationBody"]["sex"]
-        
-        unit=None
-        if ("unit" in self.requestData["transformationBody"]):
-            unit = self.requestData["transformationBody"]["unit"]
+        filters={}
+        filters['TIPO_INSC']="I"
 
-        enrollments = filterDataFrame(enrollments,insc_type="I",sex=sex,unit=unit)
+        if ("sex" in self.requestData["transformationBody"]):
+            filters['SEXO'] = self.requestData["transformationBody"]["sex"]
+        
+        if ("unit" in self.requestData["transformationBody"]):
+            filters['UNIDAD'] = self.requestData["transformationBody"]["unit"]
+
+        enrollments = filterDataFrame(enrollments,filters)
 
         enrollments = enrollments["DOCUMENTO"].unique()
 

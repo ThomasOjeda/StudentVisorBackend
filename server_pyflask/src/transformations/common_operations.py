@@ -1,12 +1,10 @@
 import pandas as pd
 
-def filterDataFrame(data:pd.DataFrame,insc_type:str=None,sex:str=None,unit:str=None):
+def filterDataFrame(data:pd.DataFrame,filters:dict):
     filteredData = data
-    if (insc_type!=None):
-        filteredData = filteredData[filteredData['TIPO_INSC']=='I']
-    if (sex!=None):
-        filteredData = filteredData[filteredData['SEXO']==sex]
-    if (unit!=None):
-        filteredData = filteredData[filteredData['UNIDAD']==unit]
+
+    for key in filters.keys():
+        if (filters[key]!=None):
+            filteredData = filteredData[filteredData[key]==filters[key]]
 
     return filteredData

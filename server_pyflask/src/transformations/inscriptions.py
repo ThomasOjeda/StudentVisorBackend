@@ -1,6 +1,6 @@
 import pandas as pd
 from .transformation import Transformation
-from .common_operations import filterDataFrame
+from .common_operations import filterDataFrame,columnUniqueValues
 
 class StudentInscriptions(Transformation):
     def validate(self)->bool:
@@ -21,7 +21,7 @@ class StudentInscriptions(Transformation):
 
         enrollments = filterDataFrame(enrollments,filters)
 
-        enrollments = enrollments["DOCUMENTO"].unique()
+        enrollments = columnUniqueValues(enrollments,'DOCUMENTO')
 
         return {
             "Enrolled": enrollments.size,

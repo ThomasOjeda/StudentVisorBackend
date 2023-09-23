@@ -8,3 +8,7 @@ def filterDataFrame(data:pd.DataFrame,filters:dict):
             filteredData = filteredData[filteredData[key]==filters[key]]
 
     return filteredData
+
+def columnUniqueValues(data:pd.DataFrame,column:str):
+
+    return data[column].unique()

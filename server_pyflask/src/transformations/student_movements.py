@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from .transformation import Transformation
-from .common_operations import filterDataFrame
+from .common_operations import filterDataFrame,columnUniqueValues
 
 class StudentMovements(Transformation):
     def validate(self)->bool:
@@ -35,14 +35,14 @@ class StudentMovements(Transformation):
 
         activeOnAnyOffer = table1.merge(table2, on="DOCUMENTO", how="inner")
         activeOnSameOffer = table1.merge(table2, on=["DOCUMENTO", "CARRERA"], how="inner")
-        activeOnAnyOffer = activeOnAnyOffer["DOCUMENTO"].unique()
-        activeOnSameOffer = activeOnSameOffer["DOCUMENTO"].unique()
+        activeOnAnyOffer = columnUniqueValues(activeOnAnyOffer,"DOCUMENTO")
+        activeOnSameOffer = columnUniqueValues(activeOnSameOffer,"DOCUMENTO")
 
         movements = np.setdiff1d(activeOnAnyOffer, activeOnSameOffer)
 
-        year1Enrolled = table1[ #Table 1 is already filtered
+        year1Enrolled = columnUniqueValues(table1, #Table 1 is already filtered
             "DOCUMENTO"
-        ].unique()
+        )
 
         return  {
             "Enrolled": year1Enrolled.size,

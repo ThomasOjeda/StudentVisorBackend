@@ -4,7 +4,7 @@ from flask import Response
 
 
 def handle_exception(exception: Exception):
-    print(exception,flush=True)
+    print(exception, flush=True)
     return str(exception), 500
 
 

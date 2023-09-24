@@ -5,6 +5,7 @@ from ..controllers.conversions import student_inscriptions
 
 conversionsBP = Blueprint("conversions", __name__, url_prefix="/")
 
+
 @conversionsBP.route("/studentinscriptions", methods=["POST"])
 @exception_wrap
 def controller():

@@ -1,14 +1,15 @@
 import pandas as pd
 
-def filterDataFrame(data:pd.DataFrame,filters:dict={}):
+
+def filterDataFrame(data: pd.DataFrame, filters: dict = {}):
     filteredData = data
 
     for key in filters.keys():
-        if (filters[key]!=None):
-            filteredData = filteredData[filteredData[key]==filters[key]]
+        if filters[key] != None:
+            filteredData = filteredData[filteredData[key] == filters[key]]
 
     return filteredData
 
-def columnUniqueValues(data:pd.DataFrame,column:str,filters:dict={}):
 
-    return filterDataFrame(data,filters)[column].unique()
+def columnUniqueValues(data: pd.DataFrame, column: str, filters: dict = {}):
+    return filterDataFrame(data, filters)[column].unique()

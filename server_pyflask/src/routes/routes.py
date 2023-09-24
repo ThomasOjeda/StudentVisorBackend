@@ -19,4 +19,3 @@ routesBP.register_blueprint(conversionsBP, url_prefix="/conversions")
 routesBP.register_blueprint(transformationsBP, url_prefix="/transformations")
 
 routesBP.register_blueprint(datacatBP, url_prefix="/datacat")
-

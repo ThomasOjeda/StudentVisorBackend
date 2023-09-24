@@ -1,6 +1,8 @@
 const { BadRequest } = require("../../../errors/errors-index");
 const studentFileMetadata = require("../../../models/student-file-metadata");
 const { PYFLASK_URL } = require("../../../config/config");
+const FileType = require("../../../models/file-types");
+
 const axios = require("axios");
 
 const studentMovementsHandler = async (req, res, next) => {
@@ -11,10 +13,12 @@ const studentMovementsHandler = async (req, res, next) => {
 
   yearAMetadata = await studentFileMetadata.findOne({
     year: req.body.transformationBody.yearA,
+    type: FileType.STUDENT_INSCRIPTIONS,
   });
 
   yearBMetadata = await studentFileMetadata.findOne({
     year: req.body.transformationBody.yearB,
+    type: FileType.STUDENT_INSCRIPTIONS,
   });
 
   if (!yearAMetadata || !yearBMetadata)

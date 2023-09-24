@@ -4,6 +4,7 @@ const { BadRequest } = require("../../errors/errors-index");
 const studentFileMetadata = require("../../models/student-file-metadata");
 const axios = require("axios");
 const { PYFLASK_URL } = require("../../config/config");
+const FileType = require("../../models/file-types");
 
 const getUnits = async (req, res) => {
   if (!req.body.year)
@@ -11,6 +12,7 @@ const getUnits = async (req, res) => {
 
   yearMetadata = await studentFileMetadata.findOne({
     year: req.body.year,
+    type: FileType.STUDENT_INSCRIPTIONS,
   });
 
   if (!yearMetadata) throw new BadRequest("Requested year is not available");
@@ -38,6 +40,7 @@ const getUnitOffers = async (req, res) => {
 
   yearMetadata = await studentFileMetadata.findOne({
     year: req.body.year,
+    type: FileType.STUDENT_INSCRIPTIONS,
   });
 
   if (!yearMetadata) throw new BadRequest("Requested year is not available");

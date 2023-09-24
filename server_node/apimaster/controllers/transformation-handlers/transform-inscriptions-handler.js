@@ -1,6 +1,8 @@
 const { BadRequest, PyflaskError } = require("../../../errors/errors-index");
 const studentFileMetadata = require("../../../models/student-file-metadata");
 const { PYFLASK_URL } = require("../../../config/config");
+const FileType = require("../../../models/file-types");
+
 const axios = require("axios");
 
 const studentInscriptionsHandler = async (req, res, next) => {
@@ -11,6 +13,7 @@ const studentInscriptionsHandler = async (req, res, next) => {
 
   yearMetadata = await studentFileMetadata.findOne({
     year: req.body.transformationBody.year,
+    type: FileType.STUDENT_INSCRIPTIONS,
   });
 
   if (!yearMetadata) throw new BadRequest("Requested year is not available");

@@ -9,6 +9,7 @@ class StudentInscriptions(Transformation):
         return True
 
     def transform(self) -> dict:
+        print(self.requestData, flush=True)
         enrollments = self.readfile(self.requestData["transformationBody"]["yearPath"])
 
         filters = {}
@@ -19,6 +20,11 @@ class StudentInscriptions(Transformation):
 
         if "unit" in self.requestData["transformationBody"]:
             filters[ColName.UNIT.value] = self.requestData["transformationBody"]["unit"]
+
+        if "offer" in self.requestData["transformationBody"]:
+            filters[ColName.OFFER.value] = self.requestData["transformationBody"][
+                "offer"
+            ]
 
         enrollments = filterDataFrame(enrollments, filters)
 

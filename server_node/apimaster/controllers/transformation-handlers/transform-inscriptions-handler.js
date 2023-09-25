@@ -6,6 +6,7 @@ const FileType = require("../../../models/file-types");
 const axios = require("axios");
 
 const studentInscriptionsHandler = async (req, res, next) => {
+  console.log(req.body);
   if (!req.body.transformationBody.year)
     throw new BadRequest(
       "Student inscriptions transformations require a year in the transformation body"

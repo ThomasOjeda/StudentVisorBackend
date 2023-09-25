@@ -9,7 +9,6 @@ class StudentInscriptions(Transformation):
         return True
 
     def transform(self) -> dict:
-        print(self.requestData, flush=True)
         enrollments = self.readfile(self.requestData["transformationBody"]["yearPath"])
 
         filters = {}

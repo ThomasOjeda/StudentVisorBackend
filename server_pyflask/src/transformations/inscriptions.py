@@ -5,30 +5,15 @@ from ..utils.enums import ColName
 
 
 class StudentInscriptions(Transformation):
-    def validate(self) -> bool:
-        return True
+    def __init__(self, enrollments: pd.DataFrame, filters: dict):
+        self.enrollments = enrollments
+        self.filters = filters
 
-    def transform(self) -> dict:
-        enrollments = self.readfile(self.requestData["transformationBody"]["yearPath"])
+    def transform(self) -> pd.DataFrame:
+        self.enrollments = filterDataFrame(self.enrollments, self.filters)
 
-        filters = {}
-        filters[ColName.INSC_TYPE.value] = "I"
-
-        if "sex" in self.requestData["transformationBody"]:
-            filters[ColName.SEX.value] = self.requestData["transformationBody"]["sex"]
-
-        if "unit" in self.requestData["transformationBody"]:
-            filters[ColName.UNIT.value] = self.requestData["transformationBody"]["unit"]
-
-        if "offer" in self.requestData["transformationBody"]:
-            filters[ColName.OFFER.value] = self.requestData["transformationBody"][
-                "offer"
-            ]
-
-        enrollments = filterDataFrame(enrollments, filters)
-
-        enrollments = columnUniqueValues(enrollments, ColName.ID.value)
+        self.enrollments = columnUniqueValues(self.enrollments, ColName.ID.value)
 
         return {
-            "Enrolled": enrollments.size,
+            "Enrolled": self.enrollments.size,
         }

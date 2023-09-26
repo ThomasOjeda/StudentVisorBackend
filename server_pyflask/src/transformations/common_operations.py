@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-def filterDataFrame(data: pd.DataFrame, filters: dict = {}):
+def filterDataFrame(data: pd.DataFrame, filters: dict = {}) -> pd.DataFrame:
     filteredData = data
 
     for key in filters.keys():
@@ -13,3 +13,7 @@ def filterDataFrame(data: pd.DataFrame, filters: dict = {}):
 
 def columnUniqueValues(data: pd.DataFrame, column: str, filters: dict = {}):
     return filterDataFrame(data, filters)[column].unique()
+
+
+def readFile(path) -> pd.DataFrame:
+    return pd.read_pickle(path)

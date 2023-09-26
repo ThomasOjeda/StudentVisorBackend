@@ -5,22 +5,19 @@ from ..utils.enums import ColName
 
 
 class availableUnits(Transformation):
-    def validate(self) -> bool:
-        return True
+    def __init__(self, table):
+        self.table = table
 
-    def transform(self) -> dict:
-        table = self.readfile(self.requestData["yearPath"])
-
-        return columnUniqueValues(table, ColName.UNIT.value)
+    def transform(self) -> pd.DataFrame:
+        return columnUniqueValues(self.table, ColName.UNIT.value)
 
 
 class unitOffers(Transformation):
-    def validate(self) -> bool:
-        return True
+    def __init__(self, table, unit):
+        self.table = table
+        self.unit = unit
 
-    def transform(self) -> dict:
-        table = self.readfile(self.requestData["yearPath"])
-
+    def transform(self) -> pd.DataFrame:
         return columnUniqueValues(
-            table, ColName.OFFER.value, {ColName.UNIT.value: self.requestData["unit"]}
+            self.table, ColName.OFFER.value, {ColName.UNIT.value: self.unit}
         )

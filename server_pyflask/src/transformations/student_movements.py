@@ -35,6 +35,18 @@ class StudentMovements(Transformation):
                 "unitB"
             ]
 
+        if "offerA" in self.requestData["transformationBody"]:
+            table1Filters[ColName.OFFER.value] = self.requestData["transformationBody"][
+                "offerA"
+            ]
+
+        if "offerB" in self.requestData["transformationBody"]:
+            table2Filters[ColName.OFFER.value] = self.requestData["transformationBody"][
+                "offerB"
+            ]
+
+        print(table1Filters, flush=True)
+        print(table2Filters, flush=True)
         table1 = self.readfile(fileAPath)
         table2 = self.readfile(fileBPath)
         table1 = filterDataFrame(table1, table1Filters)

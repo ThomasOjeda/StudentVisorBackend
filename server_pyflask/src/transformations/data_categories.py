@@ -5,19 +5,12 @@ from ..utils.enums import ColName
 
 
 class availableUnits(Transformation):
-    def __init__(self, table):
-        self.table = table
-
-    def transform(self) -> pd.DataFrame:
-        return columnUniqueValues(self.table, ColName.UNIT.value)
+    def transform(self, table) -> pd.DataFrame:
+        return columnUniqueValues(table, ColName.UNIT.value)
 
 
 class unitOffers(Transformation):
-    def __init__(self, table, unit):
-        self.table = table
-        self.unit = unit
-
-    def transform(self) -> pd.DataFrame:
+    def transform(self, table, unit) -> pd.DataFrame:
         return columnUniqueValues(
-            self.table, ColName.OFFER.value, {ColName.UNIT.value: self.unit}
+            table, ColName.OFFER.value, {ColName.UNIT.value: unit}
         )

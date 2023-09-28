@@ -4,7 +4,7 @@ from .common_operations import filterDataFrame, columnUniqueValues
 from ..utils.enums import ColName
 
 
-class StudentInscriptions(Transformation):
+class UnitInscriptions(Transformation):
     def transform(self, enrollments, filters) -> pd.DataFrame:
         enrollments = filterDataFrame(enrollments, filters)
 

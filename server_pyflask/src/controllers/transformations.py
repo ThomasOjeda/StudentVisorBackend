@@ -22,8 +22,8 @@ def student_inscriptions(request):
 
     enrollments = readFile(requestData["transformationBody"]["yearPath"])
 
-    transformer = StudentInscriptions(enrollments, filters)
-    result = transformer.transform()
+    transformer = StudentInscriptions()
+    result = transformer.transform(enrollments, filters)
     return jsonify(result), 200
 
 
@@ -55,6 +55,6 @@ def student_movements(request):
 
     table1 = readFile(fileAPath)
     table2 = readFile(fileBPath)
-    transformer = StudentMovements(table1, table2, table1Filters, table2Filters)
-    result = transformer.transform()
+    transformer = StudentMovements()
+    result = transformer.transform(table1, table2, table1Filters, table2Filters)
     return jsonify(result), 200

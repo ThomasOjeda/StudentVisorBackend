@@ -10,9 +10,8 @@ class Transformation(ABC):
 
 
 class TransformationSequence(Transformation):
-    def __init__(self, requestData):
-        super.__init__(requestData)
-        self.transformationSequence = np.array([], dtype=Transformation)
+    def __init__(self, transformations):
+        self.transformationSequence = transformations
 
     def transform(self) -> pd.DataFrame:
         for t in self.transformationSequence:

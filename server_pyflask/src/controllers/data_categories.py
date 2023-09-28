@@ -6,8 +6,8 @@ from ..transformations.common_operations import readFile
 def available_units(request):
     table = readFile(request.get_json()["yearPath"])
 
-    transformer = availableUnits(table)
-    result = transformer.transform().tolist()
+    transformer = availableUnits()
+    result = transformer.transform(table).tolist()
     return jsonify(result), 200
 
 
@@ -15,6 +15,6 @@ def unit_offers(request):
     requestData = request.get_json()
     table = readFile(requestData["yearPath"])
     unit = requestData["unit"]
-    transformer = unitOffers(table, unit)
-    result = transformer.transform().tolist()
+    transformer = unitOffers()
+    result = transformer.transform(table, unit).tolist()
     return jsonify(result), 200

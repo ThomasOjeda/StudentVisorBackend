@@ -5,11 +5,6 @@ from ..utils.enums import ColName
 
 
 class UnitInscriptions(Transformation):
-    def transform(self, enrollments, filters) -> pd.DataFrame:
-        enrollments = filterDataFrame(enrollments, filters)
-
-        enrollments = columnUniqueValues(enrollments, ColName.ID.value)
-
-        return {
-            "Enrolled": enrollments.size,
-        }
+    def transform(self, enrollments) -> pd.DataFrame:
+        enrollments = enrollments.groupby(ColName.UNIT.value).count()
+        return enrollments[ColName.ID.value]

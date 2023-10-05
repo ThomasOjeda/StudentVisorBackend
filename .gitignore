@@ -297,3 +297,6 @@ cython_debug/
 
 #Mounted students data volume 
 /studentsdata
+
+#Private keys and certificates made to provide https service from the node server should not be public
+*.pem

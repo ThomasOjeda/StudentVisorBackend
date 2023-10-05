@@ -15,6 +15,8 @@ const createDataFolders = require("./utils/create-data-folders");
 const retry = require("./utils/retry-connection");
 const startupTag = require("./utils/startup-tags");
 const path = require("path");
+const https = require("https");
+const fs = require("fs");
 
 const app = express();
 
@@ -36,10 +38,13 @@ app.use("/api/version", (req, res) => {
 });
 
 app.use("/api", resourceNotFound);
-app.get("*", (req, res) => {
+/* app.get("*", (req, res) => { //Needed if this server serves the angular application
   res.sendFile(path.join(__dirname, "/dist/student-visor-frontend/index.html"));
+}); */
+app.get("*", (req, res) => {
+  res.status = 404
+  res.send("Requested resource does not exist");
 });
-
 app.use(errorHandler);
 
 const start = async () => {
@@ -75,9 +80,22 @@ const start = async () => {
 
   await startupTag();
 
-  app.listen(PORT, () => {
+  https
+  .createServer(
+		// Provide the private and public key to the server by reading each
+		// file's content with the readFileSync() method.
+    {
+      key: fs.readFileSync("key.pem"),
+      cert: fs.readFileSync("cert.pem"),
+    },
+    app
+  )
+  .listen(PORT, () => {
     console.log(`server listening on port ${PORT}`);
   });
+
+
+
 };
 
 start();

@@ -14,7 +14,7 @@ const dataCategoriesRouter = require("../../apimaster/routes/data-categories");
 const router = express.Router();
 
 router.use("/charts", authentication, chartsRouter);
-router.use("/users", authentication, authorization("admin"), usersRouter);
+router.use("/users", authentication, usersRouter);
 router.use("/uploads", authentication, authorization("admin"), uploadsRouter);
 router.use(
   "/transformations",

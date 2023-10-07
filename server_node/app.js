@@ -42,7 +42,7 @@ app.use("/api", resourceNotFound);
   res.sendFile(path.join(__dirname, "/dist/student-visor-frontend/index.html"));
 }); */
 app.get("*", (req, res) => {
-  res.status = 404
+  res.status = 404;
   res.send("Requested resource does not exist");
 });
 app.use(errorHandler);
@@ -81,21 +81,18 @@ const start = async () => {
   await startupTag();
 
   https
-  .createServer(
-		// Provide the private and public key to the server by reading each
-		// file's content with the readFileSync() method.
-    {
-      key: fs.readFileSync("key.pem"),
-      cert: fs.readFileSync("cert.pem"),
-    },
-    app
-  )
-  .listen(PORT, () => {
-    console.log(`server listening on port ${PORT}`);
-  });
-
-
-
+    .createServer(
+      // Provide the private and public key to the server by reading each
+      // file's content with the readFileSync() method.
+      {
+        key: fs.readFileSync("key.pem"),
+        cert: fs.readFileSync("cert.pem"),
+      },
+      app
+    )
+    .listen(PORT, () => {
+      console.log(`server listening on port ${PORT}`);
+    });
 };
 
 start();

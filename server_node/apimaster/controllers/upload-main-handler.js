@@ -9,6 +9,7 @@ const { STUDENTSDATA_TEMP_FOLDER } = require("../../config/paths");
 
 const handlers = {
   "student-inscriptions": require("./upload-handlers/upload-inscriptions-handler"),
+  "student-scholarships": require("./upload-handlers/upload-scholarships-handler"),
 };
 
 const uploadMainHandler = async (req, res) => {
@@ -19,13 +20,13 @@ const uploadMainHandler = async (req, res) => {
       cb(null, tempFilename);
     },
   });
-  const upload = multer({ storage: storage }).single("uploaded_file");
+  const upload = multer({ storage: storage }).single("uploaded_file"); //Is a function that can be used as a middleware
   uploadPromise = util.promisify(upload);
 
-  result = await uploadPromise(req, res);
+  fileSaveError = await uploadPromise(req, res);
 
-  if (result !== undefined) {
-    throw result;
+  if (fileSaveError !== undefined) {
+    throw fileSaveError;
   }
   if (!req.file) {
     throw new BadRequest("File not found in request");

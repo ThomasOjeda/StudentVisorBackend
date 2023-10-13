@@ -5,12 +5,12 @@ const studentFileMetadata = require("../../../models/student-file-metadata");
 const { Conflict } = require("../../../errors/errors-index");
 const { PYFLASK_URL } = require("../../../config/config");
 const {
-  STUDENT_INSCRIPTIONS_FOLDER,
+  STUDENT_SCHOLARSHIPS_FOLDER,
   PICKLE_SUFFIX,
 } = require("../../../config/paths");
 const FileType = require("../../../models/file-types");
 
-const uploadInscriptionsHandler = async (
+const uploadScholarshipsHandler = async (
   req,
   res,
   tempFolder,
@@ -18,12 +18,12 @@ const uploadInscriptionsHandler = async (
 ) => {
   try {
     let found = await studentFileMetadata.findOne({
-      year: req.body.year,
-      type: FileType.STUDENT_INSCRIPTIONS,
+      name: req.body.name,
+      type: FileType.STUDENT_SCHOLARSHIPS,
     });
     if (found) {
       throw new Conflict(
-        `There is already a file for the year ${req.body.year} in the students inscriptions category.`
+        `There is already a file with that name in the Student Scholarships category.`
       );
     }
   } catch (error) {
@@ -34,11 +34,11 @@ const uploadInscriptionsHandler = async (
   //WARNING: the folder where the resulting .pickle file is stored MUST exist!
   try {
     //Check if folder exists
-    await fs.access(STUDENT_INSCRIPTIONS_FOLDER);
+    await fs.access(STUDENT_SCHOLARSHIPS_FOLDER);
   } catch (error) {
     //Folder does not exist, create folder
     try {
-      await fs.mkdir(STUDENT_INSCRIPTIONS_FOLDER);
+      await fs.mkdir(STUDENT_SCHOLARSHIPS_FOLDER);
     } catch (error) {
       await fs.unlink(tempFolder + "/" + tempFilename);
       throw error;
@@ -46,10 +46,10 @@ const uploadInscriptionsHandler = async (
   }
 
   try {
-    await axios.post(PYFLASK_URL + "/conversions/studentinscriptions", {
+    await axios.post(PYFLASK_URL + "/conversions/studentscholarships", {
       sourceFile: tempFolder + "/" + tempFilename,
       destinationFile:
-        STUDENT_INSCRIPTIONS_FOLDER +
+        STUDENT_SCHOLARSHIPS_FOLDER +
         "/" +
         req.body.year +
         "_" +
@@ -77,13 +77,13 @@ const uploadInscriptionsHandler = async (
         "_" +
         tempFilename +
         PICKLE_SUFFIX,
-      folder: STUDENT_INSCRIPTIONS_FOLDER,
+      folder: STUDENT_SCHOLARSHIPS_FOLDER,
       type: req.body.type,
     });
     res.status(StatusCodes.CREATED).json({ success: true });
   } catch (error) {
     await fs.unlink(
-      STUDENT_INSCRIPTIONS_FOLDER +
+      STUDENT_SCHOLARSHIPS_FOLDER +
         "/" +
         req.body.year +
         "_" +
@@ -96,4 +96,4 @@ const uploadInscriptionsHandler = async (
   }
 };
 
-module.exports = uploadInscriptionsHandler;
+module.exports = uploadScholarshipsHandler;

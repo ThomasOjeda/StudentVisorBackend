@@ -34,7 +34,7 @@ app.use("/api/v1", apiRouter);
 app.use("/api/master", masterAuthentication, masterRouter);
 app.use("/api/version", (req, res) => {
   res.status = 200;
-  res.send("28-8-23_v2_v4");
+  res.send("13-10-23_v2_v4");
 });
 
 app.use("/api", resourceNotFound);

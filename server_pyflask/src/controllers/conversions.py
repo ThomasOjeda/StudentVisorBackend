@@ -30,3 +30,26 @@ def student_inscriptions(request):
         jsonify({"created": True, "filename": request.get_json()["destinationFile"]}),
         200,
     )
+
+
+def student_scholarships(request):
+    data: pd.DataFrame = pd.read_excel(
+        request.get_json()["sourceFile"],
+        usecols=[
+            ColName.UNIT_SCHOLARSHIP_FILE.value,
+            ColName.OFFER.value,
+            ColName.ID_SCHOLARSHIP_FILE.value,
+        ],
+        converters={
+            ColName.UNIT_SCHOLARSHIP_FILE.value: str,
+            ColName.OFFER.value: str,
+            ColName.ID_SCHOLARSHIP_FILE.value: str,
+        },  # Convert columns to set types to avoid incorrect type inference
+    )
+
+    data.to_pickle(request.get_json()["destinationFile"])
+
+    return (
+        jsonify({"created": True, "filename": request.get_json()["destinationFile"]}),
+        200,
+    )

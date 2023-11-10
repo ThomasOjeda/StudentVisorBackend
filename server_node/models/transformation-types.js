@@ -3,6 +3,7 @@ const TransformationType = {
   INSC: "INSC",
   UINSC: "UINSC",
   STMIG: "STMIG",
+  STSCHMV: "STSCHMV",
 };
 
 module.exports = Object.freeze(TransformationType);

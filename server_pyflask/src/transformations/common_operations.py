@@ -15,5 +15,5 @@ def columnUniqueValues(data: pd.DataFrame, column: str, filters: dict = {}):
     return filterDataFrame(data, filters)[column].unique()
 
 
-def readFile(path) -> pd.DataFrame:
+def readFile(path: str) -> pd.DataFrame:
     return pd.read_pickle(path)

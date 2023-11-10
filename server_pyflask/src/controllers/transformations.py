@@ -7,6 +7,9 @@ from ..transformations.inscriptions import StudentInscriptions
 from ..transformations.student_movements import StudentMovements
 from ..transformations.units_inscriptions import UnitInscriptions
 from ..transformations.student_migrations import StudentMigrations
+from ..transformations.student_scholarships_movements import (
+    StudentScholarshipsMovements,
+)
 
 
 def student_inscriptions(request):
@@ -112,3 +115,22 @@ def student_migrations(request):
     )
 
     return jsonify(result.to_dict()), 200
+
+
+def student_scholarships_movements(request):
+    requestData = request.get_json()
+
+    fileAPath = requestData["transformationBody"]["yearAPath"]
+    fileBPath = requestData["transformationBody"]["yearBPath"]
+
+    fileScholarshipsPath = requestData["transformationBody"]["scholarshipsPath"]
+
+    table1 = readFile(fileAPath)
+    table2 = readFile(fileBPath)
+
+    scholarships = readFile(fileScholarshipsPath)
+
+    transformer = StudentScholarshipsMovements()
+    result = transformer.transform(table1, table2, scholarships)
+
+    return jsonify(result), 200

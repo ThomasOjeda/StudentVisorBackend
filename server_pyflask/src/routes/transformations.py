@@ -6,6 +6,7 @@ from ..controllers.transformations import (
     student_movements,
     unit_inscriptions,
     student_migrations,
+    student_scholarships_movements,
 )
 
 transformationsBP = Blueprint("transformations", __name__, url_prefix="/")
@@ -33,3 +34,9 @@ def POSTunitInscriptions():
 @exception_wrap
 def POSTstudentMigrations():
     return student_migrations(request)
+
+
+@transformationsBP.route("/studentscholarshipsmovements", methods=["POST"])
+@exception_wrap
+def POSTstudentScholarshipsMovements():
+    return student_scholarships_movements(request)

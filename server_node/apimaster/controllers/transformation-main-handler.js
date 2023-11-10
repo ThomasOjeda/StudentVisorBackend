@@ -6,6 +6,7 @@ const handlers = {
   [TransformationType.INSC]: require("./transformation-handlers/transform-inscriptions-handler"),
   [TransformationType.UINSC]: require("./transformation-handlers/transform-unit-inscriptions-handler"),
   [TransformationType.STMIG]: require("./transformation-handlers/transform-migration-destination-handler"),
+  [TransformationType.STSCHMV]: require("./transformation-handlers/transform-scholarship-movements-handler"),
 };
 
 const transformationHandler = async (req, res, next) => {

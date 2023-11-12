@@ -1,11 +1,23 @@
 from enum import Enum
 
 
+class RawFileColName(Enum):
+    SEX = "Sexo"
+    UNIT = "Responsable Académica"
+    INSC_TYPE = "Situación"
+    OFFER = "Propuesta"
+    ID = "Documento"
+    BELGRANO_UNIT = "Unidad Académica"
+    PROGRESAR_UNIT = "Facultad"
+    BELGRANO_ID = "DNI"
+    PROGRESAR_ID = "DNI"
+    BELGRANO_OFFER = "Título"
+    PROGRESAR_OFFER = "Carrera"
+
+
 class ColName(Enum):
-    SEX = "SEXO"
-    UNIT = "UNIDAD"
-    INSC_TYPE = "TIPO_INSC"
-    OFFER = "CARRERA"
-    ID = "DOCUMENTO"
-    UNIT_SCHOLARSHIP_FILE = "UNIDAD ACADEMICA"
-    ID_SCHOLARSHIP_FILE = "DNI"
+    SEX = "sex"
+    UNIT = "unit"
+    INSC_TYPE = "insc"
+    OFFER = "offer"
+    ID = "id"

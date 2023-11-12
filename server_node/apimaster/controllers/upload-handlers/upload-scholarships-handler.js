@@ -48,6 +48,7 @@ const uploadScholarshipsHandler = async (
   try {
     await axios.post(PYFLASK_URL + "/conversions/studentscholarships", {
       sourceFile: tempFolder + "/" + tempFilename,
+      scholarship: req.body.scholarship,
       destinationFile:
         STUDENT_SCHOLARSHIPS_FOLDER +
         "/" +

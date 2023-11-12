@@ -1,28 +1,38 @@
 from flask import jsonify, request
 import pandas as pd
-from ..utils.enums import ColName
+from ..utils.enums import RawFileColName, ColName
 
 
 def student_inscriptions(request):
     data = pd.read_excel(
         request.get_json()["sourceFile"],
+        header=[1],
         usecols=[
-            ColName.UNIT.value,
-            ColName.OFFER.value,
-            ColName.ID.value,
-            "TIPO.1",
-            ColName.SEX.value,
+            RawFileColName.UNIT.value,
+            RawFileColName.OFFER.value,
+            RawFileColName.ID.value,
+            RawFileColName.INSC_TYPE.value,
+            RawFileColName.SEX.value,
         ],
         converters={
-            ColName.UNIT.value: str,
-            ColName.OFFER.value: str,
-            ColName.ID.value: str,
-            "TIPO.1": str,
-            ColName.SEX.value: str,
+            RawFileColName.UNIT.value: str,
+            RawFileColName.OFFER.value: str,
+            RawFileColName.ID.value: str,
+            RawFileColName.INSC_TYPE.value: str,
+            RawFileColName.SEX.value: str,
         },  # Convert columns to set types to avoid incorrect type inference
     )
 
-    data.rename(columns={"TIPO.1": ColName.INSC_TYPE.value}, inplace=True)
+    data.rename(
+        columns={
+            RawFileColName.UNIT.value: ColName.UNIT.value,
+            RawFileColName.OFFER.value: ColName.OFFER.value,
+            RawFileColName.ID.value: ColName.ID.value,
+            RawFileColName.INSC_TYPE.value: ColName.INSC_TYPE.value,
+            RawFileColName.SEX.value: ColName.SEX.value,
+        },
+        inplace=True,
+    )
 
     data.to_pickle(request.get_json()["destinationFile"])
 
@@ -32,19 +42,53 @@ def student_inscriptions(request):
     )
 
 
-def student_scholarships(request):
+def student_belgrano_scholarships(request):
+    columnNames = []
+    convertersDict = {}
+    columnRenames = {}
+
+    if request.get_json()["scholarship"] == "belgrano":
+        columnNames = [
+            RawFileColName.BELGRANO_UNIT.value,
+            RawFileColName.BELGRANO_OFFER.value,
+            RawFileColName.BELGRANO_ID.value,
+        ]
+        convertersDict = {
+            RawFileColName.BELGRANO_UNIT.value: str,
+            RawFileColName.BELGRANO_OFFER.value: str,
+            RawFileColName.BELGRANO_ID.value: str,
+        }
+        columnRenames = {
+            RawFileColName.BELGRANO_UNIT.value: ColName.UNIT.value,
+            RawFileColName.BELGRANO_OFFER.value: ColName.OFFER.value,
+            RawFileColName.BELGRANO_ID.value: ColName.ID.value,
+        }
+    elif request.get_json()["scholarship"] == "progresar":
+        columnNames = [
+            RawFileColName.PROGRESAR_UNIT.value,
+            RawFileColName.PROGRESAR_OFFER.value,
+            RawFileColName.PROGRESAR_ID.value,
+        ]
+        convertersDict = {
+            RawFileColName.PROGRESAR_UNIT.value: str,
+            RawFileColName.PROGRESAR_OFFER.value: str,
+            RawFileColName.PROGRESAR_ID.value: str,
+        }
+        columnRenames = {
+            RawFileColName.PROGRESAR_UNIT.value: ColName.UNIT.value,
+            RawFileColName.PROGRESAR_OFFER.value: ColName.OFFER.value,
+            RawFileColName.PROGRESAR_ID.value: ColName.ID.value,
+        }
+
     data: pd.DataFrame = pd.read_excel(
         request.get_json()["sourceFile"],
-        usecols=[
-            ColName.UNIT_SCHOLARSHIP_FILE.value,
-            ColName.OFFER.value,
-            ColName.ID_SCHOLARSHIP_FILE.value,
-        ],
-        converters={
-            ColName.UNIT_SCHOLARSHIP_FILE.value: str,
-            ColName.OFFER.value: str,
-            ColName.ID_SCHOLARSHIP_FILE.value: str,
-        },  # Convert columns to set types to avoid incorrect type inference
+        usecols=columnNames,
+        converters=convertersDict,  # Convert columns to set types to avoid incorrect type inference
+    )
+
+    data.rename(
+        columns=columnRenames,
+        inplace=True,
     )
 
     data.to_pickle(request.get_json()["destinationFile"])

@@ -11,6 +11,13 @@ def deleteTildesInColumns(df: pd.DataFrame, cols: typing.List[str]) -> pd.DataFr
     return df
 
 
+def convertColumnsToCategorical(
+    df: pd.DataFrame, cols: typing.List[str]
+) -> pd.DataFrame:
+    df[cols] = df[cols].apply(lambda x: x.astype("category"))
+    return df
+
+
 scholarshipsOffersTranslations = {
     "Ingeniero Agrónomo": "Ingeniería Agronómica",
     "Licenciado en Administración Agraria": "Licenciatura en Administración Agraria",

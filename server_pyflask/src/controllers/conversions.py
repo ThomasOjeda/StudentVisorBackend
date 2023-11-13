@@ -1,7 +1,7 @@
 from flask import jsonify, request
 import pandas as pd
 from ..utils.enums import RawFileColName, ColName
-from ..utils.normalizers import deleteTildesInColumns
+from ..utils.normalizers import deleteTildesInColumns, convertColumnsToCategorical
 
 
 def student_inscriptions(request):
@@ -41,6 +41,16 @@ def student_inscriptions(request):
             ColName.UNIT.value,
             ColName.OFFER.value,
             ColName.ID.value,
+            ColName.INSC_TYPE.value,
+            ColName.SEX.value,
+        ],
+    )
+
+    data = convertColumnsToCategorical(
+        data,
+        [
+            ColName.UNIT.value,
+            ColName.OFFER.value,
             ColName.INSC_TYPE.value,
             ColName.SEX.value,
         ],
@@ -107,6 +117,8 @@ def student_belgrano_scholarships(request):
         data,
         [ColName.UNIT.value, ColName.OFFER.value, ColName.ID.value],
     )
+
+    data = convertColumnsToCategorical(data, [ColName.UNIT.value, ColName.OFFER.value])
 
     data.to_pickle(request.get_json()["destinationFile"])
 

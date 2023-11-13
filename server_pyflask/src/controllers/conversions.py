@@ -1,6 +1,7 @@
 from flask import jsonify, request
 import pandas as pd
 from ..utils.enums import RawFileColName, ColName
+from ..utils.normalizers import deleteTildesInColumns
 
 
 def student_inscriptions(request):
@@ -32,6 +33,17 @@ def student_inscriptions(request):
             RawFileColName.SEX.value: ColName.SEX.value,
         },
         inplace=True,
+    )
+
+    data = deleteTildesInColumns(
+        data,
+        [
+            ColName.UNIT.value,
+            ColName.OFFER.value,
+            ColName.ID.value,
+            ColName.INSC_TYPE.value,
+            ColName.SEX.value,
+        ],
     )
 
     data.to_pickle(request.get_json()["destinationFile"])
@@ -89,6 +101,11 @@ def student_belgrano_scholarships(request):
     data.rename(
         columns=columnRenames,
         inplace=True,
+    )
+
+    data = deleteTildesInColumns(
+        data,
+        [ColName.UNIT.value, ColName.OFFER.value, ColName.ID.value],
     )
 
     data.to_pickle(request.get_json()["destinationFile"])

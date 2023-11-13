@@ -1,3 +1,16 @@
+import pandas as pd
+import typing
+
+
+def deleteTildesInColumns(df: pd.DataFrame, cols: typing.List[str]) -> pd.DataFrame:
+    df[cols] = df[cols].apply(
+        lambda x: x.str.normalize("NFKD")
+        .str.encode("ascii", errors="ignore")
+        .str.decode("utf-8")
+    )
+    return df
+
+
 scholarshipsOffersTranslations = {
     "Ingeniero Agrónomo": "Ingeniería Agronómica",
     "Licenciado en Administración Agraria": "Licenciatura en Administración Agraria",

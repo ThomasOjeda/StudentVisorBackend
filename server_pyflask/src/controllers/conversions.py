@@ -1,7 +1,11 @@
 from flask import jsonify, request
 import pandas as pd
 from ..utils.enums import RawFileColName, ColName
-from ..utils.normalizers import deleteTildesInColumns, convertColumnsToCategorical
+from ..utils.normalizers import (
+    deleteTildesInColumns,
+    convertColumnsToCategorical,
+    offerNamesNormalization,
+)
 
 
 def student_inscriptions(request):
@@ -112,6 +116,8 @@ def student_belgrano_scholarships(request):
         columns=columnRenames,
         inplace=True,
     )
+
+    data = offerNamesNormalization(data)
 
     data = deleteTildesInColumns(
         data,

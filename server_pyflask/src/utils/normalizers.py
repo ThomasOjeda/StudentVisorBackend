@@ -1,5 +1,6 @@
 import pandas as pd
 import typing
+from ..utils.enums import ColName
 
 
 def deleteTildesInColumns(df: pd.DataFrame, cols: typing.List[str]) -> pd.DataFrame:
@@ -15,6 +16,31 @@ def convertColumnsToCategorical(
     df: pd.DataFrame, cols: typing.List[str]
 ) -> pd.DataFrame:
     df[cols] = df[cols].apply(lambda x: x.astype("category"))
+    return df
+
+
+replacements = {
+    "Ingeniero": "Ingeniería",
+    "Agrónomo": "Agronómica",
+    "Licenciado": "Licenciatura",
+    " - Mención Producción de Materia Prima de Origen Vegetal": "",
+    " - Mención Industrialización de Alimentos de Origen Vegetal": "",
+    " - Mención Tecnología de los Alimentos de Origen Animal": "",
+    "Agrimensor": "en Agrimensura",
+    "Electromecánico": "Electromecánica",
+    "Químico": "Química",
+    "Médico": "Medicina",
+    "Veterinario": "Veterinaria",
+    "Profesor": "Profesorado",
+    "Técnico/a": "Tecnicatura",
+    "Técnico": "Tecnicatura",
+    "Universitario/a": "Universitaria",
+    "Universitario": "Universitaria",
+}
+
+
+def offerNamesNormalization(df: pd.DataFrame) -> pd.DataFrame:
+    df[ColName.OFFER.value] = df[ColName.OFFER.value].replace(replacements, regex=True)
     return df
 
 

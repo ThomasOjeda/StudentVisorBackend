@@ -20,52 +20,68 @@ def convertColumnsToCategorical(
 
 
 def offerNamesNormalization(df: pd.DataFrame) -> pd.DataFrame:
-    df[ColName.OFFER.value] = df[ColName.OFFER.value].replace(replacements, regex=True)
+    df[ColName.OFFER.value] = df[ColName.OFFER.value].replace(
+        offerReplacements, regex=True
+    )
     return df
 
 
-replacements = {
-    "Ingeniero": "Ingeniería",
-    "Agrónomo": "Agronómica",
+def inscriptionTypeNormalization(df: pd.DataFrame) -> pd.DataFrame:
+    df[ColName.INSC_TYPE.value] = df[ColName.INSC_TYPE.value].replace(
+        inscriptionReplacements, regex=True
+    )
+    return df
+
+
+inscriptionReplacements = {
+    "Reinscripto": "r",
+    "Aspirante a Propuesta": "a",
+    "Inscripcion a propuesta aceptada": "i",
+}
+
+
+offerReplacements = {
+    "Ingeniero": "Ingenieria",
+    "Agronomo": "Agronomica",
     "Licenciado": "Licenciatura",
-    " - Mención Producción de Materia Prima de Origen Vegetal": "",
-    " - Mención Industrialización de Alimentos de Origen Vegetal": "",
-    " - Mención Tecnología de los Alimentos de Origen Animal": "",
+    " - Mencion Produccion de Materia Prima de Origen Vegetal": "",
+    " - Mencion Industrializacion de Alimentos de Origen Vegetal": "",
+    " - Mencion Tecnologia de los Alimentos de Origen Animal": "",
     "Agrimensor": "en Agrimensura",
-    "Electromecánico": "Electromecánica",
-    "Químico": "Química",
-    "Médico": "Medicina",
+    "Electromecanico": "Electromecanica",
+    "Quimico": "Quimica",
+    "Medico": "Medicina",
     "Veterinario": "Veterinaria",
     "Profesor": "Profesorado",
-    "Técnico/a": "Tecnicatura",
-    "Técnico": "Tecnicatura",
+    "Tecnico/a": "Tecnicatura",
+    "Tecnico": "Tecnicatura",
     "Universitario/a": "Universitaria",
     "Universitario": "Universitaria",
 }
 
 scholarshipsOffersTranslations = {
-    "Ingeniero Agrónomo": "Ingeniería Agronómica",
-    "Licenciado en Administración Agraria": "Licenciatura en Administración Agraria",
-    "Licenciado en Tecnología de los Alimentos - Mención Producción de Materia Prima de Origen Vegetal": "Licenciatura en Tecnología de los Alimentos",
-    "Licenciado en Tecnología de los Alimentos - Mención Industrialización de Alimentos de Origen Vegetal": "Licenciatura en Tecnología de los Alimentos",
-    "Licenciado en Tecnología de los Alimentos - Mención Tecnología de los Alimentos de Origen Animal": "Licenciatura en Tecnología de los Alimentos",
-    "Profesor en Ciencias Biológicas": "Profesorado en Ciencias Biológicas",
-    "Ingeniero de Sistemas": "Ingeniería de Sistemas",
-    "Ingeniero Agrimensor": "Ingeniería en Agrimensura",
-    "Ingeniero Civil": "Ingeniería Civil",
-    "Ingeniero Electromecánico": "Ingeniería Electromecánica",
-    "Ingeniero Industrial": "Ingeniería Industrial",
-    "Ingeniero Químico": "Ingeniería Química",
-    "Licenciado en Ciencias Físicas": "Licenciatura en Ciencias Físicas",
-    "Licenciado en Ciencias Matemáticas": "Licenciatura en Ciencias Matemáticas",
-    "Licenciado en Diagnóstico y Gestión Ambiental": "Licenciatura en Diagnóstico y Gestión Ambiental",
-    "Licenciado en Geografía": "Licenciatura en Geografía",
-    "Licenciado en Logística Integral": "Licenciatura en Logística Integral",
-    "Licenciado en Tecnología Ambiental": "Licenciatura en Tecnología Ambiental",
-    "Médico Veterinario": "Medicina Veterinaria",
-    "Profesor de Matemática": "Profesorado de Matemática",
-    "Profesor en Ciencias Biológicas": "Profesorado en Ciencias Biológicas",
-    "Técnico Universitario en Desarrollo de Aplicaciones Informáticas": "Tecnicatura Universitaria en Desarrollo de Aplicaciones Informáticas",
-    "Técnico Universitario en Programación y Administración de Redes": "Tecnicatura Universitaria en Programación y Administración de Redes",
-    "Técnico/a Universitario/a en Administración de Redes Informáticas": "Tecnicatura Universitaria en Administración de Redes Informáticas",
+    "Ingeniero Agronomo": "Ingenieria Agronomica",
+    "Licenciado en Administracion Agraria": "Licenciatura en Administracion Agraria",
+    "Licenciado en Tecnologia de los Alimentos - Mencion Produccion de Materia Prima de Origen Vegetal": "Licenciatura en Tecnologia de los Alimentos",
+    "Licenciado en Tecnologia de los Alimentos - Mencion Industrializacion de Alimentos de Origen Vegetal": "Licenciatura en Tecnologia de los Alimentos",
+    "Licenciado en Tecnologia de los Alimentos - Mencion Tecnologia de los Alimentos de Origen Animal": "Licenciatura en Tecnologia de los Alimentos",
+    "Profesor en Ciencias Biologicas": "Profesorado en Ciencias Biologicas",
+    "Ingeniero de Sistemas": "Ingenieria de Sistemas",
+    "Ingeniero Agrimensor": "Ingenieria en Agrimensura",
+    "Ingeniero Civil": "Ingenieria Civil",
+    "Ingeniero Electromecanico": "Ingenieria Electromecanica",
+    "Ingeniero Industrial": "Ingenieria Industrial",
+    "Ingeniero Quimico": "Ingenieria Quimica",
+    "Licenciado en Ciencias Fisicas": "Licenciatura en Ciencias Fisicas",
+    "Licenciado en Ciencias Matematicas": "Licenciatura en Ciencias Matematicas",
+    "Licenciado en Diagnostico y Gestion Ambiental": "Licenciatura en Diagnostico y Gestion Ambiental",
+    "Licenciado en Geografia": "Licenciatura en Geografia",
+    "Licenciado en Logistica Integral": "Licenciatura en Logistica Integral",
+    "Licenciado en Tecnologia Ambiental": "Licenciatura en Tecnologia Ambiental",
+    "Medico Veterinario": "Medicina Veterinaria",
+    "Profesor de Matematica": "Profesorado de Matematica",
+    "Profesor en Ciencias Biologicas": "Profesorado en Ciencias Biologicas",
+    "Tecnico Universitario en Desarrollo de Aplicaciones Informaticas": "Tecnicatura Universitaria en Desarrollo de Aplicaciones Informaticas",
+    "Tecnico Universitario en Programacion y Administracion de Redes": "Tecnicatura Universitaria en Programacion y Administracion de Redes",
+    "Tecnico/a Universitario/a en Administracion de Redes Informaticas": "Tecnicatura Universitaria en Administracion de Redes Informaticas",
 }

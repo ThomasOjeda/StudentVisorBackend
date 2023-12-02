@@ -5,6 +5,7 @@ from ..utils.normalizers import (
     deleteTildesInColumns,
     convertColumnsToCategorical,
     offerNamesNormalization,
+    inscriptionTypeNormalization,
 )
 
 
@@ -41,8 +42,6 @@ def student_inscriptions(request):
         inplace=True,
     )
 
-    data = offerNamesNormalization(data)  # Must be done after the column renaming
-
     data = deleteTildesInColumns(
         data,
         [
@@ -53,6 +52,10 @@ def student_inscriptions(request):
             ColName.SEX.value,
         ],
     )
+
+    data = offerNamesNormalization(data)  # Must be done after the column renaming
+
+    data = inscriptionTypeNormalization(data)
 
     data = convertColumnsToCategorical(
         data,
@@ -65,6 +68,8 @@ def student_inscriptions(request):
     )
 
     data.to_pickle(request.get_json()["destinationFile"])
+
+    data.to_excel(request.get_json()["destinationFile"] + "excel.xlsx")
 
     return (
         jsonify({"created": True, "filename": request.get_json()["destinationFile"]}),
@@ -123,12 +128,12 @@ def student_belgrano_scholarships(request):
         inplace=True,
     )
 
-    data = offerNamesNormalization(data)
-
     data = deleteTildesInColumns(
         data,
         [ColName.UNIT.value, ColName.OFFER.value, ColName.ID.value],
     )
+
+    data = offerNamesNormalization(data)  # Must be done after column rename
 
     data = convertColumnsToCategorical(data, [ColName.UNIT.value, ColName.OFFER.value])
 

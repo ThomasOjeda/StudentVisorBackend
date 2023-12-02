@@ -41,6 +41,8 @@ def student_inscriptions(request):
         inplace=True,
     )
 
+    data = offerNamesNormalization(data)  # Must be done after the column renaming
+
     data = deleteTildesInColumns(
         data,
         [

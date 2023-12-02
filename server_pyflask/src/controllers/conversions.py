@@ -28,6 +28,8 @@ def student_inscriptions(request):
         },  # Convert columns to set types to avoid incorrect type inference
     )
 
+    data = data.dropna()
+
     data.rename(
         columns={
             RawFileColName.UNIT.value: ColName.UNIT.value,
@@ -112,6 +114,8 @@ def student_belgrano_scholarships(request):
         converters=convertersDict,  # Convert columns to set types to avoid incorrect type inference
     )
 
+    data = data.dropna()
+
     data.rename(
         columns=columnRenames,
         inplace=True,
@@ -127,6 +131,8 @@ def student_belgrano_scholarships(request):
     data = convertColumnsToCategorical(data, [ColName.UNIT.value, ColName.OFFER.value])
 
     data.to_pickle(request.get_json()["destinationFile"])
+
+    data.to_excel(request.get_json()["destinationFile"] + "excel.xlsx")
 
     return (
         jsonify({"created": True, "filename": request.get_json()["destinationFile"]}),

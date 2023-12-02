@@ -19,6 +19,11 @@ def convertColumnsToCategorical(
     return df
 
 
+def offerNamesNormalization(df: pd.DataFrame) -> pd.DataFrame:
+    df[ColName.OFFER.value] = df[ColName.OFFER.value].replace(replacements, regex=True)
+    return df
+
+
 replacements = {
     "Ingeniero": "Ingeniería",
     "Agrónomo": "Agronómica",
@@ -37,12 +42,6 @@ replacements = {
     "Universitario/a": "Universitaria",
     "Universitario": "Universitaria",
 }
-
-
-def offerNamesNormalization(df: pd.DataFrame) -> pd.DataFrame:
-    df[ColName.OFFER.value] = df[ColName.OFFER.value].replace(replacements, regex=True)
-    return df
-
 
 scholarshipsOffersTranslations = {
     "Ingeniero Agrónomo": "Ingeniería Agronómica",

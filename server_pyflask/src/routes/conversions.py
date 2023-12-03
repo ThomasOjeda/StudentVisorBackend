@@ -3,7 +3,7 @@ from ..utils.utils import exception_wrap
 
 from ..controllers.conversions import (
     student_inscriptions,
-    student_belgrano_scholarships,
+    student_scholarships,
 )
 
 conversionsBP = Blueprint("conversions", __name__, url_prefix="/")
@@ -18,4 +18,4 @@ def studentinscriptions():
 @conversionsBP.route("/studentscholarships", methods=["POST"])
 @exception_wrap
 def studentscholarships():
-    return student_belgrano_scholarships(request)
+    return student_scholarships(request)

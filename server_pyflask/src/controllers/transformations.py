@@ -16,7 +16,7 @@ def student_inscriptions(request):
     requestData = request.get_json()
 
     filters = {}
-    filters[ColName.INSC_TYPE.value] = "I"
+    filters[ColName.INSC_TYPE.value] = "i"
 
     if "sex" in requestData["transformationBody"]:
         filters[ColName.SEX.value] = requestData["transformationBody"]["sex"]
@@ -39,7 +39,7 @@ def student_movements(request):
     fileBPath = requestData["transformationBody"]["yearBPath"]
 
     table1Filters = {}
-    table1Filters[ColName.INSC_TYPE.value] = "I"
+    table1Filters[ColName.INSC_TYPE.value] = "i"
     table2Filters = {}
 
     if "sex" in requestData["transformationBody"]:
@@ -83,7 +83,7 @@ def student_migrations(request):
     fileBPath = requestData["transformationBody"]["yearBPath"]
 
     table1Filters = {}
-    table1Filters[ColName.INSC_TYPE.value] = "I"
+    table1Filters[ColName.INSC_TYPE.value] = "i"
     table2Filters = {}
 
     if "sex" in requestData["transformationBody"]:

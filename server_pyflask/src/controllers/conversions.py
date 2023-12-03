@@ -77,7 +77,7 @@ def student_inscriptions(request):
     )
 
 
-def student_belgrano_scholarships(request):
+def student_scholarships(request):
     columnNames = []
     convertersDict = {}
     columnRenames = {}

@@ -1,6 +1,4 @@
 import functools
-import traceback
-from flask import Response
 
 
 def handle_exception(exception: Exception):

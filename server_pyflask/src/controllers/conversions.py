@@ -53,8 +53,6 @@ def student_inscriptions(request):
         ],
     )
 
-    data = offerNamesNormalization(data)  # Must be done after the column renaming
-
     data = inscriptionTypeNormalization(data)
 
     data = convertColumnsToCategorical(

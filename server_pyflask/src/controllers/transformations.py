@@ -133,4 +133,4 @@ def student_scholarships_movements(request):
     transformer = StudentScholarshipsMovements()
     result = transformer.transform(table1, table2, scholarships)
 
-    return jsonify(result), 200
+    return jsonify(result.to_dict()), 200

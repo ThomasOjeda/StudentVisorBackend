@@ -33,33 +33,10 @@ class StudentScholarshipsMovements(Transformation):
             != pseudoMigrations[ColName.OFFER.value + "_y"]
         ]
 
-        print(
-            pseudoMigrations[
-                [
-                    ColName.OFFER.value + "_x",
-                    ColName.OFFER.value + "_y",
-                    ColName.ID.value,
-                ]
-            ],
-            flush=True,
-        )
-
         pseudoMigrations = pseudoMigrations.merge(
             scholarships,
             on=ColName.ID.value,
             how="inner",
-        )
-
-        print(
-            pseudoMigrations[
-                [
-                    ColName.OFFER.value + "_x",
-                    ColName.OFFER.value + "_y",
-                    ColName.OFFER.value,
-                    ColName.ID.value,
-                ]
-            ],
-            flush=True,
         )
 
         pseudoMigrations = pseudoMigrations[
@@ -79,13 +56,10 @@ class StudentScholarshipsMovements(Transformation):
             flush=True,
         )
 
-        movements: np.ndarray = np.setdiff1d(activeOnAnyOffer, activeOnSameOffer)
-
-        movementsScholarships: np.ndarray = np.intersect1d(
-            movements, scholarships["DNI"].unique()
+        pseudoMigrations = (
+            pseudoMigrations.drop_duplicates(subset=[ColName.ID.value])
+            .groupby(ColName.OFFER.value)[ColName.OFFER.value]
+            .count()
         )
 
-        return {
-            "movements": 0,  # movements.size,
-            "movementScholarships": 0,  # movementsScholarships.size,
-        }
+        return pseudoMigrations

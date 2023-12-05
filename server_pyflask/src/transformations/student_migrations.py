@@ -14,6 +14,14 @@ class StudentMigrations(Transformation):
 
         activity = table1.merge(table2, on=ColName.ID.value, how="inner")
 
+        activity[ColName.OFFER.value + "_x"] = activity[
+            ColName.OFFER.value + "_x"
+        ].astype(str)
+
+        activity[ColName.OFFER.value + "_y"] = activity[
+            ColName.OFFER.value + "_y"
+        ].astype(str)
+
         activity = activity[
             activity[ColName.OFFER.value + "_x"] != activity[ColName.OFFER.value + "_y"]
         ]

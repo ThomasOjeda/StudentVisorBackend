@@ -58,7 +58,9 @@ class StudentScholarshipsMovements(Transformation):
 
         pseudoMigrations = (
             pseudoMigrations.drop_duplicates(subset=[ColName.ID.value])
-            .groupby(ColName.OFFER.value, observed=True)[ColName.OFFER.value]
+            .groupby(ColName.OFFER.value, observed=True)[
+                ColName.OFFER.value
+            ]  # observed only applies if grouping by categorical columns.
             .count()
         )
 

@@ -21,7 +21,7 @@ def convertColumnsToCategorical(
 
 def offerNamesNormalization(df: pd.DataFrame) -> pd.DataFrame:
     df[ColName.OFFER.value] = df[ColName.OFFER.value].replace(
-        offerReplacements, regex=True
+        scholarshipOfferReplacements, regex=True
     )
     return df
 
@@ -33,14 +33,30 @@ def inscriptionTypeNormalization(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def studentInscriptionsOfferNormalization(df: pd.DataFrame) -> pd.DataFrame:
+    df.loc[
+        df[ColName.OFFER.value] == "Convenio Ingenieria Sistemas", ColName.UNIT.value
+    ] = "Facultad de Ciencias Exactas"
+
+    df[ColName.OFFER.value] = df[ColName.OFFER.value].replace(
+        studentInscriptionsOfferReplacements, regex=True
+    )
+
+    return df
+
+
 inscriptionReplacements = {
     "Reinscripto": "r",
     "Aspirante a Propuesta": "a",
     "Inscripcion a propuesta aceptada": "i",
 }
 
+studentInscriptionsOfferReplacements = {
+    "Convenio Ingenieria Sistemas": "Ingenieria de Sistemas"
+}
 
-offerReplacements = {
+
+scholarshipOfferReplacements = {
     "Ingeniero": "Ingenieria",
     "Agronomo": "Agronomica",
     "Licenciado": "Licenciatura",

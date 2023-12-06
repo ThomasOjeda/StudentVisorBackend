@@ -1,7 +1,6 @@
 import pandas as pd
-import numpy as np
 from .transformation import Transformation
-from .common_operations import filterDataFrame, columnUniqueValues
+from .common_operations import filterDataFrame
 from ..utils.enums import ColName
 
 

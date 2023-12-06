@@ -6,6 +6,7 @@ from ..utils.normalizers import (
     convertColumnsToCategorical,
     offerNamesNormalization,
     inscriptionTypeNormalization,
+    studentInscriptionsOfferNormalization,
 )
 
 
@@ -54,6 +55,8 @@ def student_inscriptions(request):
     )
 
     data = inscriptionTypeNormalization(data)
+
+    data = studentInscriptionsOfferNormalization(data)
 
     data = convertColumnsToCategorical(
         data,

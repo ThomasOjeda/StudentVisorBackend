@@ -83,7 +83,7 @@ def student_scholarships(request):
     convertersDict = {}
     columnRenames = {}
 
-    if request.get_json()["scholarship"] == "belgrano":
+    if request.get_json()["type"] == "student-scholarships-belgrano":
         columnNames = [
             RawFileColName.BELGRANO_UNIT.value,
             RawFileColName.BELGRANO_OFFER.value,
@@ -99,7 +99,7 @@ def student_scholarships(request):
             RawFileColName.BELGRANO_OFFER.value: ColName.OFFER.value,
             RawFileColName.BELGRANO_ID.value: ColName.ID.value,
         }
-    elif request.get_json()["scholarship"] == "progresar":
+    elif request.get_json()["type"] == "student-scholarships-progresar":
         columnNames = [
             RawFileColName.PROGRESAR_UNIT.value,
             RawFileColName.PROGRESAR_OFFER.value,

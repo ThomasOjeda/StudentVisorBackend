@@ -6,10 +6,12 @@ const { v4: uuidv4 } = require("uuid");
 const studentFileMetadata = require("../../models/student-file-metadata");
 const { StatusCodes } = require("http-status-codes");
 const { STUDENTSDATA_TEMP_FOLDER } = require("../../config/paths");
+const FileType = require("../../models/file-types");
 
 const handlers = {
-  "student-inscriptions": require("./upload-handlers/upload-inscriptions-handler"),
-  "student-scholarships": require("./upload-handlers/upload-scholarships-handler"),
+  [FileType.STUDENT_INSCRIPTIONS]: require("./upload-handlers/upload-inscriptions-handler"),
+  [FileType.SCH_BELGRANO]: require("./upload-handlers/upload-scholarships-handler"),
+  [FileType.SCH_PROGRESAR]: require("./upload-handlers/upload-scholarships-handler"),
 };
 
 const uploadMainHandler = async (req, res) => {

@@ -8,7 +8,6 @@ const {
   STUDENT_SCHOLARSHIPS_FOLDER,
   PICKLE_SUFFIX,
 } = require("../../../config/paths");
-const FileType = require("../../../models/file-types");
 
 const uploadScholarshipsHandler = async (
   req,
@@ -18,12 +17,12 @@ const uploadScholarshipsHandler = async (
 ) => {
   try {
     let found = await studentFileMetadata.findOne({
-      name: req.body.name,
-      type: FileType.STUDENT_SCHOLARSHIPS,
+      year: req.body.year,
+      type: req.body.type,
     });
     if (found) {
       throw new Conflict(
-        `There is already a file with that name in the Student Scholarships category.`
+        `There is already a file of type ${req.body.type} for the year ${req.body.year}.`
       );
     }
   } catch (error) {
@@ -47,8 +46,8 @@ const uploadScholarshipsHandler = async (
 
   try {
     await axios.post(PYFLASK_URL + "/conversions/studentscholarships", {
+      type: req.body.type,
       sourceFile: tempFolder + "/" + tempFilename,
-      scholarship: req.body.scholarship,
       destinationFile:
         STUDENT_SCHOLARSHIPS_FOLDER +
         "/" +

@@ -43,7 +43,7 @@ class StudentScholarshipsMovements(Transformation):
             == pseudoMigrations[ColName.OFFER.value]
         ]
 
-        print(
+        """         print(
             pseudoMigrations[
                 [
                     ColName.OFFER.value + "_x",
@@ -53,7 +53,7 @@ class StudentScholarshipsMovements(Transformation):
                 ]
             ],
             flush=True,
-        )
+        ) """
 
         pseudoMigrations = (
             pseudoMigrations.drop_duplicates(subset=[ColName.ID.value])

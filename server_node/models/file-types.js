@@ -1,6 +1,7 @@
 const FileType = {
   STUDENT_INSCRIPTIONS: "student-inscriptions",
-  STUDENT_SCHOLARSHIPS: "student-scholarships",
+  SCH_PROGRESAR: "student-scholarships-progresar",
+  SCH_BELGRANO: "student-scholarships-belgrano",
 };
 
 module.exports = Object.freeze(FileType);

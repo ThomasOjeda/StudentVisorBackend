@@ -2,12 +2,28 @@ const { StatusCodes } = require("http-status-codes");
 const fs = require("fs/promises");
 const axios = require("axios");
 const studentFileMetadata = require("../../../models/student-file-metadata");
-const { Conflict } = require("../../../errors/errors-index");
 const { PYFLASK_URL } = require("../../../config/config");
 const {
   STUDENT_SCHOLARSHIPS_FOLDER,
   PICKLE_SUFFIX,
 } = require("../../../config/paths");
+
+const updateScholarshipFile = async (
+  req,
+  res,
+  tempFolder,
+  tempFilename,
+  toBeUpdated
+) => {
+  await axios.post(PYFLASK_URL + "/conversions/studentscholarships/update", {
+    sourceFile: tempFolder + "/" + tempFilename,
+    destinationFile: toBeUpdated.folder + "/" + toBeUpdated.filename,
+    type: req.body.type,
+  });
+  await fs.unlink(tempFolder + "/" + tempFilename);
+
+  res.status(StatusCodes.OK).json({ success: true });
+};
 
 const uploadScholarshipsHandler = async (
   req,
@@ -21,8 +37,12 @@ const uploadScholarshipsHandler = async (
       type: req.body.type,
     });
     if (found) {
-      throw new Conflict(
-        `There is already a file of type ${req.body.type} for the year ${req.body.year}.`
+      return await updateScholarshipFile(
+        req,
+        res,
+        tempFolder,
+        tempFilename,
+        found
       );
     }
   } catch (error) {

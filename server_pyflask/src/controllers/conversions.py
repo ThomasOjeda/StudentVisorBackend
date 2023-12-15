@@ -79,6 +79,75 @@ def student_inscriptions(request):
 
 
 def student_scholarships(request):
+    data = loadRawScholarshipsFile(request)
+
+    data = normalizeScholarships(data)
+
+    saveScholarships(data, request)
+
+    return (
+        jsonify({"created": True, "filename": request.get_json()["destinationFile"]}),
+        200,
+    )
+
+
+def update_student_scholarships(request):
+    newData: pd.DataFrame = loadRawScholarshipsFile(request)
+
+    newData = normalizeScholarships(newData)
+
+    print(newData.dtypes, flush=True)
+
+    toBeUpdated: pd.DataFrame = pd.read_pickle(request.get_json()["destinationFile"])
+
+    print(toBeUpdated.dtypes, flush=True)
+
+    toBeUpdated = pd.concat(
+        [toBeUpdated, newData], ignore_index=True
+    )  # Ignore index creates a new index for the dataframe (unique values)
+
+    print(toBeUpdated.dtypes, flush=True)
+
+    toBeUpdated = convertColumnsToCategorical(
+        toBeUpdated, [ColName.UNIT.value, ColName.OFFER.value]
+    )
+
+    print(toBeUpdated.dtypes, flush=True)
+
+    with pd.option_context(
+        "display.max_rows",
+        None,
+        "display.max_columns",
+        None,
+        "display.expand_frame_repr",
+        False,
+    ):
+        print(toBeUpdated, flush=True)
+
+    saveScholarships(toBeUpdated, request)
+
+    return (
+        jsonify({"created": True, "filename": request.get_json()["destinationFile"]}),
+        200,
+    )
+
+
+def normalizeScholarships(data: pd.DataFrame) -> pd.DataFrame:
+    data = data.dropna()
+
+    data = deleteTildesInColumns(
+        data,
+        [ColName.UNIT.value, ColName.OFFER.value],
+    )
+
+    data = offerNamesNormalization(data)  # Must be done after column rename
+
+    data = convertColumnsToCategorical(data, [ColName.UNIT.value, ColName.OFFER.value])
+
+    return data
+
+
+def loadRawScholarshipsFile(request) -> pd.DateOffset:
     columnNames = []
     convertersDict = {}
     columnRenames = {}
@@ -122,27 +191,19 @@ def student_scholarships(request):
         converters=convertersDict,  # Convert columns to set types to avoid incorrect type inference
     )
 
-    data = data.dropna()
-
     data.rename(
         columns=columnRenames,
         inplace=True,
     )
 
-    data = deleteTildesInColumns(
-        data,
-        [ColName.UNIT.value, ColName.OFFER.value, ColName.ID.value],
-    )
+    return data
 
-    data = offerNamesNormalization(data)  # Must be done after column rename
 
-    data = convertColumnsToCategorical(data, [ColName.UNIT.value, ColName.OFFER.value])
-
+def saveScholarships(data: pd.DataFrame, request):
     data.to_pickle(request.get_json()["destinationFile"])
 
     data.to_excel(request.get_json()["destinationFile"] + "excel.xlsx")
 
-    return (
-        jsonify({"created": True, "filename": request.get_json()["destinationFile"]}),
-        200,
-    )
+
+def updateScholarships(data: pd.DataFrame, request):
+    return

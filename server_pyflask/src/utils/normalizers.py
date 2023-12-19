@@ -20,49 +20,18 @@ def convertColumnsToCategorical(
 
 
 def offerNamesNormalization(df: pd.DataFrame) -> pd.DataFrame:
-    df[ColName.OFFER.value] = df[ColName.OFFER.value].replace(
-        scholarshipOfferReplacements, regex=True
-    )
-    return df
+    df = offerNamesPatching(df)
 
-
-def inscriptionTypeNormalization(df: pd.DataFrame) -> pd.DataFrame:
-    df[ColName.INSC_TYPE.value] = df[ColName.INSC_TYPE.value].replace(
-        inscriptionReplacements, regex=True
-    )
-    return df
-
-
-def studentInscriptionsOfferNormalization(df: pd.DataFrame) -> pd.DataFrame:
-    df.loc[
-        df[ColName.OFFER.value] == "Convenio Ingenieria Sistemas", ColName.UNIT.value
-    ] = "Facultad de Ciencias Exactas"
-
-    df[ColName.OFFER.value] = df[ColName.OFFER.value].replace(
-        studentInscriptionsOfferReplacements, regex=True
-    )
+    df = offerNamesReplacing(df)
 
     return df
 
 
-inscriptionReplacements = {
-    "Reinscripto": "r",
-    "Aspirante a Propuesta": "a",
-    "Inscripcion a propuesta aceptada": "i",
-}
-
-studentInscriptionsOfferReplacements = {
-    "Convenio Ingenieria Sistemas": "Ingenieria de Sistemas"
-}
-
-
-scholarshipOfferReplacements = {
+scholarshipOfferPatches = {
     "Ingeniero": "Ingenieria",
     "Agronomo": "Agronomica",
+    "Licenciado/a": "Licenciatura",
     "Licenciado": "Licenciatura",
-    " - Mencion Produccion de Materia Prima de Origen Vegetal": "",
-    " - Mencion Industrializacion de Alimentos de Origen Vegetal": "",
-    " - Mencion Tecnologia de los Alimentos de Origen Animal": "",
     "Agrimensor": "en Agrimensura",
     "Electromecanico": "Electromecanica",
     "Quimico": "Quimica",
@@ -73,8 +42,100 @@ scholarshipOfferReplacements = {
     "Tecnico": "Tecnicatura",
     "Universitario/a": "Universitaria",
     "Universitario": "Universitaria",
+    "Realizador": "Realizacion",
 }
 
+
+def offerNamesPatching(df: pd.DataFrame) -> pd.DataFrame:
+    df[ColName.OFFER.value] = df[ColName.OFFER.value].replace(
+        scholarshipOfferPatches, regex=True
+    )
+    return df
+
+
+scholarshipOfferReplacements_keys = [
+    "Enfermero Profesional",
+    "Tecnicatura Universitaria en Electromedicina",  ###
+    "Profesorado de Geografia",  ###
+    "Guia Universitaria en Turismo",  ###
+    "Licenciatura en Teatro",  ###
+    "Profesorado de Teatro",  ###
+    "Licenciatura en Antropologia orientacion Arqueologia",  ###
+    "Analista Programador Universitaria",
+    "Abogado",
+    "Periodista",
+    "Licenciatura en Tecnologia de los Alimentos - Mencion Produccion de Materia Prima de Origen Vegetal",
+    "Licenciatura en Tecnologia de los Alimentos - Mencion Industrializacion de Alimentos de Origen Vegetal",
+    "Licenciatura en Tecnologia de los Alimentos - Mencion Tecnologia de los Alimentos de Origen Animal",
+]
+
+scholarshipOfferReplacements_values = [
+    "Licenciatura en Enfermeria",
+    "Tecnico Universitario en Electromedicina",
+    "Profesorado en Geografia",
+    "Guia Universitario en Turismo",
+    "Licenciado en Teatro",
+    "Profesor de Teatro",
+    "Licenciatura en Antropologia",
+    "Analista Programador Universitario",
+    "Abogacia",
+    "Periodismo",
+    "Licenciatura en Tecnologia de los Alimentos",
+    "Licenciatura en Tecnologia de los Alimentos",
+    "Licenciatura en Tecnologia de los Alimentos",
+]
+
+# Elementos de becas que no se encuentran en inscripciones
+# {'Analista Programador Universitario', 'CBC - Ingenieria',
+#'Bachiller Universitaria en Derecho', 'Realizacion Integral de Cine, Video y Television'
+# , 'Profesorado en Juegos Dramaticos', 'Tecnicatura en Ambiente',
+#'Profesorado de Comunicacion Social', 'Licenciatura en Gestion Tecnologica ',
+#'Tecnicatura Universitaria en Circuitos Turisticos'}
+
+
+def offerNamesReplacing(df: pd.DataFrame) -> pd.DataFrame:
+    df[ColName.OFFER.value] = df[ColName.OFFER.value].replace(
+        scholarshipOfferReplacements_keys,
+        scholarshipOfferReplacements_values,
+        regex=True,
+    )
+    return df
+
+
+inscriptionReplacements = {
+    "Reinscripto": "r",
+    "Aspirante a Propuesta": "a",
+    "Inscripcion a propuesta aceptada": "i",
+}
+
+
+def inscriptionTypeNormalization(df: pd.DataFrame) -> pd.DataFrame:
+    df[ColName.INSC_TYPE.value] = df[ColName.INSC_TYPE.value].replace(
+        inscriptionReplacements, regex=True
+    )
+    return df
+
+
+studentInscriptionsOfferPatches = {
+    "Convenio Ingenieria Sistemas": "Ingenieria de Sistemas",
+    "Licenciatura en Antropologia Orientacion Antropologia Social": "Licenciatura en Antropologia",
+    "Licenciatura en Antropologia Orientacion Arqueologia": "Licenciatura en Antropologia",
+}
+
+
+def studentInscriptionsOfferNormalization(df: pd.DataFrame) -> pd.DataFrame:
+    df.loc[
+        df[ColName.OFFER.value] == "Convenio Ingenieria Sistemas", ColName.UNIT.value
+    ] = "Facultad de Ciencias Exactas"
+
+    df[ColName.OFFER.value] = df[ColName.OFFER.value].replace(
+        studentInscriptionsOfferPatches
+    )
+
+    return df
+
+
+#########
 scholarshipsOffersTranslations = {
     "Ingeniero Agronomo": "Ingenieria Agronomica",
     "Licenciado en Administracion Agraria": "Licenciatura en Administracion Agraria",

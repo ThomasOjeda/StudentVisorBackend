@@ -28,21 +28,21 @@ def offerNamesNormalization(df: pd.DataFrame) -> pd.DataFrame:
 
 
 scholarshipOfferPatches = {
-    "Ingeniero": "Ingenieria",
-    "Agronomo": "Agronomica",
-    "Licenciado/a": "Licenciatura",
-    "Licenciado": "Licenciatura",
-    "Agrimensor": "en Agrimensura",
-    "Electromecanico": "Electromecanica",
-    "Quimico": "Quimica",
-    "Medico": "Medicina",
-    "Veterinario": "Veterinaria",
-    "Profesor": "Profesorado",
-    "Tecnico/a": "Tecnicatura",
-    "Tecnico": "Tecnicatura",
-    "Universitario/a": "Universitaria",
-    "Universitario": "Universitaria",
-    "Realizador": "Realizacion",
+    "ingeniero": "ingenieria",
+    "agronomo": "agronomica",
+    "licenciado/a": "licenciatura",
+    "licenciado": "licenciatura",
+    "agrimensor": "en agrimensura",
+    "electromecanico": "electromecanica",
+    "quimico": "quimica",
+    "medico": "medicina",
+    "veterinario": "veterinaria",
+    "profesor ": "profesorado ",  # whitespace added because "profesor" is substring of "profesorado"
+    "tecnico/a": "tecnicatura",
+    "tecnico": "tecnicatura",
+    "universitario/a": "universitaria",
+    "universitario": "universitaria",
+    "realizador": "realizacion",
 }
 
 
@@ -54,43 +54,43 @@ def offerNamesPatching(df: pd.DataFrame) -> pd.DataFrame:
 
 
 scholarshipOfferReplacements_keys = [
-    "Enfermero Profesional",
-    "Tecnicatura Universitaria en Electromedicina",  ###
-    "Profesorado de Geografia",  ###
-    "Guia Universitaria en Turismo",  ###
-    "Licenciatura en Teatro",  ###
-    "Profesorado de Teatro",  ###
-    "Licenciatura en Antropologia orientacion Arqueologia",  ###
-    "Analista Programador Universitaria",
-    "Abogado",
-    "Periodista",
-    "Licenciatura en Tecnologia de los Alimentos - Mencion Produccion de Materia Prima de Origen Vegetal",
-    "Licenciatura en Tecnologia de los Alimentos - Mencion Industrializacion de Alimentos de Origen Vegetal",
-    "Licenciatura en Tecnologia de los Alimentos - Mencion Tecnologia de los Alimentos de Origen Animal",
+    "enfermero profesional",
+    "tecnicatura universitaria en electromedicina",  ###
+    "profesorado de geografia",  ###
+    "profesorado de comunicacion social",
+    "guia universitaria en turismo",  ###
+    "licenciatura en teatro",  ###
+    "profesorado de teatro",  ###
+    "licenciatura en antropologia orientacion arqueologia",  ###
+    "analista programador universitaria",
+    "abogado",
+    "periodista",
+    "licenciatura en tecnologia de los alimentos - mencion produccion de materia prima de origen vegetal",
+    "licenciatura en tecnologia de los alimentos - mencion industrializacion de alimentos de origen vegetal",
+    "licenciatura en tecnologia de los alimentos - mencion tecnologia de los alimentos de origen animal",
 ]
 
 scholarshipOfferReplacements_values = [
-    "Licenciatura en Enfermeria",
-    "Tecnico Universitario en Electromedicina",
-    "Profesorado en Geografia",
-    "Guia Universitario en Turismo",
-    "Licenciado en Teatro",
-    "Profesor de Teatro",
-    "Licenciatura en Antropologia",
-    "Analista Programador Universitario",
-    "Abogacia",
-    "Periodismo",
-    "Licenciatura en Tecnologia de los Alimentos",
-    "Licenciatura en Tecnologia de los Alimentos",
-    "Licenciatura en Tecnologia de los Alimentos",
+    "licenciatura en enfermeria",
+    "tecnico universitario en electromedicina",
+    "profesorado en geografia",
+    "profesorado en comunicacion social",
+    "guia universitario en turismo",
+    "licenciado en teatro",
+    "profesor de teatro",
+    "licenciatura en antropologia",
+    "analista programador universitario",
+    "abogacia",
+    "periodismo",
+    "licenciatura en tecnologia de los alimentos",
+    "licenciatura en tecnologia de los alimentos",
+    "licenciatura en tecnologia de los alimentos",
 ]
 
 # Elementos de becas que no se encuentran en inscripciones
-# {'Analista Programador Universitario', 'CBC - Ingenieria',
-#'Bachiller Universitaria en Derecho', 'Realizacion Integral de Cine, Video y Television'
-# , 'Profesorado en Juegos Dramaticos', 'Tecnicatura en Ambiente',
-#'Profesorado de Comunicacion Social', 'Licenciatura en Gestion Tecnologica ',
-#'Tecnicatura Universitaria en Circuitos Turisticos'}
+# {'tecnicatura universitaria en circuitos turisticos', 'realizacion integral de cine, video y television',
+#'analista programador universitario', 'tecnicatura en ambiente', 'cbc - ingenieria',
+# 'profesorado en juegos dramaticos', 'bachiller universitaria en derecho'}
 
 
 def offerNamesReplacing(df: pd.DataFrame) -> pd.DataFrame:
@@ -103,9 +103,9 @@ def offerNamesReplacing(df: pd.DataFrame) -> pd.DataFrame:
 
 
 inscriptionReplacements = {
-    "Reinscripto": "r",
-    "Aspirante a Propuesta": "a",
-    "Inscripcion a propuesta aceptada": "i",
+    "reinscripto": "r",
+    "aspirante a propuesta": "a",
+    "inscripcion a propuesta aceptada": "i",
 }
 
 
@@ -117,16 +117,16 @@ def inscriptionTypeNormalization(df: pd.DataFrame) -> pd.DataFrame:
 
 
 studentInscriptionsOfferPatches = {
-    "Convenio Ingenieria Sistemas": "Ingenieria de Sistemas",
-    "Licenciatura en Antropologia Orientacion Antropologia Social": "Licenciatura en Antropologia",
-    "Licenciatura en Antropologia Orientacion Arqueologia": "Licenciatura en Antropologia",
+    "convenio ingenieria sistemas": "ingenieria de sistemas",
+    "licenciatura en antropologia orientacion antropologia social": "licenciatura en antropologia",
+    "licenciatura en antropologia orientacion arqueologia": "licenciatura en antropologia",
 }
 
 
 def studentInscriptionsOfferNormalization(df: pd.DataFrame) -> pd.DataFrame:
     df.loc[
-        df[ColName.OFFER.value] == "Convenio Ingenieria Sistemas", ColName.UNIT.value
-    ] = "Facultad de Ciencias Exactas"
+        df[ColName.OFFER.value] == "convenio ingenieria sistemas", ColName.UNIT.value
+    ] = "facultad de ciencias exactas"
 
     df[ColName.OFFER.value] = df[ColName.OFFER.value].replace(
         studentInscriptionsOfferPatches

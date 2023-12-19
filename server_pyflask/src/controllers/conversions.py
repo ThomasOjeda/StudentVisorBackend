@@ -10,6 +10,10 @@ from ..utils.normalizers import (
 )
 
 
+def converter(value):
+    return str(value).lower().strip()
+
+
 def student_inscriptions(request):
     data = pd.read_excel(
         request.get_json()["sourceFile"],
@@ -22,11 +26,11 @@ def student_inscriptions(request):
             RawFileColName.SEX.value,
         ],
         converters={
-            RawFileColName.UNIT.value: str,
-            RawFileColName.OFFER.value: str,
-            RawFileColName.ID.value: str,
-            RawFileColName.INSC_TYPE.value: str,
-            RawFileColName.SEX.value: str,
+            RawFileColName.UNIT.value: converter,
+            RawFileColName.OFFER.value: converter,
+            RawFileColName.ID.value: converter,
+            RawFileColName.INSC_TYPE.value: converter,
+            RawFileColName.SEX.value: converter,
         },  # Convert columns to set types to avoid incorrect type inference
     )
 
@@ -159,9 +163,9 @@ def loadRawScholarshipsFile(request) -> pd.DateOffset:
             RawFileColName.BELGRANO_ID.value,
         ]
         convertersDict = {
-            RawFileColName.BELGRANO_UNIT.value: str,
-            RawFileColName.BELGRANO_OFFER.value: str,
-            RawFileColName.BELGRANO_ID.value: str,
+            RawFileColName.BELGRANO_UNIT.value: converter,
+            RawFileColName.BELGRANO_OFFER.value: converter,
+            RawFileColName.BELGRANO_ID.value: converter,
         }
         columnRenames = {
             RawFileColName.BELGRANO_UNIT.value: ColName.UNIT.value,
@@ -175,9 +179,9 @@ def loadRawScholarshipsFile(request) -> pd.DateOffset:
             RawFileColName.PROGRESAR_ID.value,
         ]
         convertersDict = {
-            RawFileColName.PROGRESAR_UNIT.value: str,
-            RawFileColName.PROGRESAR_OFFER.value: str,
-            RawFileColName.PROGRESAR_ID.value: str,
+            RawFileColName.PROGRESAR_UNIT.value: converter,
+            RawFileColName.PROGRESAR_OFFER.value: converter,
+            RawFileColName.PROGRESAR_ID.value: converter,
         }
         columnRenames = {
             RawFileColName.PROGRESAR_UNIT.value: ColName.UNIT.value,

@@ -100,33 +100,33 @@ def update_student_scholarships(request):
 
     newData = normalizeScholarships(newData)
 
-    print(newData.dtypes, flush=True)
+    # print(newData.dtypes, flush=True)
 
     toBeUpdated: pd.DataFrame = pd.read_pickle(request.get_json()["destinationFile"])
 
-    print(toBeUpdated.dtypes, flush=True)
+    # print(toBeUpdated.dtypes, flush=True)
 
     toBeUpdated = pd.concat(
         [toBeUpdated, newData], ignore_index=True
     )  # Ignore index creates a new index for the dataframe (unique values)
 
-    print(toBeUpdated.dtypes, flush=True)
+    # print(toBeUpdated.dtypes, flush=True)
 
     toBeUpdated = convertColumnsToCategorical(
         toBeUpdated, [ColName.UNIT.value, ColName.OFFER.value]
     )
 
-    print(toBeUpdated.dtypes, flush=True)
+    # print(toBeUpdated.dtypes, flush=True)
 
-    with pd.option_context(
-        "display.max_rows",
-        None,
-        "display.max_columns",
-        None,
-        "display.expand_frame_repr",
-        False,
-    ):
-        print(toBeUpdated, flush=True)
+    # with pd.option_context(
+    #     "display.max_rows",
+    #     None,
+    #     "display.max_columns",
+    #     None,
+    #     "display.expand_frame_repr",
+    #     False,
+    # ):
+    #     print(toBeUpdated, flush=True)
 
     saveScholarships(toBeUpdated, request)
 

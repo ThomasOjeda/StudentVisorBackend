@@ -13,9 +13,9 @@ const UNIT = [
 ];
 
 const GENDER = [
-  { _id: "M", label: "Masculino" },
-  { _id: "F", label: "Femenino" },
-  { _id: "O", label: "Otro" },
+  { _id: "m", label: "masculino" },
+  { _id: "f", label: "femenino" },
+  { _id: "o", label: "otro" },
 ];
 
 module.exports = { UNIT, GENDER };

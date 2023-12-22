@@ -116,15 +116,21 @@ def studentInscriptionsOfferNormalization(df: pd.DataFrame) -> pd.DataFrame:
     ] = "facultad de ciencias exactas"
 
     df[ColName.OFFER.value] = df[ColName.OFFER.value].replace(
+        {" - ciclo de licenciatura": ""}, regex=True
+    )
+
+    df[ColName.OFFER.value] = df[ColName.OFFER.value].replace(
         [
             "convenio ingenieria sistemas",
             "licenciatura en antropologia orientacion antropologia social",
             "licenciatura en antropologia orientacion arqueologia",
+            "ciclo licenciatura en enfermeria",
         ],
         [
             "ingenieria de sistemas",
             "licenciatura en antropologia",
             "licenciatura en antropologia",
+            "licenciatura en enfermeria",
         ],
     )
 

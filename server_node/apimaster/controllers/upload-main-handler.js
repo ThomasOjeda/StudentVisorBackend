@@ -22,7 +22,10 @@ const uploadMainHandler = async (req, res) => {
       cb(null, tempFilename);
     },
   });
-  const upload = multer({ storage: storage }).single("uploaded_file"); //Is a function that can be used as a middleware
+  const upload = multer({
+    storage: storage,
+    limits: { fileSize: 25 * 1024 * 1024 /* bytes */, files: 1 },
+  }).single("uploaded_file"); //Is a function that can be used as a middleware
   uploadPromise = util.promisify(upload);
 
   fileSaveError = await uploadPromise(req, res);

@@ -45,6 +45,22 @@ const uploadMainHandler = async (req, res) => {
     await fs.unlink(STUDENTSDATA_TEMP_FOLDER + "/" + tempFilename);
     throw new BadRequest("File type not found in request");
   }
+
+  const { fileTypeFromFile } = await import("file-type");
+
+  const mimetype = await fileTypeFromFile(
+    STUDENTSDATA_TEMP_FOLDER + "/" + tempFilename
+  );
+
+  if (
+    !mimetype ||
+    mimetype.mime !==
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  )
+    throw new BadRequest(
+      "File mime type does not correspond to (.xlsx) mime type (application/vnd.openxmlformats-officedocument.spreadsheetml.sheet)"
+    );
+
   const handler = handlers[req.body.type];
   if (handler == undefined) {
     await fs.unlink(STUDENTSDATA_TEMP_FOLDER + "/" + tempFilename);

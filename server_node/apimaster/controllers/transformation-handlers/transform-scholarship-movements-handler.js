@@ -6,9 +6,9 @@ const FileType = require("../../../models/file-types");
 const axios = require("axios");
 
 const scholarshipMovementsHandler = async (req, res, next) => {
-  if (!req.body.transformationHeader.schType)
+  if (!req.body.transformationBody.schType)
     throw new BadRequest(
-      "Student scholarship movements transformations require a schType transformation header"
+      "Student scholarship movements transformations require a schType transformation body"
     );
 
   if (!req.body.transformationBody.yearA || !req.body.transformationBody.yearB)
@@ -18,7 +18,7 @@ const scholarshipMovementsHandler = async (req, res, next) => {
 
   scholarshipsMetadata = await studentFileMetadata.findOne({
     year: req.body.transformationBody.yearB,
-    type: req.body.transformationHeader.schType,
+    type: req.body.transformationBody.schType,
   });
 
   yearAMetadata = await studentFileMetadata.findOne({

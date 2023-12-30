@@ -18,9 +18,12 @@ const getStudentFileMetadata = async (req, res) => {
 
 const updateStudentFileMetadata = async (req, res) => {
   const { id: fileId } = req.params;
+  let updated = {};
+  if (req.body.name) updated.name = req.body.name;
+  if (req.body.description) updated.description = req.body.description;
   const resultFile = await studentFileMetadata.findOneAndUpdate(
     { _id: fileId },
-    req.body,
+    updated,
     {
       new: true,
       runValidators: true,

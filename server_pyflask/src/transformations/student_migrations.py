@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 from .transformation import Transformation
 from .common_operations import filterDataFrame, columnUniqueValues
 from ..utils.enums import ColName
@@ -22,24 +21,38 @@ class StudentMigrations(Transformation):
             ColName.OFFER.value + "_y"
         ].astype(str)
 
-        activity = activity[
+        differentActivity = activity[
             activity[ColName.OFFER.value + "_x"] != activity[ColName.OFFER.value + "_y"]
         ]
 
         if mode == "dest_unit":
-            activity = activity[
-                activity[ColName.UNIT.value + "_x"]
-                != activity[ColName.UNIT.value + "_y"]
+            differentActivity = differentActivity[
+                differentActivity[ColName.UNIT.value + "_x"]
+                != differentActivity[ColName.UNIT.value + "_y"]
             ]
 
-        activity = activity.drop_duplicates(
+        differentActivity = differentActivity.drop_duplicates(
             subset=[ColName.ID.value, ColName.OFFER.value + "_y"]
         )
 
+        sameActivity = activity[
+            activity[ColName.OFFER.value + "_x"] == activity[ColName.OFFER.value + "_y"]
+        ]
+
+        sameActivityIds = columnUniqueValues(sameActivity, ColName.ID.value)
+
+        differentActivity = differentActivity[
+            ~differentActivity[ColName.ID.value].isin(sameActivityIds)
+        ]
+
         if mode == "dest_unit":
-            activity = activity.groupby(ColName.UNIT.value + "_y").count()
+            differentActivity = differentActivity.groupby(
+                ColName.UNIT.value + "_y", observed=True
+            ).count()
 
         if mode == "dest_offer":
-            activity = activity.groupby(ColName.OFFER.value + "_y").count()
+            differentActivity = differentActivity.groupby(
+                ColName.OFFER.value + "_y", observed=True
+            ).count()
 
-        return activity[ColName.ID.value]
+        return differentActivity[ColName.ID.value]

@@ -114,7 +114,7 @@ def student_migrations(request):
         requestData["transformationBody"]["destMode"],
     )
 
-    return jsonify(result.to_dict()), 200
+    return jsonify(result), 200
 
 
 def student_scholarships_movements(request):

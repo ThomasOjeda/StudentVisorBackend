@@ -74,21 +74,11 @@ class StudentMigrations(Transformation):
             ColName.OFFER.value + "_y"
         ].astype(str)
 
-        differentActivity = None
+        # Leave only activity of students that changed offer
 
-        # Leave only activity of students that changed unit/offer
-
-        if mode == "dest_unit":
-            differentActivity = activity[
-                activity[ColName.UNIT.value + "_x"]
-                != activity[ColName.UNIT.value + "_y"]
-            ]
-
-        if mode == "dest_offer":
-            differentActivity = activity[
-                activity[ColName.OFFER.value + "_x"]
-                != activity[ColName.OFFER.value + "_y"]
-            ]
+        differentActivity = activity[
+            activity[ColName.OFFER.value + "_x"] != activity[ColName.OFFER.value + "_y"]
+        ]
 
         # Obtain the ids of students that remained in the same activity
         sameActivity = activity[

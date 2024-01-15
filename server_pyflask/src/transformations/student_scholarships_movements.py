@@ -6,61 +6,51 @@ from ..utils.enums import ColName
 
 class StudentScholarshipsMovements(Transformation):
     def transform(
-        self, table1: pd.DataFrame, table2: pd.DataFrame, scholarships: pd.DataFrame
+        self,
+        table1: pd.DataFrame,
+        table2: pd.DataFrame,
+        scholarships: pd.DataFrame,
+        filters1: object,
+        filters2: object,
+        schFilters: object,
     ) -> pd.DataFrame:
-        pd.set_option("display.max_columns", 6)
-        pd.set_option("expand_frame_repr", False)
+        table1 = filterDataFrame(table1, filters1)
+        table2 = filterDataFrame(table2, filters2)
+        scholarships = filterDataFrame(scholarships, schFilters)
 
-        table1 = filterDataFrame(table1, {ColName.INSC_TYPE.value: "i"})
-        table2 = filterDataFrame(table2, {ColName.INSC_TYPE.value: "i"})
-
-        pseudoMigrations: pd.DataFrame = table1.merge(
+        activity: pd.DataFrame = table1.merge(
             table2, on=[ColName.ID.value], how="inner"
         )
 
-        # Conversion from categorical to string to allow comparison
-        pseudoMigrations[ColName.OFFER.value + "_x"] = pseudoMigrations[
+        # Conversion from categorical to string to allow comparison between series
+        activity[ColName.OFFER.value + "_x"] = activity[
             ColName.OFFER.value + "_x"
         ].astype(str)
 
-        pseudoMigrations[ColName.OFFER.value + "_y"] = pseudoMigrations[
+        activity[ColName.OFFER.value + "_y"] = activity[
             ColName.OFFER.value + "_y"
         ].astype(str)
 
-        pseudoMigrations = pseudoMigrations[
-            pseudoMigrations[ColName.OFFER.value + "_x"]
-            != pseudoMigrations[ColName.OFFER.value + "_y"]
+        differentActivity = activity[
+            activity[ColName.OFFER.value + "_x"] != activity[ColName.OFFER.value + "_y"]
         ]
-
-        pseudoMigrations = pseudoMigrations.merge(
+        differentActivityWithScholarships = differentActivity.merge(
             scholarships,
             on=ColName.ID.value,
             how="inner",
         )
 
-        pseudoMigrations = pseudoMigrations[
-            pseudoMigrations[ColName.OFFER.value + "_y"]
-            == pseudoMigrations[ColName.OFFER.value]
+        differentActivityWithScholarships = differentActivityWithScholarships[
+            differentActivityWithScholarships[ColName.OFFER.value + "_y"]
+            == differentActivityWithScholarships[ColName.OFFER.value]
         ]
 
-        """         print(
-            pseudoMigrations[
-                [
-                    ColName.OFFER.value + "_x",
-                    ColName.OFFER.value + "_y",
-                    ColName.OFFER.value,
-                    ColName.ID.value,
-                ]
-            ],
-            flush=True,
-        ) """
-
-        pseudoMigrations = (
-            pseudoMigrations.drop_duplicates(subset=[ColName.ID.value])
+        differentActivityWithScholarships = (
+            differentActivityWithScholarships.drop_duplicates(subset=[ColName.ID.value])
             .groupby(ColName.OFFER.value, observed=True)[
                 ColName.OFFER.value
-            ]  # observed only applies if grouping by categorical columns.
+            ]  # observed only applies if grouping by categorical columns,but set it still.
             .count()
         )
 
-        return pseudoMigrations
+        return differentActivityWithScholarships

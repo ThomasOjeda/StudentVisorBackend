@@ -125,12 +125,39 @@ def student_scholarships_movements(request):
 
     fileScholarshipsPath = requestData["transformationBody"]["scholarshipsPath"]
 
+    table1Filters = {}
+    table1Filters[ColName.INSC_TYPE.value] = "i"
+    table2Filters = {}
+    table2Filters[ColName.INSC_TYPE.value] = "i"
+
+    schFilters = {}
+
+    if "sex" in requestData["transformationBody"]:
+        table1Filters[ColName.SEX.value] = requestData["transformationBody"]["sex"]
+        table2Filters[ColName.SEX.value] = requestData["transformationBody"]["sex"]
+
+    if "unitA" in requestData["transformationBody"]:
+        table1Filters[ColName.UNIT.value] = requestData["transformationBody"]["unitA"]
+
+    if "unitB" in requestData["transformationBody"]:
+        table2Filters[ColName.UNIT.value] = requestData["transformationBody"]["unitB"]
+        schFilters[ColName.UNIT.value] = requestData["transformationBody"]["unitB"]
+
+    if "offerA" in requestData["transformationBody"]:
+        table1Filters[ColName.OFFER.value] = requestData["transformationBody"]["offerA"]
+
+    if "offerB" in requestData["transformationBody"]:
+        table2Filters[ColName.OFFER.value] = requestData["transformationBody"]["offerB"]
+        schFilters[ColName.OFFER.value] = requestData["transformationBody"]["offerB"]
+
     table1 = readFile(fileAPath)
     table2 = readFile(fileBPath)
 
     scholarships = readFile(fileScholarshipsPath)
 
     transformer = StudentScholarshipsMovements()
-    result = transformer.transform(table1, table2, scholarships)
+    result = transformer.transform(
+        table1, table2, scholarships, table1Filters, table2Filters, schFilters
+    )
 
     return jsonify(result.to_dict()), 200

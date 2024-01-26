@@ -8,45 +8,28 @@ const {
   PICKLE_SUFFIX,
 } = require("../../../config/paths");
 
-const updateScholarshipFile = async (
-  req,
-  res,
-  tempFolder,
-  tempFilename,
-  toBeUpdated
-) => {
+const updateScholarshipFile = async (req, res, toBeUpdated) => {
   await axios.post(PYFLASK_URL + "/conversions/studentscholarships/update", {
-    sourceFile: tempFolder + "/" + tempFilename,
+    sourceFile: req.body.tempFolder + "/" + req.body.tempFilename,
     destinationFile: toBeUpdated.folder + "/" + toBeUpdated.filename,
     type: req.body.type,
   });
-  await fs.unlink(tempFolder + "/" + tempFilename);
+  await fs.unlink(req.body.tempFolder + "/" + req.body.tempFilename);
 
   res.status(StatusCodes.OK).json({ success: true });
 };
 
-const uploadScholarshipsHandler = async (
-  req,
-  res,
-  tempFolder,
-  tempFilename
-) => {
+const uploadScholarshipsHandler = async (req, res) => {
   try {
     let found = await studentFileMetadata.findOne({
       year: req.body.year,
       type: req.body.type,
     });
     if (found) {
-      return await updateScholarshipFile(
-        req,
-        res,
-        tempFolder,
-        tempFilename,
-        found
-      );
+      return await updateScholarshipFile(req, res, found);
     }
   } catch (error) {
-    await fs.unlink(tempFolder + "/" + tempFilename);
+    await fs.unlink(req.body.tempFolder + "/" + req.body.tempFilename);
     throw error;
   }
 
@@ -59,7 +42,7 @@ const uploadScholarshipsHandler = async (
     try {
       await fs.mkdir(STUDENT_SCHOLARSHIPS_FOLDER);
     } catch (error) {
-      await fs.unlink(tempFolder + "/" + tempFilename);
+      await fs.unlink(req.body.tempFolder + "/" + req.body.tempFilename);
       throw error;
     }
   }
@@ -67,7 +50,7 @@ const uploadScholarshipsHandler = async (
   try {
     await axios.post(PYFLASK_URL + "/conversions/studentscholarships", {
       type: req.body.type,
-      sourceFile: tempFolder + "/" + tempFilename,
+      sourceFile: req.body.tempFolder + "/" + req.body.tempFilename,
       destinationFile:
         STUDENT_SCHOLARSHIPS_FOLDER +
         "/" +
@@ -75,15 +58,15 @@ const uploadScholarshipsHandler = async (
         "_" +
         req.body.type +
         "_" +
-        tempFilename +
+        req.body.tempFilename +
         PICKLE_SUFFIX,
     });
   } catch (error) {
-    await fs.unlink(tempFolder + "/" + tempFilename);
+    await fs.unlink(req.body.tempFolder + "/" + req.body.tempFilename);
 
     throw error;
   }
-  await fs.unlink(tempFolder + "/" + tempFilename);
+  await fs.unlink(req.body.tempFolder + "/" + req.body.tempFilename);
 
   try {
     await studentFileMetadata.create({
@@ -95,7 +78,7 @@ const uploadScholarshipsHandler = async (
         "_" +
         req.body.type +
         "_" +
-        tempFilename +
+        req.body.tempFilename +
         PICKLE_SUFFIX,
       folder: STUDENT_SCHOLARSHIPS_FOLDER,
       type: req.body.type,
@@ -109,7 +92,7 @@ const uploadScholarshipsHandler = async (
         "_" +
         req.body.type +
         "_" +
-        tempFilename +
+        req.body.tempFilename +
         PICKLE_SUFFIX
     );
     throw error;

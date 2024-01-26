@@ -10,12 +10,7 @@ const {
 } = require("../../../config/paths");
 const FileType = require("../../../models/file-types");
 
-const uploadInscriptionsHandler = async (
-  req,
-  res,
-  tempFolder,
-  tempFilename
-) => {
+const uploadInscriptionsHandler = async (req, res) => {
   try {
     let found = await studentFileMetadata.findOne({
       year: req.body.year,
@@ -27,7 +22,7 @@ const uploadInscriptionsHandler = async (
       );
     }
   } catch (error) {
-    await fs.unlink(tempFolder + "/" + tempFilename);
+    await fs.unlink(req.body.tempFolder + "/" + req.body.tempFilename);
     throw error;
   }
 
@@ -40,14 +35,14 @@ const uploadInscriptionsHandler = async (
     try {
       await fs.mkdir(STUDENT_INSCRIPTIONS_FOLDER);
     } catch (error) {
-      await fs.unlink(tempFolder + "/" + tempFilename);
+      await fs.unlink(req.body.tempFolder + "/" + req.body.tempFilename);
       throw error;
     }
   }
 
   try {
     await axios.post(PYFLASK_URL + "/conversions/studentinscriptions", {
-      sourceFile: tempFolder + "/" + tempFilename,
+      sourceFile: req.body.tempFolder + "/" + req.body.tempFilename,
       destinationFile:
         STUDENT_INSCRIPTIONS_FOLDER +
         "/" +
@@ -55,15 +50,14 @@ const uploadInscriptionsHandler = async (
         "_" +
         req.body.type +
         "_" +
-        tempFilename +
+        req.body.tempFilename +
         PICKLE_SUFFIX,
     });
   } catch (error) {
-    await fs.unlink(tempFolder + "/" + tempFilename);
-
+    await fs.unlink(req.body.tempFolder + "/" + req.body.tempFilename);
     throw error;
   }
-  await fs.unlink(tempFolder + "/" + tempFilename);
+  await fs.unlink(req.body.tempFolder + "/" + req.body.tempFilename);
 
   try {
     await studentFileMetadata.create({
@@ -75,7 +69,7 @@ const uploadInscriptionsHandler = async (
         "_" +
         req.body.type +
         "_" +
-        tempFilename +
+        req.body.tempFilename +
         PICKLE_SUFFIX,
       folder: STUDENT_INSCRIPTIONS_FOLDER,
       type: req.body.type,
@@ -89,7 +83,7 @@ const uploadInscriptionsHandler = async (
         "_" +
         req.body.type +
         "_" +
-        tempFilename +
+        req.body.tempFilename +
         PICKLE_SUFFIX
     );
     throw error;

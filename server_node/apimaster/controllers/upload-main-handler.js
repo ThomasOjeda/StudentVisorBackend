@@ -1,11 +1,7 @@
-const { BadRequest, NotFound } = require("../../errors/errors-index");
-const multer = require("multer");
-const util = require("util");
+const { NotFound } = require("../../errors/errors-index");
 const fs = require("fs/promises");
-const { v4: uuidv4 } = require("uuid");
 const studentFileMetadata = require("../../models/student-file-metadata");
 const { StatusCodes } = require("http-status-codes");
-const { STUDENTSDATA_TEMP_FOLDER } = require("../../config/paths");
 const FileType = require("../../models/file-types");
 
 const handlers = {
@@ -15,62 +11,13 @@ const handlers = {
 };
 
 const uploadMainHandler = async (req, res) => {
-  let tempFilename = uuidv4();
-  const storage = multer.diskStorage({
-    destination: STUDENTSDATA_TEMP_FOLDER,
-    filename: function (req, file, cb) {
-      cb(null, tempFilename);
-    },
-  });
-  const upload = multer({
-    storage: storage,
-    limits: { fileSize: 25 * 1024 * 1024 /* bytes */, files: 1 }, //Errors related to these limits cause the temporary file to not be saved at all
-  }).single("uploaded_file"); //Is a function that can be used as a middleware
-  uploadPromise = util.promisify(upload);
-
-  fileSaveError = await uploadPromise(req, res);
-
-  if (fileSaveError !== undefined) {
-    throw fileSaveError;
-  }
-  if (!req.file) {
-    throw new BadRequest("File not found in request");
-  }
-  if (!req.body.name) {
-    await fs.unlink(STUDENTSDATA_TEMP_FOLDER + "/" + tempFilename);
-    throw new BadRequest("File name not found in request");
-  }
-  if (!req.body.year) {
-    await fs.unlink(STUDENTSDATA_TEMP_FOLDER + "/" + tempFilename);
-    throw new BadRequest("File year not found in request");
-  }
-  if (!req.body.type) {
-    await fs.unlink(STUDENTSDATA_TEMP_FOLDER + "/" + tempFilename);
-    throw new BadRequest("File type not found in request");
-  }
-
-  const { fileTypeFromFile } = await import("file-type");
-
-  const mimetype = await fileTypeFromFile(
-    STUDENTSDATA_TEMP_FOLDER + "/" + tempFilename
-  );
-
-  if (
-    !mimetype ||
-    mimetype.mime !==
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-  )
-    throw new BadRequest(
-      "File mime type does not correspond to (.xlsx) mime type (application/vnd.openxmlformats-officedocument.spreadsheetml.sheet)"
-    );
-
   const handler = handlers[req.body.type];
   if (handler == undefined) {
-    await fs.unlink(STUDENTSDATA_TEMP_FOLDER + "/" + tempFilename);
+    await fs.unlink(req.body.tempFolder + "/" + req.body.tempFilename);
     throw new NotFound("File type is not supported");
   }
 
-  await handler(req, res, STUDENTSDATA_TEMP_FOLDER, tempFilename);
+  await handler(req, res);
 };
 
 const deleteFile = async (req, res) => {

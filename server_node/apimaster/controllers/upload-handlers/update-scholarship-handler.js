@@ -35,8 +35,13 @@ const updateScholarshipsHandler = async (req, res) => {
   }
 
   await fs.unlink(req.body.tempFolder + "/" + req.body.tempFilename);
-  await studentFileMetadata.findOneAndUpdate({ _id: toBeUpdated._id }, {}); //Trigger a dummy update to update the updatedAt field with the current date.
-  res.status(StatusCodes.OK).json({ success: true });
+  let result = await studentFileMetadata.findOneAndUpdate(
+    { _id: toBeUpdated._id },
+    {},
+    { fields: "-folder -filename", new: true }
+  ); //Trigger a dummy update to update the updatedAt field with the current date.
+
+  res.status(StatusCodes.OK).json({ success: true, result: result });
 };
 
 module.exports = updateScholarshipsHandler;

@@ -5,9 +5,9 @@ const { StatusCodes } = require("http-status-codes");
 const FileType = require("../../models/file-types");
 
 const handlers = {
-  [FileType.STUDENT_INSCRIPTIONS]: require("./upload-handlers/upload-inscriptions-handler"),
-  [FileType.SCH_BELGRANO]: require("./upload-handlers/upload-scholarships-handler"),
-  [FileType.SCH_PROGRESAR]: require("./upload-handlers/upload-scholarships-handler"),
+  [FileType.STUDENT_INSCRIPTIONS]: require("./upload-handlers/new-inscriptions-handler"),
+  [FileType.SCH_BELGRANO]: require("./upload-handlers/new-scholarships-handler"),
+  [FileType.SCH_PROGRESAR]: require("./upload-handlers/new-scholarships-handler"),
 };
 
 const uploadMainHandler = async (req, res) => {

@@ -7,17 +7,7 @@ const {
   STUDENT_SCHOLARSHIPS_FOLDER,
   PICKLE_SUFFIX,
 } = require("../../../config/paths");
-
-const updateScholarshipFile = async (req, res, toBeUpdated) => {
-  await axios.post(PYFLASK_URL + "/conversions/studentscholarships/update", {
-    sourceFile: req.body.tempFolder + "/" + req.body.tempFilename,
-    destinationFile: toBeUpdated.folder + "/" + toBeUpdated.filename,
-    type: req.body.type,
-  });
-  await fs.unlink(req.body.tempFolder + "/" + req.body.tempFilename);
-
-  res.status(StatusCodes.OK).json({ success: true });
-};
+const Conflict = require("../../../errors/conflict");
 
 const uploadScholarshipsHandler = async (req, res) => {
   try {
@@ -26,7 +16,9 @@ const uploadScholarshipsHandler = async (req, res) => {
       type: req.body.type,
     });
     if (found) {
-      return await updateScholarshipFile(req, res, found);
+      throw new Conflict(
+        `There is already a file for the year ${req.body.year} in the students scholarships category.`
+      );
     }
   } catch (error) {
     await fs.unlink(req.body.tempFolder + "/" + req.body.tempFilename);
@@ -63,7 +55,6 @@ const uploadScholarshipsHandler = async (req, res) => {
     });
   } catch (error) {
     await fs.unlink(req.body.tempFolder + "/" + req.body.tempFilename);
-
     throw error;
   }
   await fs.unlink(req.body.tempFolder + "/" + req.body.tempFilename);

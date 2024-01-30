@@ -65,8 +65,26 @@ const getAllGenders = async (req, res) => {
     .json({ success: true, result: GENDER, nHits: GENDER.length });
 };
 
+const getFileTypes = async (req, res) => {
+  if (!req.body.year)
+    throw new BadRequest("Year not found in data category request");
+
+  filesInYear = await studentFileMetadata.find({
+    year: req.body.year,
+  });
+
+  fileTypes = filesInYear.map((file) => {
+    return file.type;
+  });
+
+  res
+    .status(StatusCodes.OK)
+    .json({ success: true, result: fileTypes, nHits: fileTypes.length });
+};
+
 module.exports = {
   getUnits,
   getUnitOffers,
   getAllGenders,
+  getFileTypes,
 };

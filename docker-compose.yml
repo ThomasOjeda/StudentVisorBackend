@@ -5,7 +5,7 @@ services:
       context: ./server_node
     image: thomasojeda/studentvisor-node #Image from dockerhub that gets pulled in the production server
     ports:
-      - "5000:5000"
+      - "80:5000"
     #Mount a volume to allow node and pyflask to share files
     volumes:
       - node-pyflask-shared-volume:/studentsdata

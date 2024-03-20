@@ -1,0 +1,44 @@
+version: "3"
+services:
+  node-service:
+    build:
+      args:
+        NODE_ENV: development
+    environment:
+      - NODE_ENV=development
+      - MONGO_USER=dbadmin
+      - MONGO_PASSWORD=dbadminpassword
+      - JWT_SECRET=jwtjwtsecretsecret
+      - MASTER_SECRET=mastermastersecretsecret
+    volumes:
+      #The volume that binds the project local source code to the container so nodemon can restart when a change occurs
+      - ./server_node:/app
+      #The volume that binds the project local data folder with the node container to see its contents in real time
+      - ./studentsdata:/studentsdata
+        #(anonymous volume) The volume that prevents the node_modules folder inside the container to be rewritten by the previous volume
+      - /app/node_modules
+    command: npm run dev
+
+  pyflask-service:
+    #only open port in development mode
+    ports:
+      - "5100:5100"
+    environment:
+      #DEBUG_MODE environment variable is REQUIRED
+      #The server opens up in debug mode if the DEBUG_MODE environment variable is set to True
+      - PYFLASK_ENV=development
+      - DEBUG_MODE=True
+    volumes:
+      #The volume that binds the project local source code to the container
+      - ./server_pyflask:/app
+      #The volume that binds the project local data folder with the node container to see its contents in real time
+      - ./studentsdata:/studentsdata
+
+        #The volume that prevents the .venv folder inside the container to be rewritten by the previous volume
+      - /app/.venv
+    command: flask --debug run --host 0.0.0.0 --port 5100 #Host 0.0.0.0 means that the server can be accessed by anyone, but only if the container opens a port
+
+  mongo-service:
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=dbadmin
+      - MONGO_INITDB_ROOT_PASSWORD=dbadminpassword

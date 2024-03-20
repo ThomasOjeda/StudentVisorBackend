@@ -38,13 +38,14 @@ app.use("/api/version", (req, res) => {
 });
 
 app.use("/api", resourceNotFound);
-/* app.get("*", (req, res) => { //Needed if this server serves the angular application
-  res.sendFile(path.join(__dirname, "/dist/student-visor-frontend/index.html"));
-}); */
 app.get("*", (req, res) => {
+  //Needed if this server serves the angular application
+  res.sendFile(path.join(__dirname, "/dist/student-visor-frontend/index.html"));
+});
+/* app.get("*", (req, res) => {
   res.status = 404;
   res.send("Requested resource does not exist");
-});
+}); */
 app.use(errorHandler);
 
 const start = async () => {
@@ -80,7 +81,8 @@ const start = async () => {
 
   await startupTag();
 
-  https
+  //Use this if you want to createa https server
+  /*   https
     .createServer(
       // Provide the private and public key to the server by reading each
       // file's content with the readFileSync() method.
@@ -92,7 +94,11 @@ const start = async () => {
     )
     .listen(PORT, () => {
       console.log(`server listening on port ${PORT}`);
-    });
+    }); */
+
+  app.listen(PORT, () => {
+    console.log(`server listening on port ${PORT}`);
+  });
 };
 
 start();

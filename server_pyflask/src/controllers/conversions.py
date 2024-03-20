@@ -8,6 +8,7 @@ from ..utils.normalizers import (
     inscriptionTypeNormalization,
     studentInscriptionsOfferNormalization,
 )
+import time
 
 
 def converter(value):
@@ -15,6 +16,11 @@ def converter(value):
 
 
 def student_inscriptions(request):
+
+    current = time.process_time()
+    # your code here
+    print("start time" + str(time.process_time() - current), flush=True)
+
     data = pd.read_excel(
         request.get_json()["sourceFile"],
         header=[1],
@@ -33,8 +39,10 @@ def student_inscriptions(request):
             RawFileColName.SEX.value: converter,
         },  # Convert columns to set types to avoid incorrect type inference
     )
+    print("read_excel time" + str(time.process_time() - current), flush=True)
 
     data = data.dropna()
+    print("dropna time" + str(time.process_time() - current), flush=True)
 
     data.rename(
         columns={
@@ -46,6 +54,7 @@ def student_inscriptions(request):
         },
         inplace=True,
     )
+    print("rename time" + str(time.process_time() - current), flush=True)
 
     data = deleteTildesInColumns(
         data,
@@ -57,10 +66,19 @@ def student_inscriptions(request):
             ColName.SEX.value,
         ],
     )
+    print("delete tildes time" + str(time.process_time() - current), flush=True)
 
     data = inscriptionTypeNormalization(data)
+    print(
+        "inscription type normalization time" + str(time.process_time() - current),
+        flush=True,
+    )
 
     data = studentInscriptionsOfferNormalization(data)
+    print(
+        "inscription normalization time" + str(time.process_time() - current),
+        flush=True,
+    )
 
     data = convertColumnsToCategorical(
         data,
@@ -71,10 +89,15 @@ def student_inscriptions(request):
             ColName.SEX.value,
         ],
     )
+    print(
+        "columns to categorical time" + str(time.process_time() - current), flush=True
+    )
 
     data.to_pickle(request.get_json()["destinationFile"])
-
-    data.to_excel(request.get_json()["destinationFile"] + "excel.xlsx")
+    print(
+        "to pickle type normalization time" + str(time.process_time() - current),
+        flush=True,
+    )
 
     return (
         jsonify({"created": True, "filename": request.get_json()["destinationFile"]}),

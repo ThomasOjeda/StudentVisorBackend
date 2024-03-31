@@ -19,7 +19,7 @@ def student_inscriptions(request):
 
     current = time.process_time()
     # your code here
-    print("start time" + str(time.process_time() - current), flush=True)
+    # print("start time" + str(time.process_time() - current), flush=True)
 
     data = pd.read_excel(
         request.get_json()["sourceFile"],
@@ -39,10 +39,10 @@ def student_inscriptions(request):
             RawFileColName.SEX.value: converter,
         },  # Convert columns to set types to avoid incorrect type inference
     )
-    print("read_excel time" + str(time.process_time() - current), flush=True)
+    # print("read_excel time" + str(time.process_time() - current), flush=True)
 
     data = data.dropna()
-    print("dropna time" + str(time.process_time() - current), flush=True)
+    # print("dropna time" + str(time.process_time() - current), flush=True)
 
     data.rename(
         columns={
@@ -54,7 +54,7 @@ def student_inscriptions(request):
         },
         inplace=True,
     )
-    print("rename time" + str(time.process_time() - current), flush=True)
+    # print("rename time" + str(time.process_time() - current), flush=True)
 
     data = deleteTildesInColumns(
         data,
@@ -66,19 +66,19 @@ def student_inscriptions(request):
             ColName.SEX.value,
         ],
     )
-    print("delete tildes time" + str(time.process_time() - current), flush=True)
+    # print("delete tildes time" + str(time.process_time() - current), flush=True)
 
     data = inscriptionTypeNormalization(data)
-    print(
+    """     print(
         "inscription type normalization time" + str(time.process_time() - current),
         flush=True,
-    )
+    ) """
 
     data = studentInscriptionsOfferNormalization(data)
-    print(
+    """     print(
         "inscription normalization time" + str(time.process_time() - current),
         flush=True,
-    )
+    ) """
 
     data = convertColumnsToCategorical(
         data,
@@ -89,15 +89,15 @@ def student_inscriptions(request):
             ColName.SEX.value,
         ],
     )
-    print(
+    """ print(
         "columns to categorical time" + str(time.process_time() - current), flush=True
-    )
+    ) """
 
     data.to_pickle(request.get_json()["destinationFile"])
-    print(
+    """ print(
         "to pickle type normalization time" + str(time.process_time() - current),
         flush=True,
-    )
+    ) """
 
     return (
         jsonify({"created": True, "filename": request.get_json()["destinationFile"]}),
@@ -106,11 +106,13 @@ def student_inscriptions(request):
 
 
 def student_scholarships(request):
-    data = loadRawScholarshipsFile(request)
+    data = loadRawScholarshipsFile(
+        request.get_json()["sourceFile"], request.get_json()["type"]
+    )
 
     data = normalizeScholarships(data)
 
-    saveScholarships(data, request)
+    saveScholarships(data, request.get_json()["destinationFile"])
 
     return (
         jsonify({"created": True, "filename": request.get_json()["destinationFile"]}),
@@ -119,13 +121,15 @@ def student_scholarships(request):
 
 
 def update_student_scholarships(request):
-    newData: pd.DataFrame = loadRawScholarshipsFile(request)
+    newData: pd.DataFrame = loadRawScholarshipsFile(
+        request.get_json()["newDataFile"], request.get_json()["type"]
+    )
 
     newData = normalizeScholarships(newData)
 
     # print(newData.dtypes, flush=True)
 
-    toBeUpdated: pd.DataFrame = pd.read_pickle(request.get_json()["destinationFile"])
+    toBeUpdated: pd.DataFrame = pd.read_pickle(request.get_json()["currentDataFile"])
 
     # print(toBeUpdated.dtypes, flush=True)
 
@@ -151,7 +155,7 @@ def update_student_scholarships(request):
     # ):
     #     print(toBeUpdated, flush=True)
 
-    saveScholarships(toBeUpdated, request)
+    saveScholarships(toBeUpdated, request.get_json()["destinationFile"])
 
     return (
         jsonify({"created": True, "filename": request.get_json()["destinationFile"]}),
@@ -174,12 +178,12 @@ def normalizeScholarships(data: pd.DataFrame) -> pd.DataFrame:
     return data
 
 
-def loadRawScholarshipsFile(request) -> pd.DateOffset:
+def loadRawScholarshipsFile(sourceFile: str, fileType: str) -> pd.DateOffset:
     columnNames = []
     convertersDict = {}
     columnRenames = {}
 
-    if request.get_json()["type"] == "student-scholarships-belgrano":
+    if fileType == "student-scholarships-belgrano":
         columnNames = [
             RawFileColName.BELGRANO_UNIT.value,
             RawFileColName.BELGRANO_OFFER.value,
@@ -195,7 +199,7 @@ def loadRawScholarshipsFile(request) -> pd.DateOffset:
             RawFileColName.BELGRANO_OFFER.value: ColName.OFFER.value,
             RawFileColName.BELGRANO_ID.value: ColName.ID.value,
         }
-    elif request.get_json()["type"] == "student-scholarships-progresar":
+    elif fileType == "student-scholarships-progresar":
         columnNames = [
             RawFileColName.PROGRESAR_UNIT.value,
             RawFileColName.PROGRESAR_OFFER.value,
@@ -213,7 +217,7 @@ def loadRawScholarshipsFile(request) -> pd.DateOffset:
         }
 
     data: pd.DataFrame = pd.read_excel(
-        request.get_json()["sourceFile"],
+        sourceFile,
         usecols=columnNames,
         converters=convertersDict,  # Convert columns to set types to avoid incorrect type inference
     )
@@ -226,11 +230,7 @@ def loadRawScholarshipsFile(request) -> pd.DateOffset:
     return data
 
 
-def saveScholarships(data: pd.DataFrame, request):
-    data.to_pickle(request.get_json()["destinationFile"])
+def saveScholarships(data: pd.DataFrame, destinationFile: str):
+    data.to_pickle(destinationFile)
 
-    data.to_excel(request.get_json()["destinationFile"] + "excel.xlsx")
-
-
-def updateScholarships(data: pd.DataFrame, request):
-    return
+    data.to_excel(destinationFile + "excel.xlsx")

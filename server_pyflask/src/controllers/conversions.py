@@ -9,6 +9,7 @@ from ..utils.normalizers import (
     studentInscriptionsOfferNormalization,
 )
 import time
+import os
 
 
 def converter(value):
@@ -93,7 +94,8 @@ def student_inscriptions(request):
         "columns to categorical time" + str(time.process_time() - current), flush=True
     ) """
 
-    data.to_pickle(request.get_json()["destinationFile"])
+    saveToPickle(data, request.get_json()["destinationFile"])
+
     """ print(
         "to pickle type normalization time" + str(time.process_time() - current),
         flush=True,
@@ -112,7 +114,7 @@ def student_scholarships(request):
 
     data = normalizeScholarships(data)
 
-    saveScholarships(data, request.get_json()["destinationFile"])
+    saveToPickle(data, request.get_json()["destinationFile"])
 
     return (
         jsonify({"created": True, "filename": request.get_json()["destinationFile"]}),
@@ -155,7 +157,7 @@ def update_student_scholarships(request):
     # ):
     #     print(toBeUpdated, flush=True)
 
-    saveScholarships(toBeUpdated, request.get_json()["destinationFile"])
+    saveToPickle(toBeUpdated, request.get_json()["destinationFile"])
 
     return (
         jsonify({"created": True, "filename": request.get_json()["destinationFile"]}),
@@ -230,7 +232,9 @@ def loadRawScholarshipsFile(sourceFile: str, fileType: str) -> pd.DateOffset:
     return data
 
 
-def saveScholarships(data: pd.DataFrame, destinationFile: str):
+# Saves a dataframe to a pickle file. If the environment is development, it also saves a copy in excel format
+def saveToPickle(data: pd.DataFrame, destinationFile: str):
     data.to_pickle(destinationFile)
-
-    data.to_excel(destinationFile + "excel.xlsx")
+    print(os.environ["DEBUG_MODE"], flush=True)
+    if os.environ["DEBUG_MODE"] == "True":
+        data.to_excel(destinationFile + "excel.xlsx")

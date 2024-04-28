@@ -234,7 +234,26 @@ def loadRawScholarshipsFile(sourceFile: str, fileType: str) -> pd.DateOffset:
 
 # Saves a dataframe to a pickle file. If the environment is development, it also saves a copy in excel format
 def saveToPickle(data: pd.DataFrame, destinationFile: str):
-    data.to_pickle(destinationFile)
-    print(os.environ["DEBUG_MODE"], flush=True)
+    saveToPickle(data, destinationFile)
     if os.environ["DEBUG_MODE"] == "True":
-        data.to_excel(destinationFile + "excel.xlsx")
+        saveToExcel(data, destinationFile + "excel.xlsx")
+
+
+def saveToPickle(data: pd.DataFrame, destinationFile: str):
+    data.to_pickle(destinationFile)
+
+
+def saveToExcel(data: pd.DataFrame, destinationFile: str):
+    data.to_excel(destinationFile)
+
+
+def file_to_excel(request):
+
+    data: pd.DataFrame = pd.read_pickle(request.get_json()["sourceFile"])
+
+    saveToExcel(data, request.get_json()["destinationFile"])
+
+    return (
+        jsonify({"created": True, "filename": request.get_json()["destinationFile"]}),
+        200,
+    )

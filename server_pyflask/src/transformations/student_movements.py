@@ -38,6 +38,7 @@ class StudentMovements(Transformation):
 
         # We need to do these conversions because a lot of operations work differently if the columns are of type categorical
 
+        """
         activity[ColName.OFFER.value + "_x"] = activity[
             ColName.OFFER.value + "_x"
         ].astype(str)
@@ -45,6 +46,7 @@ class StudentMovements(Transformation):
         activity[ColName.OFFER.value + "_y"] = activity[
             ColName.OFFER.value + "_y"
         ].astype(str)
+        """
 
         differentActivity = activity[
             activity[ColName.OFFER.value + "_x"] != activity[ColName.OFFER.value + "_y"]

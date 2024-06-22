@@ -22,7 +22,8 @@ class StudentScholarshipsMovements(Transformation):
             table2, on=[ColName.ID.value], how="inner"
         )
 
-        # Conversion from categorical to string to allow comparison between series
+        # Conversion from categorical to string to allow comparison between series (only if columns are categorical)
+        """
         activity[ColName.OFFER.value + "_x"] = activity[
             ColName.OFFER.value + "_x"
         ].astype(str)
@@ -30,6 +31,7 @@ class StudentScholarshipsMovements(Transformation):
         activity[ColName.OFFER.value + "_y"] = activity[
             ColName.OFFER.value + "_y"
         ].astype(str)
+        """
 
         differentActivity = activity[
             activity[ColName.OFFER.value + "_x"] != activity[ColName.OFFER.value + "_y"]
@@ -47,9 +49,9 @@ class StudentScholarshipsMovements(Transformation):
 
         differentActivityWithScholarships = (
             differentActivityWithScholarships.drop_duplicates(subset=[ColName.ID.value])
-            .groupby(ColName.OFFER.value, observed=True)[
+            .groupby(ColName.OFFER.value)[
                 ColName.OFFER.value
-            ]  # observed only applies if grouping by categorical columns,but set it still.
+            ]  # if grouping by categorical column, set observed=True
             .count()
         )
 

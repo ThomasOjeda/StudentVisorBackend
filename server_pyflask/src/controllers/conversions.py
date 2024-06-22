@@ -18,13 +18,14 @@ def converter(value):
 
 def student_inscriptions(request):
 
-    current = time.process_time()
-    # your code here
+    # current = time.process_time()
     # print("start time" + str(time.process_time() - current), flush=True)
 
     data = pd.read_excel(
         request.get_json()["sourceFile"],
-        header=[1],
+        header=[
+            1
+        ],  # This is necessary as these files contain 2 headers, we want the second
         usecols=[
             RawFileColName.UNIT.value,
             RawFileColName.OFFER.value,
@@ -70,17 +71,23 @@ def student_inscriptions(request):
     # print("delete tildes time" + str(time.process_time() - current), flush=True)
 
     data = inscriptionTypeNormalization(data)
-    """     print(
+
+    """
+    print(
         "inscription type normalization time" + str(time.process_time() - current),
         flush=True,
-    ) """
+    ) 
+    """
 
     data = studentInscriptionsOfferNormalization(data)
-    """     print(
+
+    """
+    print(
         "inscription normalization time" + str(time.process_time() - current),
         flush=True,
-    ) """
-
+    )
+    """
+    """
     data = convertColumnsToCategorical(
         data,
         [
@@ -90,16 +97,21 @@ def student_inscriptions(request):
             ColName.SEX.value,
         ],
     )
-    """ print(
+    """
+    """
+    print(
         "columns to categorical time" + str(time.process_time() - current), flush=True
-    ) """
+    )
+    """
 
     saveToPickle(data, request.get_json()["destinationFile"])
 
-    """ print(
+    """
+    print(
         "to pickle type normalization time" + str(time.process_time() - current),
         flush=True,
-    ) """
+    )
+    """
 
     return (
         jsonify({"created": True, "filename": request.get_json()["destinationFile"]}),
@@ -141,9 +153,11 @@ def update_student_scholarships(request):
 
     # print(toBeUpdated.dtypes, flush=True)
 
+    """
     toBeUpdated = convertColumnsToCategorical(
         toBeUpdated, [ColName.UNIT.value, ColName.OFFER.value]
     )
+    """
 
     # print(toBeUpdated.dtypes, flush=True)
 
@@ -175,7 +189,7 @@ def normalizeScholarships(data: pd.DataFrame) -> pd.DataFrame:
 
     data = offerNamesNormalization(data)  # Must be done after column rename
 
-    data = convertColumnsToCategorical(data, [ColName.UNIT.value, ColName.OFFER.value])
+    """ data = convertColumnsToCategorical(data, [ColName.UNIT.value, ColName.OFFER.value]) """
 
     return data
 
@@ -234,24 +248,24 @@ def loadRawScholarshipsFile(sourceFile: str, fileType: str) -> pd.DateOffset:
 
 # Saves a dataframe to a pickle file. If the environment is development, it also saves a copy in excel format
 def saveToPickle(data: pd.DataFrame, destinationFile: str):
-    saveToPickle(data, destinationFile)
+    toPickle(data, destinationFile)
     if os.environ["DEBUG_MODE"] == "True":
-        saveToExcel(data, destinationFile + "excel.xlsx")
+        toExcel(data, destinationFile + "excel.xlsx")
 
 
-def saveToPickle(data: pd.DataFrame, destinationFile: str):
+def toPickle(data: pd.DataFrame, destinationFile: str):
     data.to_pickle(destinationFile)
 
 
-def saveToExcel(data: pd.DataFrame, destinationFile: str):
+def toExcel(data: pd.DataFrame, destinationFile: str):
     data.to_excel(destinationFile)
 
 
-def file_to_excel(request):
+def saveToExcel(request):
 
     data: pd.DataFrame = pd.read_pickle(request.get_json()["sourceFile"])
 
-    saveToExcel(data, request.get_json()["destinationFile"])
+    toExcel(data, request.get_json()["destinationFile"])
 
     return (
         jsonify({"created": True, "filename": request.get_json()["destinationFile"]}),

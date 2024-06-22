@@ -14,6 +14,9 @@ class StudentMigrations(Transformation):
 
         activity = table1.merge(table2, on=ColName.ID.value, how="inner")
 
+        # The two conversions to string are neccesary when the columns are of type categorical
+
+        """
         activity[ColName.OFFER.value + "_x"] = activity[
             ColName.OFFER.value + "_x"
         ].astype(str)
@@ -21,6 +24,7 @@ class StudentMigrations(Transformation):
         activity[ColName.OFFER.value + "_y"] = activity[
             ColName.OFFER.value + "_y"
         ].astype(str)
+        """
 
         differentActivity = activity[
             activity[ColName.OFFER.value + "_x"] != activity[ColName.OFFER.value + "_y"]
@@ -46,14 +50,16 @@ class StudentMigrations(Transformation):
             ~differentActivity[ColName.ID.value].isin(sameActivityIds)
         ]
 
+        # If columns are categorical, the use observed=True in the following groupby
+
         if mode == "dest_unit":
             differentActivity = differentActivity.groupby(
-                ColName.UNIT.value + "_y", observed=True
+                ColName.UNIT.value + "_y"
             ).count()
 
         if mode == "dest_offer":
             differentActivity = differentActivity.groupby(
-                ColName.OFFER.value + "_y", observed=True
+                ColName.OFFER.value + "_y"
             ).count()
 
         return differentActivity[ColName.ID.value]
@@ -66,6 +72,8 @@ class StudentMigrations(Transformation):
 
         activity = table1.merge(table2, on=ColName.ID.value, how="inner")
         # We need to do these conversions because a lot of operations work differently if the columns are of type categorical
+
+        """
         activity[ColName.OFFER.value + "_x"] = activity[
             ColName.OFFER.value + "_x"
         ].astype(str)
@@ -73,6 +81,7 @@ class StudentMigrations(Transformation):
         activity[ColName.OFFER.value + "_y"] = activity[
             ColName.OFFER.value + "_y"
         ].astype(str)
+        """
 
         # Leave only activity of students that changed offer
 
@@ -95,9 +104,10 @@ class StudentMigrations(Transformation):
 
         result = None
 
+        # Use observed=True if the columns are categorical in the following groupbys
         if mode == "dest_unit":
             result = dict(
-                differentActivity.groupby(ColName.UNIT.value + "_x", observed=True)[
+                differentActivity.groupby(ColName.UNIT.value + "_x")[
                     ColName.UNIT.value + "_y"
                 ]
                 .apply(list)
@@ -107,7 +117,7 @@ class StudentMigrations(Transformation):
 
         if mode == "dest_offer":
             result = dict(
-                differentActivity.groupby(ColName.OFFER.value + "_x", observed=True)[
+                differentActivity.groupby(ColName.OFFER.value + "_x")[
                     ColName.OFFER.value + "_y"
                 ]
                 .apply(list)

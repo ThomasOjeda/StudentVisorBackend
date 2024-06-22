@@ -5,7 +5,7 @@ from ..controllers.conversions import (
     student_inscriptions,
     student_scholarships,
     update_student_scholarships,
-    file_to_excel,
+    saveToExcel,
 )
 
 conversionsBP = Blueprint("conversions", __name__, url_prefix="/")
@@ -32,4 +32,4 @@ def updatestudentscholarships():
 @conversionsBP.route("/filetoexcel", methods=["POST"])
 @exception_wrap
 def filetoexcel():
-    return file_to_excel(request)
+    return saveToExcel(request)

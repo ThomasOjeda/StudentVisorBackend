@@ -302,3 +302,5 @@ cython_debug/
 *.pem
 
 pyflaskvirtualenv/
+
+database_tesis/

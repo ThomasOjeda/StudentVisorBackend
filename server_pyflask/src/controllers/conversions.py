@@ -184,7 +184,7 @@ def normalizeScholarships(data: pd.DataFrame) -> pd.DataFrame:
 
     data = deleteTildesInColumns(
         data,
-        [ColName.UNIT.value, ColName.OFFER.value],
+        [ColName.UNIT.value, ColName.OFFER.value, ColName.ID.value],
     )
 
     data = offerNamesNormalization(data)  # Must be done after column rename

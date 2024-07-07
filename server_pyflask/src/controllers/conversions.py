@@ -2,18 +2,13 @@ from flask import jsonify, request
 import pandas as pd
 from ..utils.enums import RawFileColName, ColName
 from ..utils.normalizers import (
-    deleteTildesInColumns,
-    convertColumnsToCategorical,
+    cleanColumns,
     offerNamesNormalization,
     inscriptionTypeNormalization,
     studentInscriptionsOfferNormalization,
 )
 import time
 import os
-
-
-def converter(value):
-    return str(value).lower().strip()
 
 
 def student_inscriptions(request):
@@ -34,11 +29,11 @@ def student_inscriptions(request):
             RawFileColName.SEX.value,
         ],
         converters={
-            RawFileColName.UNIT.value: converter,
-            RawFileColName.OFFER.value: converter,
-            RawFileColName.ID.value: converter,
-            RawFileColName.INSC_TYPE.value: converter,
-            RawFileColName.SEX.value: converter,
+            RawFileColName.UNIT.value: str,
+            RawFileColName.OFFER.value: str,
+            RawFileColName.ID.value: str,
+            RawFileColName.INSC_TYPE.value: str,
+            RawFileColName.SEX.value: str,
         },  # Convert columns to set types to avoid incorrect type inference
     )
     # print("read_excel time" + str(time.process_time() - current), flush=True)
@@ -58,7 +53,7 @@ def student_inscriptions(request):
     )
     # print("rename time" + str(time.process_time() - current), flush=True)
 
-    data = deleteTildesInColumns(
+    data = cleanColumns(
         data,
         [
             ColName.UNIT.value,
@@ -182,7 +177,7 @@ def update_student_scholarships(request):
 def normalizeScholarships(data: pd.DataFrame) -> pd.DataFrame:
     data = data.dropna()
 
-    data = deleteTildesInColumns(
+    data = cleanColumns(
         data,
         [ColName.UNIT.value, ColName.OFFER.value, ColName.ID.value],
     )
@@ -206,9 +201,9 @@ def loadRawScholarshipsFile(sourceFile: str, fileType: str) -> pd.DateOffset:
             RawFileColName.BELGRANO_ID.value,
         ]
         convertersDict = {
-            RawFileColName.BELGRANO_UNIT.value: converter,
-            RawFileColName.BELGRANO_OFFER.value: converter,
-            RawFileColName.BELGRANO_ID.value: converter,
+            RawFileColName.BELGRANO_UNIT.value: str,
+            RawFileColName.BELGRANO_OFFER.value: str,
+            RawFileColName.BELGRANO_ID.value: str,
         }
         columnRenames = {
             RawFileColName.BELGRANO_UNIT.value: ColName.UNIT.value,
@@ -222,9 +217,9 @@ def loadRawScholarshipsFile(sourceFile: str, fileType: str) -> pd.DateOffset:
             RawFileColName.PROGRESAR_ID.value,
         ]
         convertersDict = {
-            RawFileColName.PROGRESAR_UNIT.value: converter,
-            RawFileColName.PROGRESAR_OFFER.value: converter,
-            RawFileColName.PROGRESAR_ID.value: converter,
+            RawFileColName.PROGRESAR_UNIT.value: str,
+            RawFileColName.PROGRESAR_OFFER.value: str,
+            RawFileColName.PROGRESAR_ID.value: str,
         }
         columnRenames = {
             RawFileColName.PROGRESAR_UNIT.value: ColName.UNIT.value,

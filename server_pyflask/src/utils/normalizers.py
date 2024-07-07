@@ -3,11 +3,13 @@ import typing
 from ..utils.enums import ColName
 
 
-def deleteTildesInColumns(df: pd.DataFrame, cols: typing.List[str]) -> pd.DataFrame:
+def cleanColumns(df: pd.DataFrame, cols: typing.List[str]) -> pd.DataFrame:
     df[cols] = df[cols].apply(
         lambda x: x.str.normalize("NFKD")
         .str.encode("ascii", errors="ignore")
         .str.decode("utf-8")
+        .str.strip()
+        .str.lower()
     )
     return df
 

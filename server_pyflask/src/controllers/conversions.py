@@ -3,9 +3,10 @@ import pandas as pd
 from ..utils.enums import RawFileColName, ColName
 from ..utils.normalizers import (
     cleanColumns,
-    offerNamesNormalization,
+    scholarshipOfferNamesNormalization,
     inscriptionTypeNormalization,
-    studentInscriptionsOfferNormalization,
+    studentInscriptionsOfferNamesNormalization,
+    unitsNormalization,
 )
 import time
 import os
@@ -16,7 +17,7 @@ def student_inscriptions(request):
     # current = time.process_time()
     # print("start time" + str(time.process_time() - current), flush=True)
 
-    data = pd.read_excel(
+    data: pd.DataFrame = pd.read_excel(
         request.get_json()["sourceFile"],
         header=[
             1
@@ -74,7 +75,9 @@ def student_inscriptions(request):
     ) 
     """
 
-    data = studentInscriptionsOfferNormalization(data)
+    data = studentInscriptionsOfferNamesNormalization(data)
+
+    data = unitsNormalization(data)
 
     """
     print(
@@ -182,7 +185,9 @@ def normalizeScholarships(data: pd.DataFrame) -> pd.DataFrame:
         [ColName.UNIT.value, ColName.OFFER.value, ColName.ID.value],
     )
 
-    data = offerNamesNormalization(data)  # Must be done after column rename
+    data = scholarshipOfferNamesNormalization(data)  # Must be done after column rename
+
+    data = unitsNormalization(data)
 
     """ data = convertColumnsToCategorical(data, [ColName.UNIT.value, ColName.OFFER.value]) """
 

@@ -26,12 +26,12 @@ class StudentMigrations(Transformation):
         ].astype(str)
         """
 
-        differentActivity = activity[
+        differentActivity: pd.DataFrame = activity.loc[
             activity[ColName.OFFER.value + "_x"] != activity[ColName.OFFER.value + "_y"]
         ]
 
         if mode == "dest_unit":
-            differentActivity = differentActivity[
+            differentActivity = differentActivity.loc[
                 differentActivity[ColName.UNIT.value + "_x"]
                 != differentActivity[ColName.UNIT.value + "_y"]
             ]
@@ -40,13 +40,13 @@ class StudentMigrations(Transformation):
             subset=[ColName.ID.value, ColName.OFFER.value + "_y"]
         )
 
-        sameActivity = activity[
+        sameActivity: pd.DataFrame = activity.loc[
             activity[ColName.OFFER.value + "_x"] == activity[ColName.OFFER.value + "_y"]
         ]
 
         sameActivityIds = columnUniqueValues(sameActivity, ColName.ID.value)
 
-        differentActivity = differentActivity[
+        differentActivity = differentActivity.loc[
             ~differentActivity[ColName.ID.value].isin(sameActivityIds)
         ]
 
@@ -85,12 +85,12 @@ class StudentMigrations(Transformation):
 
         # Leave only activity of students that changed offer
 
-        differentActivity = activity[
+        differentActivity = activity.loc[
             activity[ColName.OFFER.value + "_x"] != activity[ColName.OFFER.value + "_y"]
         ]
 
         # Obtain the ids of students that remained in the same activity
-        sameActivity = activity[
+        sameActivity = activity.loc[
             activity[ColName.OFFER.value + "_x"] == activity[ColName.OFFER.value + "_y"]
         ]
 
@@ -98,7 +98,7 @@ class StudentMigrations(Transformation):
 
         # Get rid of rows with id of student present in same activity
         # (based on own criteria, these students did not change activity)
-        differentActivity = differentActivity[
+        differentActivity = differentActivity.loc[
             ~differentActivity[ColName.ID.value].isin(sameActivityIds)
         ]
 

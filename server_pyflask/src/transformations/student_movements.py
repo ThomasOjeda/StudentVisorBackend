@@ -48,11 +48,11 @@ class StudentMovements(Transformation):
         ].astype(str)
         """
 
-        differentActivity = activity[
+        differentActivity: pd.DataFrame = activity.loc[
             activity[ColName.OFFER.value + "_x"] != activity[ColName.OFFER.value + "_y"]
         ]
 
-        sameActivity = activity[
+        sameActivity: pd.DataFrame = activity.loc[
             activity[ColName.OFFER.value + "_x"] == activity[ColName.OFFER.value + "_y"]
         ]
 

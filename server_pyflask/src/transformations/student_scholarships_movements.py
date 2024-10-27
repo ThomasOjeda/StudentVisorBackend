@@ -33,7 +33,7 @@ class StudentScholarshipsMovements(Transformation):
         ].astype(str)
         """
 
-        differentActivity = activity[
+        differentActivity: pd.DataFrame = activity.loc[
             activity[ColName.OFFER.value + "_x"] != activity[ColName.OFFER.value + "_y"]
         ]
         differentActivityWithScholarships = differentActivity.merge(
@@ -42,10 +42,12 @@ class StudentScholarshipsMovements(Transformation):
             how="inner",
         )
 
-        differentActivityWithScholarships = differentActivityWithScholarships[
-            differentActivityWithScholarships[ColName.OFFER.value + "_y"]
-            == differentActivityWithScholarships[ColName.OFFER.value]
-        ]
+        differentActivityWithScholarships: pd.DataFrame = (
+            differentActivityWithScholarships.loc[
+                differentActivityWithScholarships[ColName.OFFER.value + "_y"]
+                == differentActivityWithScholarships[ColName.OFFER.value]
+            ]
+        )
 
         differentActivityWithScholarships = (
             differentActivityWithScholarships.drop_duplicates(subset=[ColName.ID.value])

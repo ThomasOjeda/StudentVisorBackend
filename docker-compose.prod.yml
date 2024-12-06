@@ -18,8 +18,9 @@ services:
       - PYFLASK_ENV=production
       - DEBUG_MODE=False
     command:
-      waitress-serve --host 0.0.0.0 --port=5100 app:app #Host 0.0.0.0 means that the server can be accessed by anyone, but only if the container opens a port
+      gunicorn -w 4 -b 0.0.0.0:5100 app:app #Host 0.0.0.0 means that the server can be accessed by anyone, but only if the container opens a port
       #In this case we dont want this, so we dont open any port
+      #-w 4 means 4 working processes to process tasks concurrently, at the expense of resources and possible race conditions (e.g. opening and manipulating files)
 
   mongo-service:
     environment:

@@ -23,7 +23,7 @@ services:
       - node-pyflask-shared-volume:/studentsdata
 
   mongo-service:
-    image: mongo
+    image: mongo:4.4 #mongo 5 requires AVX support
     volumes:
       #(must not be deleted)The volume that stores the whole mongo database and persists it across multiple container runs
       - mongo-db-volume:/data/db

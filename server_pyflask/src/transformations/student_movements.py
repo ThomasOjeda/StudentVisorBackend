@@ -36,6 +36,20 @@ class StudentMovements(Transformation):
 
         activity = table1.merge(table2, on=ColName.ID.value, how="inner")
 
+        activity = activity.rename(
+            columns={
+                ColName.UNIT.value + "_x": "DX[" + ColName.UNIT.value + "]",
+                ColName.OFFER.value + "_x": "DX[" + ColName.OFFER.value + "]",
+                ColName.INSC_TYPE.value + "_x": "DX[" + ColName.INSC_TYPE.value + "]",
+                ColName.SEX.value + "_x": "DX[" + ColName.SEX.value + "]",
+
+                ColName.UNIT.value + "_y": "DXY[" + ColName.UNIT.value + "]",
+                ColName.OFFER.value + "_y": "DXY[" + ColName.OFFER.value + "]",
+                ColName.INSC_TYPE.value + "_y": "DXY[" + ColName.INSC_TYPE.value + "]",
+                ColName.SEX.value + "_y": "DXY[" + ColName.SEX.value + "]",
+            }
+        )
+
         # We need to do these conversions because a lot of operations work differently if the columns are of type categorical
 
         """
@@ -49,11 +63,11 @@ class StudentMovements(Transformation):
         """
 
         differentActivity: pd.DataFrame = activity.loc[
-            activity[ColName.OFFER.value + "_x"] != activity[ColName.OFFER.value + "_y"]
+            activity["DX[" + ColName.OFFER.value + "]"] != activity["DXY[" + ColName.OFFER.value + "]"]
         ]
 
         sameActivity: pd.DataFrame = activity.loc[
-            activity[ColName.OFFER.value + "_x"] == activity[ColName.OFFER.value + "_y"]
+            activity["DX[" + ColName.OFFER.value + "]"] == activity["DXY[" + ColName.OFFER.value + "]"]
         ]
 
         differentActivityIds = columnUniqueValues(differentActivity, ColName.ID.value)

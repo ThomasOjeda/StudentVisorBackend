@@ -2,7 +2,7 @@ const MONGO_IP = process.env.MONGO_IP || "mongo-service";
 const MONGO_PORT = process.env.MONGO_PORT || 27017;
 const MONGO_USER = process.env.MONGO_USER;
 const MONGO_PASSWORD = process.env.MONGO_PASSWORD;
-const MONGO_URI = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_IP}:${MONGO_PORT}/studentvisordb?retryWrites=true&w=majority&authSource=admin`;
+const MONGO_URI = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_IP}:${MONGO_PORT}/studentvisordb?retryWrites=true&w=majority&authSource=admin&directConnection=true`;
 
 const PYFLASK_IP = process.env.PYFLASK_IP || "http://pyflask-service";
 const PYFLASK_PORT = process.env.PYFLASK_PORT || 5100;

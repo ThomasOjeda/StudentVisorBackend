@@ -40,7 +40,7 @@ app.use("/api/version", (req, res) => {
 app.use("/api", resourceNotFound);
 app.get("*", (req, res) => {
   //Needed if this server serves the angular application
-  res.sendFile(path.join(__dirname, "/dist/student-visor-frontend/index.html"));
+  res.sendFile(path.join(__dirname, "/dist/student-visor-frontend/browser/index.html"));
 });
 /* app.get("*", (req, res) => {
   res.status = 404;

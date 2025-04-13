@@ -1,17 +1,23 @@
 const tagDB = require("../models/tag");
 const { NotFound, BadRequest } = require("../errors/errors-index");
+const { UNIVERSAL_TAG } = require("./default-tags");
 
 const checkValidAndDuplicateTags = async (tags) => {
+  tagsArray = tags;
   //Check if tags is an array of strings
-  if (!Array.isArray(tags))
-    throw new BadRequest("Tags must be an array of string");
+  if (!Array.isArray(tagsArray))
+    tagsArray = [];
   //Check if tags are valid
-  for (const tag of tags) {
+  for (const tag of tagsArray) {
     if (!(await tagDB.findOne({ _id: tag })))
       throw new NotFound(`No tag with value : ${tag}`);
   }
   //Filter duplicates
-  filtered = tags.filter((tag, index) => tags.indexOf(tag) === index);
+  filtered = tagsArray.filter((tag, index) => tags.indexOf(tag) === index);
+  //Include UNIVERSAL tag if it is not already included
+  if (!filtered.includes(UNIVERSAL_TAG)) {
+    filtered.push(UNIVERSAL_TAG);
+  }
   return filtered;
 };
 

@@ -4,6 +4,7 @@ const user = require("../../models/user");
 
 const { NotFound, BadRequest } = require("../../errors/errors-index");
 const { StatusCodes } = require("http-status-codes");
+const { DEFAULT_TAGS } = require("../../utils/default-tags");
 
 const getAllTags = async (req, res) => {
   resultTags = await tag.find({});
@@ -35,24 +36,27 @@ const createTag = async (req, res) => {
   res.status(StatusCodes.CREATED).json({ success: true, result: created });
 };
 
-//This delete also prevents the PUBLIC tag from being deleted
+//This delete also prevents the DEFAULT tags from being deleted
 const deleteTag = async (req, res) => {
   const { id: tagId } = req.params;
-  result = await tag.deleteOne({
-    $and: [{ _id: tagId }, { _id: { $ne: "PUBLIC" } }],
-  });
+
+  checkDefaultTagDeletion(tagId);
+
+  result = await tag.deleteOne({ _id: tagId });
 
   if (result.deletedCount <= 0)
     throw new NotFound(
-      `No tag with id : ${tagId} or trying to delete PUBLIC tag`
+      `No tag with id : ${tagId}.`
     );
   res.status(StatusCodes.OK).json({ success: true });
 };
 
-//This delete also prevents the PUBLIC tag from being deleted
+//This delete also prevents the DEFAULT tags from being deleted
 //This delete checks if the tag is being used in any chart or user before deleting it
 const consistentDeleteTag = async (req, res) => {
   const { id: tagId } = req.params;
+
+  checkDefaultTagDeletion(tagId);
 
   const c = await chart.findOne({ tags: tagId });
   if (c) {
@@ -64,25 +68,36 @@ const consistentDeleteTag = async (req, res) => {
     throw new BadRequest(`The tag is in use by user ${u._id}`);
   }
 
-  result = await tag.deleteOne({
-    $and: [{ _id: tagId }, { _id: { $ne: "PUBLIC" } }],
-  });
+  result = await tag.deleteOne({ _id: tagId });
 
   if (result.deletedCount <= 0)
     throw new NotFound(
-      `No tag with id : ${tagId} or trying to delete PUBLIC tag`
+      `No tag with id : ${tagId}.`
     );
   res.status(StatusCodes.OK).json({ success: true });
 };
 
-//This delete also prevents the PUBLIC tag from being deleted
+//This delete also prevents the DEFAULT tags from being deleted
 const deleteAllTags = async (req, res) => {
-  result = await tag.deleteMany({ _id: { $ne: "PUBLIC" } });
+
+  //The mongodb operation of deletion should delete all tags except the default ones
+  //This is done by using the deleteMany function with a filter
+  const result = await tag.deleteMany({
+    _id: { $nin: Object.keys(DEFAULT_TAGS) },
+  });
 
   res
     .status(StatusCodes.OK)
     .json({ success: true, nHits: result.deletedCount });
 };
+
+const checkDefaultTagDeletion = (tagId) => {
+  if (Object.keys(DEFAULT_TAGS).includes(tagId)) {
+    throw new BadRequest(
+      `The tag ${tagId} is a default tag and cannot be deleted`
+    );
+  }
+}
 
 module.exports = {
   getAllTags,

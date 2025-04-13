@@ -57,10 +57,8 @@ const register = async (req, res) => {
   } catch (err) {
     throw new BadRequest("Please provide a password");
   }
-  if (req.body.tags)
-    if (req.body.tags.length > 0)
-      req.body.tags = await checkValidAndDuplicateTags(req.body.tags);
-    else req.body.tags = [];
+
+  req.body.tags = await checkValidAndDuplicateTags(req.body.tags);
 
   userWithSameEmail = await user.findOne({ email: req.body.email });
   if (userWithSameEmail) {

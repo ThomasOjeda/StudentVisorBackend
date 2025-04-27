@@ -35,7 +35,7 @@ const consistentUpdateChart = async (req, res) => {
   const { id: chartId } = req.params;
   const updated = {};
   if (req.body.name) updated.name = req.body.name;
-  if (req.body.tags) updated.tags = await checkValidAndDuplicateTags(req.body.tags);
+  if (req.body.tags) updated.tags = await checkValidAndDuplicateTags(req.body.tags, false);
 
   const resultChart = await chart.findOneAndUpdate({ _id: chartId }, updated, {
     new: true,

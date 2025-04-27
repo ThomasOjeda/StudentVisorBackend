@@ -41,8 +41,7 @@ const updateUser = async (req, res) => {
   let updatedUser = {};
   if (req.body.username) updatedUser.username = req.body.username;
   if (req.body.role) updatedUser.role = req.body.role;
-
-  updatedUser.tags = await checkValidAndDuplicateTags(req.body.tags);
+  if (req.body.tags) updatedUser.tags = await checkValidAndDuplicateTags(req.body.tags);
 
   const resultUser = await user.findOneAndUpdate({ _id: userId }, updatedUser, {
     fields: "-password",
@@ -57,8 +56,7 @@ const updateMyUser = async (req, res) => {
   let updatedUser = {};
   if (req.body.username) updatedUser.username = req.body.username;
   if (req.body.role) updatedUser.role = req.body.role;
-
-  updatedUser.tags = await checkValidAndDuplicateTags(req.body.tags);
+  if (req.body.tags) updatedUser.tags = await checkValidAndDuplicateTags(req.body.tags);
 
   const resultUser = await user.findOneAndUpdate(
     { email: req.userData.email },

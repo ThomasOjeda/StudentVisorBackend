@@ -28,7 +28,7 @@ app.use(cors()); //----------
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(express.static("dist/student-visor-frontend"));
+app.use(express.static("dist/student-visor-frontend/browser")); //Serve static files from the dist folder
 
 app.use("/api/v1", apiRouter);
 app.use("/api/master", masterAuthentication, masterRouter);
